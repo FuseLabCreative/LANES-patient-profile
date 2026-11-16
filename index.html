@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LANES — Patient Synopsis</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --primary:#2c7be5; --primary-hover:#2565c0; --secondary:#748194;
+    --success:#00d27a; --info:#27bcfd; --warning:#f5803e; --danger:#e63757;
+    --gray-100:#f9fafd; --gray-200:#edf2f9; --gray-300:#d8e2ef; --gray-400:#b6c1d2;
+    --gray-500:#9da9bb; --gray-600:#748194; --gray-700:#5e6e82; --gray-800:#4d5969; --gray-900:#344050;
+    --body-bg:#edf2f9; --card-shadow:0 2px 5px 0 rgba(65,69,88,.07), 0 1px 2px 0 rgba(0,0,0,.04);
+    --radius:0.5rem;
+    /* chart palette */
+    --chart-emergency:#f07ea0; --chart-inpatient:#8fa3e8; --chart-outpatient:#19b5c4;
+    --chart-grid:#e3e9f3; --chart-axis:#9da9bb;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{
+    font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    background-color:var(--body-bg); color:var(--gray-700); font-size:.9rem;
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  a{ text-decoration:none; color:var(--primary); }
+  button{ font-family:inherit; }
+  .svg-ico{ width:1em; height:1em; fill:currentColor; display:inline-block; vertical-align:-.125em; }
+
+  /* ===== Navbar ===== */
+  .lanes-navbar{ background:linear-gradient(180deg,#5aa9e6 0%,#7ec0ee 48%,#acd6f6 100%);
+    box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:0; z-index:1030; }
+  .nav-inner{ display:flex; align-items:center; padding:.7rem 1.25rem; min-height:62px; }
+  .lanes-logo{ font-weight:700; letter-spacing:.42em; font-size:1.35rem; color:#0b3b66; margin-right:1.1rem; padding-right:.1em; }
+  .demo-badge{ background:var(--danger); color:#fff; font-weight:600; font-size:.8rem; letter-spacing:.06em;
+    padding:.5rem .9rem; border-radius:.375rem; box-shadow:0 2px 4px rgba(230,55,87,.35); white-space:nowrap; }
+  .nav-link-plain{ color:#17446e; font-size:.9rem; font-weight:500; margin-left:1.25rem; white-space:nowrap; }
+  .nav-link-plain:hover{ color:#0b3b66; text-decoration:underline; }
+  .patient-search{ flex:1 1 auto; max-width:520px; margin:0 auto; }
+  .patient-search input{ width:100%; background:rgba(255,255,255,.92); border:none; border-radius:.375rem;
+    height:38px; font-size:.85rem; padding:0 .9rem; color:var(--gray-800); }
+  .patient-search input:focus{ outline:none; box-shadow:0 0 0 .18rem rgba(255,255,255,.5); }
+  .nav-user{ display:flex; align-items:center; gap:1rem; margin-left:auto; }
+  .user-info{ display:flex; flex-direction:column; align-items:flex-end; line-height:1.3; text-align:right; }
+  .user-name{ font-size:.9rem; font-weight:600; color:#13456f; }
+  .user-datetime{ font-size:.78rem; font-weight:400; color:#1c5887; }
+  .gear{ font-size:1.35rem; color:#13456f; cursor:pointer; display:flex; }
+
+  /* settings dropdown on the gear */
+  .gear-menu{ position:absolute; right:0; top:46px; background:#fff; border:1px solid var(--gray-200);
+    border-radius:.5rem; box-shadow:var(--card-shadow); padding:.35rem; min-width:196px; z-index:1050; display:none; }
+  .gear-menu.open{ display:block; }
+  .gm-title{ font-size:.64rem; text-transform:uppercase; letter-spacing:.07em; color:var(--gray-500); font-weight:600; padding:.35rem .6rem; }
+  .gm-item{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem .6rem; border-radius:.375rem;
+    font-size:.85rem; color:var(--gray-700); cursor:pointer; background:none; border:none; width:100%; text-align:left; }
+  .gm-item:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .gm-item .chk{ color:var(--primary); opacity:0; }
+  .gm-item.active .chk{ opacity:1; }
+
+  /* category tabs (alternative navigation) */
+  .cat-tabs{ display:none; background:#fff; border-bottom:1px solid var(--gray-200); padding:0 1.5rem; gap:.25rem;
+    position:sticky; top:62px; z-index:1020; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
+  .cat-tabs::-webkit-scrollbar{ display:none; }
+  body.nav-tabs .cat-tabs{ display:flex; }
+  .cat-tab{ padding:.8rem 1rem; font-size:.9rem; font-weight:500; color:var(--gray-600); cursor:pointer;
+    border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; }
+  .cat-tab:hover{ color:var(--gray-900); }
+  .cat-tab.active{ color:var(--primary); border-bottom-color:var(--primary); }
+
+  /* secondary nav: the card sections inside the active tab */
+  .cat-subnav{ display:none; background:var(--gray-100); border-bottom:1px solid var(--gray-200); padding:.55rem 1.5rem;
+    gap:.4rem; position:sticky; top:107px; z-index:1019; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
+  .cat-subnav::-webkit-scrollbar{ display:none; }
+  body.nav-tabs .cat-subnav{ display:flex; }
+  .subnav-chip{ font-size:.8rem; color:var(--gray-600); padding:.3rem .75rem; border-radius:1rem; background:#fff;
+    border:1px solid var(--gray-300); cursor:pointer; white-space:nowrap; }
+  .subnav-chip:hover{ color:var(--gray-900); border-color:var(--gray-400); }
+  .subnav-chip.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+  /* in tabs mode: hide the sidebar + the in-content category headings; land sections below the sticky bars */
+  body.nav-tabs .toc{ display:none; }
+  body.nav-tabs .cat-heading{ display:none !important; }
+  body.nav-tabs .main-grid > section, body.nav-tabs .info-card{ scroll-margin-top:152px; }
+  /* the Overview at-a-glance cards are shown only in Tabs mode */
+  body.nav-sidebar .glance-card{ display:none !important; }
+
+  /* ===== Patient header strip ===== */
+  .patient-header{ background:#fff; border-bottom:1px solid var(--gray-200); padding:1rem 1.5rem; }
+  .ph-row{ display:flex; align-items:center; gap:1rem 1.25rem; flex-wrap:wrap; }
+  .ph-id{ display:flex; align-items:baseline; gap:.75rem; flex-wrap:wrap; }
+  .ph-name{ font-size:1.5rem; font-weight:700; color:var(--gray-900); line-height:1.1; }
+  .ph-meta{ color:var(--gray-600); font-size:.86rem; }
+  .ph-tags{ display:flex; gap:.4rem; flex-wrap:wrap; }
+  .tag{ background:var(--gray-200); color:var(--gray-800); font-size:.72rem; font-weight:500;
+    padding:.2rem .55rem; border-radius:.3rem; white-space:nowrap; }
+  .tag.info{ background:rgba(39,188,253,.14); color:#0a7cb0; }
+  .tag.purple{ background:rgba(115,103,240,.14); color:#6155c9; }
+  .ph-actions{ display:flex; align-items:center; gap:.6rem; margin-left:auto; flex-wrap:wrap; }
+  .mini-select{ height:34px; border:1px solid var(--gray-300); border-radius:.375rem; font-size:.8rem;
+    color:var(--gray-700); background:#fff; padding:.3rem 1.8rem .3rem .6rem; -webkit-appearance:none; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23748194'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right .55rem center; background-size:13px; }
+  .btn-primary{ background:var(--primary); border:1px solid var(--primary); color:#fff; font-size:.82rem;
+    font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap; }
+  .btn-primary:hover{ background:var(--primary-hover); }
+  .btn-ghost{ background:#fff; border:1px solid var(--gray-300); color:var(--gray-700); font-size:.82rem;
+    font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap; }
+  .btn-ghost:hover{ background:var(--gray-200); }
+
+  /* ===== New-since bar ===== */
+  .new-bar{ background:#eaf2fd; border-bottom:1px solid #cfe0f7; padding:.65rem 1.5rem; font-size:.85rem;
+    color:var(--gray-800); display:flex; align-items:center; gap:.5rem 1.1rem; flex-wrap:wrap; }
+  .new-bar .nb-dot{ color:var(--primary); display:flex; }
+  .new-bar a{ font-weight:600; }
+  .new-bar .nb-link-end{ margin-left:auto; }
+
+  /* ===== Section nav pills ===== */
+  .section-nav{ background:#fff; border-bottom:1px solid var(--gray-200); padding:.5rem 1.25rem;
+    display:flex; gap:.35rem; overflow-x:auto; position:sticky; top:62px; z-index:1020; }
+  .section-nav::-webkit-scrollbar{ height:5px; }
+  .sn-item{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .75rem; border-radius:.375rem;
+    font-size:.82rem; color:var(--gray-700); white-space:nowrap; cursor:pointer; font-weight:500; }
+  .sn-item:hover{ background:var(--gray-200); }
+  .sn-item.active{ background:var(--primary); color:#fff; }
+  .sn-count{ font-size:.72rem; background:rgba(0,0,0,.08); padding:.05rem .35rem; border-radius:1rem; }
+  .sn-item.active .sn-count{ background:rgba(255,255,255,.25); }
+
+  /* ===== Layout ===== */
+  .page{ padding:1.25rem; max-width:100%; overflow-x:clip; }
+
+  /* ===== Layout with minimalistic left navigation ===== */
+  .layout{ display:flex; gap:1.5rem; align-items:flex-start; }
+  .content{ flex:1 1 auto; min-width:0; }
+  /* sticky nav: stays put while the right-side content scrolls */
+  .toc{ position:sticky; top:76px; width:150px; flex:0 0 150px; align-self:flex-start;
+    max-height:calc(100vh - 92px); overflow:auto; }
+  .toc-item{ display:block; padding:.4rem .65rem; font-size:.82rem; color:var(--gray-700); cursor:pointer; border-radius:.3rem; }
+  .toc-item:hover{ color:var(--gray-900); background:var(--gray-100); }
+  .toc-item.active{ color:var(--primary); font-weight:600; }
+  .toc-cat{ padding:.3rem .65rem; font-size:.66rem; text-transform:uppercase; letter-spacing:.07em; color:var(--gray-600); font-weight:600; margin-top:.9rem; }
+  .toc-cat:first-child{ margin-top:0; }
+  .toc-sub{ display:flex; flex-direction:column; margin-left:.9rem; border-left:1px solid var(--gray-300); padding-left:.2rem; }
+  .toc-sub .toc-item{ position:relative; }
+  .toc-sub .toc-item.active::before{ content:''; position:absolute; left:calc(-.2rem - 1px); top:.38rem; bottom:.38rem; width:2px; background:var(--primary); }
+  #sec-overview, .main-grid > section{ scroll-margin-top:76px; }
+  @media (max-width:1100px){ .toc{ display:none; } }
+
+  .info-cards{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.25rem; grid-auto-rows:1fr; }
+  @media (max-width:1200px){ .info-cards{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  @media (max-width:620px){ .info-cards{ grid-template-columns:1fr; } }
+
+  /* single column — every card (and its table) gets a full-width row.
+     One flow (headings + info-cards + section cards) so spacing is uniform. */
+  .main-grid{ display:flex; flex-direction:column; gap:1.25rem; }
+  .main-grid > *{ min-width:0; }
+  .span-all{ width:100%; }
+  /* category section heading: same space above and below for every heading */
+  .cat-heading{ font-size:1.2rem; font-weight:700; color:var(--gray-900); margin:.5rem 0 -.45rem; scroll-margin-top:76px; }
+  .cat-heading:first-child{ margin-top:0; }
+
+  /* ===== Panels ===== */
+  .panel{ background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); overflow:hidden; min-width:0;
+    display:flex; flex-direction:column; }
+  /* standardized card height — every section card is the same size; data scrolls inside */
+  .main-grid > section{ height:500px; }
+  .panel > .table-scroll, .panel > .table-scroll-sm, .panel > .labs-split{ flex:1 1 auto; min-height:0; }
+  .subpanel.active{ display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+  .subpanel.active > .table-scroll, .subpanel.active > .table-scroll-sm{ flex:1 1 auto; min-height:0; }
+  .panel-header{ display:flex; align-items:center; gap:.5rem; padding:.85rem 1rem; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); }
+  .panel-title{ font-weight:600; color:var(--gray-900); font-size:1.05rem; margin:0; white-space:nowrap; display:flex; align-items:center; gap:.5rem; }
+  .panel-body{ padding:1rem; }
+
+  /* header tools */
+  .header-tools{ display:flex; align-items:center; gap:.5rem; margin-left:auto; flex-wrap:wrap; justify-content:flex-end; }
+  .search-expand{ display:none; align-items:center; gap:.5rem; flex:1 1 100%; min-width:0; }
+  .search-expand .field{ height:34px; flex:1 1 auto; width:auto; min-width:0; }
+  .header-tools.searching > .date-field,
+  .header-tools.searching > .search-btn,
+  .header-tools.searching > .filter-btn,
+  .header-tools.searching > .hbtn.primary,
+  .header-tools.searching > .kebab-wrap{ display:none; }
+  .header-tools.searching > .search-expand{ display:flex; }
+
+  .date-field{ position:relative; display:inline-flex; align-items:center; }
+  .date-field input{ width:118px; height:34px; border:1px solid var(--gray-300); border-radius:.375rem;
+    padding:.25rem 1.9rem .25rem .55rem; font-size:.8rem; color:var(--gray-700); background:#fff; }
+  .date-field input:focus{ outline:none; border-color:#9bbdf0; box-shadow:0 0 0 .18rem rgba(44,123,229,.18); }
+  .date-field .cal{ position:absolute; right:.5rem; color:var(--gray-500); font-size:.9rem; pointer-events:none; display:flex; }
+
+  .hbtn{ width:34px; height:34px; flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--gray-300); background:#fff; color:var(--gray-700); border-radius:.375rem; cursor:pointer; font-size:1rem; padding:0; }
+  .hbtn:hover{ background:var(--gray-200); color:var(--gray-900); }
+  .hbtn.primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+  .hbtn.primary:hover{ background:var(--primary-hover); border-color:var(--primary-hover); color:#fff; }
+
+  .kebab-wrap{ position:relative; }
+  .kebab-menu{ position:absolute; right:0; top:40px; min-width:170px; background:#fff; border:1px solid var(--gray-200);
+    border-radius:.5rem; box-shadow:var(--card-shadow); padding:.35rem; z-index:50; display:none; }
+  .kebab-menu.open{ display:block; }
+  .kebab-item{ display:flex; align-items:center; gap:.6rem; padding:.5rem .6rem; border-radius:.375rem; font-size:.85rem;
+    color:var(--gray-700); cursor:pointer; background:none; border:none; width:100%; text-align:left; }
+  .kebab-item:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .kebab-item .svg-ico{ color:var(--primary); font-size:1rem; }
+  .ms-auto{ margin-left:auto; }
+
+  /* filters grid */
+  /* filters sit in a single wrapping row, each control capped so they don't stretch */
+  .filters{ display:flex; flex-wrap:wrap; gap:.75rem; }
+  .filters .field{ flex:1 1 200px; min-width:160px; max-width:300px; }
+  @media (max-width:480px){ .filters .field{ max-width:none; } }
+  .field{ height:42px; width:100%; border:1px solid var(--gray-300); border-radius:.375rem; font-size:.85rem;
+    color:var(--gray-600); background-color:#fff; padding:.4rem .75rem; }
+  select.field{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23748194'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right .75rem center; background-size:14px; -webkit-appearance:none; appearance:none; padding-right:2rem; }
+  .field:focus{ outline:none; border-color:#9bbdf0; box-shadow:0 0 0 .18rem rgba(44,123,229,.18); }
+  /* collapsible filters panel attached under the header (hidden by default to save space) */
+  .filters-panel{ display:none; background:var(--gray-100); border-bottom:1px solid var(--gray-200); }
+  .panel.filters-open .filters-panel{ display:block; }
+  .panel.filters-open .filter-btn{ background:var(--primary); border-color:var(--primary); color:#fff; }
+  .info-card{ scroll-margin-top:76px; }
+
+  /* tables */
+  .lanes-table{ width:100%; border-collapse:collapse; font-size:.83rem; }
+  .lanes-table thead th{ color:var(--gray-700); font-weight:600; text-align:left; padding:.6rem 1rem;
+    white-space:nowrap; user-select:none; position:sticky; top:0; background:var(--gray-100); z-index:2; }
+  .sort-caret{ color:var(--gray-400); font-size:.7rem; margin-left:.2rem; }
+  .lanes-table tbody td{ padding:.6rem 1rem; border-bottom:1px solid var(--gray-200); color:var(--gray-700); vertical-align:top; }
+  .lanes-table tbody tr:hover{ background:var(--gray-100); }
+  .lanes-table tbody tr:last-child td{ border-bottom:none; }
+  .table-scroll{ overflow:auto; min-height:120px; }
+  .table-scroll-sm{ overflow:auto; min-height:120px; }
+  .table-scroll-lg{ overflow:auto; }
+  .empty-row{ padding:1rem; color:var(--gray-600); font-size:.85rem; }
+  .muted{ color:var(--gray-500); }
+  .sub{ color:var(--gray-500); font-size:.76rem; }
+  .act-link{ font-size:.82rem; margin-right:.6rem; }
+  .table-note{ padding:.6rem 1rem; font-size:.75rem; color:var(--gray-500); background:var(--gray-100); border-top:1px solid var(--gray-200); }
+  .table-footer{ padding:.65rem 1rem; color:var(--gray-600); font-size:.82rem; background:var(--gray-100); }
+
+  .doc-icon{ font-size:1.05rem; display:inline-flex; }
+  .doc-icon.green{ color:var(--success); } .doc-icon.blue{ color:var(--primary); }
+
+  /* badges */
+  .badge-new{ background:rgba(44,123,229,.12); color:var(--primary); font-size:.66rem; font-weight:600; padding:.1rem .4rem; border-radius:.25rem; white-space:nowrap; }
+  .badge-abn{ background:rgba(230,55,87,.12); color:var(--danger); font-size:.66rem; font-weight:600; padding:.12rem .4rem; border-radius:.25rem; white-space:nowrap; }
+  .badge-opt-in{ background:rgba(0,210,122,.14); color:#0a9b5c; font-size:.7rem; font-weight:600; padding:.1rem .45rem; border-radius:.25rem; }
+  .badge-opt-out{ background:rgba(245,128,62,.16); color:#c25a1b; font-size:.7rem; font-weight:600; padding:.1rem .45rem; border-radius:.25rem; }
+  .flag-H{ color:var(--danger); font-weight:600; } .flag-L{ color:var(--warning); font-weight:600; }
+
+  /* pagination */
+  .lanes-pagination{ display:flex; align-items:center; justify-content:space-between; padding:.65rem 1rem;
+    background:var(--gray-100); font-size:.82rem; color:var(--gray-600); flex-wrap:wrap; gap:.5rem; }
+  .pg-controls{ display:flex; align-items:center; gap:.25rem; }
+  .pg-btn{ min-width:28px; height:28px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--gray-300);
+    background:#fff; color:var(--gray-700); border-radius:.3rem; font-size:.8rem; cursor:pointer; padding:0 .35rem; }
+  .pg-btn:hover{ background:var(--gray-200); }
+  .pg-btn.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
+  .pg-btn.icon{ color:var(--gray-500); }
+
+  /* info cards */
+  .info-card{ background:#fff; border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1rem 1.1rem; }
+  /* at-a-glance summary cards */
+  .allergy-chips{ display:flex; gap:.4rem; flex-wrap:wrap; margin-bottom:.5rem; }
+  .allergy-chip{ background:rgba(230,55,87,.12); color:var(--danger); font-weight:600; font-size:.78rem; padding:.25rem .6rem; border-radius:.3rem; }
+  .sum-list{ font-size:.82rem; }
+  .sum-list .sl{ display:flex; justify-content:space-between; gap:.5rem; padding:.42rem 0; border-top:1px solid var(--gray-200); }
+  .sum-list .sl:first-child{ border-top:none; }
+  .sum-name{ color:var(--gray-800); }
+  .sum-meta{ color:var(--gray-500); font-size:.74rem; white-space:nowrap; }
+  .sum-more{ font-size:.78rem; margin-top:.6rem; display:inline-block; }
+  .ic-head{ display:flex; align-items:center; gap:.5rem; margin-bottom:.75rem; }
+  .ic-title{ font-weight:600; color:var(--gray-900); font-size:.98rem; }
+  .ic-badge{ background:var(--gray-200); color:var(--gray-700); font-size:.72rem; font-weight:600; padding:.1rem .45rem; border-radius:1rem; }
+  .kv{ display:grid; grid-template-columns:96px 1fr; column-gap:.8rem; font-size:.8rem; }
+  .kv dt{ color:var(--gray-500); padding:.5rem 0; }
+  .kv dd{ color:var(--gray-800); padding:.5rem 0; }
+  /* row dividers so each field reads as its own line */
+  .kv dt:not(:last-of-type), .kv dd:not(:last-of-type){ border-bottom:1px solid var(--gray-200); }
+  .kv a{ font-size:.76rem; }
+  .pending{ color:var(--gray-400); font-style:italic; }
+
+  .stat-trio{ display:flex; gap:.75rem; margin-bottom:.85rem; }
+  .stat{ flex:1; text-align:center; background:var(--gray-100); border-radius:.375rem; padding:.5rem; }
+  .stat .num{ font-size:1.35rem; font-weight:700; color:var(--gray-900); line-height:1.1; }
+  .stat .num.emerg{ color:var(--chart-emergency); } .stat .num.inp{ color:var(--chart-inpatient); } .stat .num.outp{ color:var(--chart-outpatient); }
+  .stat .lbl{ font-size:.68rem; text-transform:uppercase; letter-spacing:.04em; color:var(--gray-500); }
+  .recent-list{ font-size:.78rem; }
+  .recent-list .ri{ padding:.4rem 0; border-top:1px solid var(--gray-200); display:flex; gap:.4rem; }
+  .ri-dot{ width:9px; height:9px; border-radius:2px; margin-top:.35rem; flex:0 0 auto; }
+  .ri-dot.emerg{ background:var(--chart-emergency); } .ri-dot.inp{ background:var(--chart-inpatient); } .ri-dot.outp{ background:var(--chart-outpatient); }
+  .readmit{ font-size:.78rem; }
+  .readmit .rm{ padding:.5rem 0; border-top:1px solid var(--gray-200); }
+  .readmit .rm:first-of-type{ border-top:none; }
+  .readmit .rm-name{ color:var(--gray-800); font-weight:500; }
+  .readmit .rm-sub{ color:var(--gray-500); font-size:.74rem; }
+
+  /* ===== Bar chart (Falcon style, chart palette) ===== */
+  .chart-title{ text-align:left; font-weight:600; color:var(--gray-900); font-size:.9rem; margin-bottom:.6rem; }
+  .chart-legend{ display:flex; justify-content:flex-start; gap:1.25rem; font-size:.78rem; color:var(--gray-700); margin-bottom:1rem; flex-wrap:wrap; }
+  .chart-legend span{ display:inline-flex; align-items:center; gap:.4rem; }
+  .chart-legend i{ width:22px; height:11px; border-radius:3px; display:inline-block; }
+  .sw-emergency{ background:var(--chart-emergency); } .sw-inpatient{ background:var(--chart-inpatient); } .sw-outpatient{ background:var(--chart-outpatient); }
+
+  .chart-grid{ display:grid; grid-template-columns:minmax(120px,250px) 1fr; column-gap:.75rem; max-width:1100px; }
+  .crow{ display:contents; }
+  .clabel{ font-size:.75rem; color:var(--gray-700); text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    display:flex; align-items:center; justify-content:flex-start; height:30px; }
+  .cbar-wrap{ height:30px; display:flex; align-items:center; }
+  .cbar{ position:relative; width:100%; height:16px;
+    background-image:linear-gradient(90deg, var(--chart-grid) 1px, transparent 1px);
+    background-size:33.333% 100%; background-position:left; }
+  .cbar-inner{ display:flex; height:100%; }
+  .seg{ height:100%; } .seg:first-child{ border-radius:3px 0 0 3px; } .seg:last-child{ border-radius:0 3px 3px 0; }
+  .seg.only{ border-radius:3px; }
+  .seg.emergency{ background:var(--chart-emergency); } .seg.inpatient{ background:var(--chart-inpatient); } .seg.outpatient{ background:var(--chart-outpatient); }
+  .chart-axis{ grid-column:2; display:flex; justify-content:space-between; font-size:.72rem; color:var(--chart-axis);
+    border-top:1px solid var(--chart-grid); margin-top:.35rem; padding-top:.3rem; }
+  .chart-axis span{ transform:translateX(-50%); }
+  .chart-axis span:first-child{ transform:none; } .chart-axis span:last-child{ transform:none; }
+
+  /* sub-tabs */
+  .subtabs{ display:flex; gap:.25rem; border-bottom:1px solid var(--gray-200); padding:0 1rem; }
+  .subtab{ padding:.6rem .75rem; font-size:.84rem; font-weight:500; color:var(--gray-600); cursor:pointer;
+    border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-1px; display:flex; align-items:center; gap:.4rem; }
+  .subtab:hover{ color:var(--gray-900); }
+  .subtab.active{ color:var(--primary); border-bottom-color:var(--primary); }
+  .subpanel{ display:none; } .subpanel.active{ display:flex; flex-direction:column; }
+
+  /* labs split */
+  .labs-split{ display:flex; border-top:1px solid var(--gray-200); }
+  .labs-list{ width:46%; border-right:1px solid var(--gray-200); overflow-y:auto; max-height:520px; }
+  .lab-item{ padding:.6rem 1rem; border-bottom:1px solid var(--gray-200); cursor:pointer; font-size:.82rem; border-left:3px solid transparent; }
+  .lab-item:hover{ background:var(--gray-100); }
+  .lab-item.active{ background:#DAE6F1; border-left:3px solid var(--success); }
+  .lab-row{ display:flex; justify-content:space-between; gap:.5rem; align-items:center; }
+  .lab-name{ font-weight:600; color:var(--gray-900); }
+  .lab-meta{ color:var(--gray-600); font-size:.74rem; margin-top:.1rem; }
+  .labs-detail{ flex:1; min-width:0; display:flex; flex-direction:column; max-height:520px; }
+  .labs-detail-head{ flex:0 0 auto; padding:.85rem 1rem .5rem; }
+  .labs-detail-body{ flex:1 1 auto; overflow:auto; padding:0 1rem 1rem; }
+  .labs-detail-title{ font-weight:600; color:var(--gray-900); }
+  .labs-detail-sub{ color:var(--gray-600); font-size:.76rem; margin-top:.1rem; }
+  .result-table{ width:100%; min-width:360px; border-collapse:collapse; font-size:.8rem; }
+  .result-table th{ text-align:left; padding:.45rem .6rem; color:var(--gray-600); font-weight:600; border-bottom:1px solid var(--gray-300);
+    font-size:.72rem; text-transform:uppercase; letter-spacing:.03em; position:sticky; top:0; background:#fff; z-index:1; }
+  .result-table td{ padding:.45rem .6rem; border-bottom:1px solid var(--gray-200); color:var(--gray-700); }
+  @media (max-width:1400px){ .labs-split{ flex-direction:column; } .labs-list{ width:100%; border-right:none; max-height:260px; } }
+
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb{ background:var(--gray-400); border-radius:4px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+
+  @media (max-width:860px){
+    .nav-inner{ flex-wrap:wrap; gap:.5rem .75rem; padding:.7rem 1rem; }
+    .patient-search{ order:3; flex-basis:100%; max-width:none; margin:.25rem 0 0; }
+    .section-nav{ top:auto; position:static; }
+    .page{ padding:1rem; }
+    .patient-header, .new-bar{ padding-left:1rem; padding-right:1rem; }
+  }
+  @media (max-width:480px){
+    .lanes-logo{ font-size:1.15rem; letter-spacing:.3em; margin-right:.6rem; }
+    .date-field input{ width:100%; } .date-field{ flex:1 1 130px; }
+    .page{ padding:.75rem; }
+  }
+  .flex{ display:flex; } .items-center{ align-items:center; } .gap-2{ gap:.5rem; } .mb-2{ margin-bottom:.5rem; } .wrap{ flex-wrap:wrap; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-calendar" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></symbol>
+  <symbol id="i-printer" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 16 16"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.93 2.93 0 1 1 0-5.86 2.93 2.93 0 0 1 0 5.86z"/></symbol>
+  <symbol id="i-file" viewBox="0 0 16 16"><path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0H4zm5.5 1.5V5H13l-3.5-3.5zM5 7h6v1H5V7zm0 2h6v1H5V9zm0 2h4v1H5v-1z"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 16 16"><path d="M3.5 3.5 6 1l2.5 2.5H3.5zM3.5 12.5 6 15l2.5-2.5H3.5z"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 16 16"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></symbol>
+  <symbol id="i-fullscreen" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/></symbol>
+  <symbol id="i-external" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/><path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></symbol>
+  <symbol id="i-note" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 16 16"><path d="M3.204 5h9.592L8 10.481 3.204 5z"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 16 16"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M13.485 1.929a.75.75 0 0 1 .086 1.057l-7 8.25a.75.75 0 0 1-1.102.043l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.93 2.929 6.47-7.62a.75.75 0 0 1 1.056-.099z"/></symbol>
+</svg>
+
+<!-- ============ NAVBAR ============ -->
+<nav class="lanes-navbar">
+  <div class="nav-inner">
+    <span class="lanes-logo">LANES</span>
+    <span class="demo-badge">DEMO MODE</span>
+    <a href="#" class="nav-link-plain">Feedback / Help</a>
+    <div class="patient-search"><input type="text" placeholder="Search patient…"></div>
+    <div class="nav-user">
+      <div class="user-info">
+        <span class="user-name">janedoe</span>
+        <span class="user-datetime" id="user-datetime"></span>
+      </div>
+      <span class="gear" title="Settings"><svg class="svg-ico"><use href="#i-gear"/></svg></span>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ PATIENT HEADER ============ -->
+<div class="patient-header">
+  <div class="ph-row">
+    <div class="ph-id">
+      <span class="ph-name">Maria Sanchez</span>
+      <span class="ph-meta">DOB 01/01/2001 · 23 yrs · Female</span>
+    </div>
+    <!-- Patient tags hidden for now — remove display:none to restore -->
+    <div class="ph-tags" style="display:none;">
+      <span class="tag info">ECM Health Net</span>
+      <span class="tag purple">Behavioral health</span>
+      <span class="tag">Still on location</span>
+    </div>
+    <div class="ph-actions">
+      <select class="mini-select"><option>Lookback: 3 years</option></select>
+      <select class="mini-select"><option>Layout: care coordinator</option></select>
+      <a href="#" class="btn-ghost"><svg class="svg-ico"><use href="#i-note"/></svg> Notes (0)</a>
+      <button class="btn-primary">Add note</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ NEW SINCE BAR (hidden for now — remove display:none to restore) ============ -->
+<div class="new-bar" style="display:none;">
+  <span class="nb-dot"><svg class="svg-ico"><use href="#i-note"/></svg></span>
+  <span>New since you last opened this patient on 02/03/2024</span>
+  <a href="#">2 documents</a>
+  <a href="#">9 lab orders</a>
+  <a href="#">1 problem</a>
+  <a href="#">1 encounter</a>
+  <a href="#">1 specialty referral</a>
+  <a href="#" class="nb-link-end">Mark as seen</a>
+</div>
+
+<!-- ============ SECTION NAV (hidden for now — primary nav is the left sidebar) ============ -->
+<div class="section-nav" style="display:none;">
+  <span class="sn-item active">Documents <span class="sn-count">174</span></span>
+  <span class="sn-item">Labs</span>
+  <span class="sn-item">Medications <span class="sn-count">62</span></span>
+  <span class="sn-item">Allergies <span class="sn-count">10</span></span>
+  <span class="sn-item">Problems <span class="sn-count">241</span></span>
+  <span class="sn-item">Vitals <span class="sn-count">318</span></span>
+  <span class="sn-item">Social history <span class="sn-count">9</span></span>
+  <span class="sn-item">Encounters <span class="sn-count">197</span></span>
+  <span class="sn-item">Consent <span class="sn-count">30</span></span>
+  <span class="sn-item">Ordered procedures</span>
+  <span class="sn-item">Specialty referrals <span class="sn-count">12</span></span>
+  <span class="sn-item">Immunizations <span class="sn-count">1</span></span>
+</div>
+
+<div class="page">
+ <div class="layout">
+
+  <!-- ============ LEFT TABLE OF CONTENTS ============ -->
+  <aside class="toc" id="toc">
+    <!-- nav injected by JS -->
+  </aside>
+
+  <div class="content">
+
+  <!-- ============ INFO CARDS ============ -->
+  <div class="info-cards" id="sec-overview">
+    <!-- Demographics -->
+    <div class="info-card">
+      <div class="ic-head"><span class="ic-title">Demographics and contact</span></div>
+      <dl class="kv">
+        <dt>Phone</dt><dd>(213) 555-0147 · <a href="#">History</a></dd>
+        <dt>Email</dt><dd>m.sanchez@example.com · <a href="#">History</a></dd>
+        <dt>Address</dt><dd>1457 S Bonnie Brae St, Los Angeles, CA 90006 · <a href="#">History</a></dd>
+        <dt>Identifiers</dt><dd>MRN 00482915, policy ID · <a href="#">View all</a></dd>
+        <dt>Languages</dt><dd>Spanish, English · <a href="#">Patient languages</a></dd>
+        <dt>Contacts</dt><dd><a href="#">Related persons and emergency contacts</a></dd>
+        <dt>Race, ethnicity</dt><dd>Hispanic or Latino</dd>
+        <dt>Marital status</dt><dd>Single</dd>
+      </dl>
+    </div>
+
+    <!-- Coverage -->
+    <div class="info-card">
+      <div class="ic-head"><span class="ic-title">Coverage and programs</span></div>
+      <dl class="kv">
+        <dt>Plan</dt><dd>Medi-Cal — Health Net</dd>
+        <dt>Program</dt><dd>Enhanced Care Management (ECM), Health Net</dd>
+      </dl>
+      <div class="sub" style="margin:.6rem 0 .3rem;">Affiliations, last 45 days</div>
+      <dl class="kv" style="grid-template-columns:1fr;">
+        <dd>LA Care Members, for Portal</dd>
+        <dd>Health Net Active Members, for ENS</dd>
+        <dd>Health Net Active Members, for Portal</dd>
+        <dd>Bella Vista IPA</dd>
+        <dd>LADMH_HI_USER_PILOT_GRP</dd>
+      </dl>
+    </div>
+
+    <!-- Encounters last 6 months -->
+    <div class="info-card">
+      <div class="ic-head"><span class="ic-title">Encounters, last 6 months</span></div>
+      <div class="stat-trio">
+        <div class="stat"><div class="num emerg">20</div><div class="lbl">Emergency</div></div>
+        <div class="stat"><div class="num inp">0</div><div class="lbl">Inpatient</div></div>
+        <div class="stat"><div class="num outp">23</div><div class="lbl">Outpatient</div></div>
+      </div>
+      <div class="sub" style="margin-bottom:.1rem;">Most recent</div>
+      <div class="recent-list">
+        <div class="ri"><span class="ri-dot outp"></span><div><div>Outpatient, Memorial Hospital of Gardena</div><div class="sub">02/05/2024 09:57 AM, discharged 02/05/2024</div></div></div>
+        <div class="ri"><span class="ri-dot emerg"></span><div><div>Emergency, LAC + USC Medical Center</div><div class="sub">02/03/2024 08:01 PM, discharged 02/04/2024</div></div></div>
+        <div class="ri"><span class="ri-dot emerg"></span><div><div>Emergency, Ronald Reagan UCLA Medical Center</div><div class="sub">01/30/2024 11:05 PM, discharged 01/31/2024</div></div></div>
+      </div>
+      <div style="margin-top:.5rem;"><a href="#">All 197 encounters</a></div>
+    </div>
+
+    <!-- Readmissions -->
+    <div class="info-card">
+      <div class="ic-head"><span class="ic-title">Readmissions</span><span class="ic-badge">4</span></div>
+      <div class="sub" style="margin-bottom:.3rem;">A return to hospital within 30 days of a discharge.</div>
+      <div class="readmit">
+        <div class="rm"><div class="rm-name">Olive View-UCLA Medical Center</div><div class="rm-sub">Discharged 01/03/2024, readmitted 01/30/2024 · 27 days</div></div>
+        <div class="rm"><div class="rm-name">Olive View-UCLA Medical Center</div><div class="rm-sub">Discharged 01/02/2024, readmitted 01/30/2024 · 28 days</div></div>
+        <div class="rm"><div class="rm-name">Olive View-UCLA Medical Center</div><div class="rm-sub">Discharged 12/11/2023, readmitted 12/12/2023 · 1 day</div></div>
+        <div class="rm"><div class="rm-name">Community Hospital of Huntington Park</div><div class="rm-sub">Discharged 11/21/2023, readmitted 12/12/2023 · 21 days</div></div>
+      </div>
+      <div class="sub" style="margin-top:.4rem;">Readmission location is not recorded in the source.</div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN GRID ============ -->
+  <div class="main-grid">
+
+    <!-- ===== Documents ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Documents <span class="badge-new">2 new</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" value="02/12/2021"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" value="02/13/2024"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <button class="hbtn primary" title="View QHIO"><svg class="svg-ico"><use href="#i-external"/></svg></button>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu">
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button>
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-file"/></svg> Include QHIO data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="filters">
+          <input type="text" class="field span-2" placeholder="Search documents">
+          <select class="field"><option>Source: all</option></select>
+          <select class="field"><option>Type: all</option></select>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="lanes-table">
+          <thead><tr><th>Date</th><th>Document</th><th>Format</th><th>Source</th><th>Encounter</th><th>Actions</th></tr></thead>
+          <tbody>
+            <tr><td>02/07/2024<div class="sub">03:20 AM</div></td><td>Summary of care <span class="badge-new">New</span></td><td>CDA</td><td>UCLA</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>02/04/2024<div class="sub">10:22 AM</div></td><td>XR chest 2 views <span class="badge-new">New</span><div class="sub">Diagnostic imaging study</div></td><td>Aggregated</td><td>LA County Dept. of Health Services</td><td><a href="#">Emergency, 02/03/2024</a></td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>01/31/2024<div class="sub">02:58 AM</div></td><td>Note<div class="sub">Other</div></td><td>Aggregated</td><td>UCLA</td><td><a href="#">Emergency, 01/30/2024</a></td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>12/28/2023<div class="sub">08:26 AM</div></td><td>Summary of patient chart</td><td>CDA</td><td>LA County Dept. of Mental Health</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>12/12/2023<div class="sub">09:45 PM</div></td><td>CT head or brain w/o contrast<div class="sub">Diagnostic imaging study</div></td><td>Aggregated</td><td>LA County Dept. of Health Services</td><td><a href="#">Emergency, 12/12/2023</a></td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>12/10/2023<div class="sub">09:35 PM</div></td><td>Note<div class="sub">Other</div></td><td>Aggregated</td><td>UCLA</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>11/26/2023<div class="sub">03:19 PM</div></td><td>Note<div class="sub">Other</div></td><td>Aggregated</td><td>UCLA</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>11/26/2023<div class="sub">12:53 PM</div></td><td>Note<div class="sub">Progress note</div></td><td>Aggregated</td><td>UCLA</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>11/07/2023<div class="sub">08:00 AM</div></td><td>Note<div class="sub">Progress note</div></td><td>Aggregated</td><td>UCLA</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+            <tr><td>10/14/2023<div class="sub">04:46 AM</div></td><td>Summary of care<div class="sub">10/10/2023 to 10/11/2023</div></td><td>CDA</td><td>LA County Dept. of Health Services</td><td class="muted">None linked</td><td><a class="act-link" href="#">Open</a><a class="act-link" href="#">Print</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-note">Format key — CDA: structured summary from the source. Aggregated: compiled by LANES. PDF: original file from the source. Records from 1 facility are not shown because the patient opted out. <a href="#">See consent</a></div>
+      <div class="lanes-pagination">
+        <span>1 to 10 of 174</span>
+        <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1 of 18</span><button class="pg-btn icon">&rsaquo;</button></div>
+      </div>
+    </section>
+
+    <!-- ===== Labs ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Labs <span class="badge-new">9 new</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" value="02/12/2021"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" value="02/13/2024"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu">
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-fullscreen"/></svg> Full Screen</button>
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="filters">
+          <input type="text" class="field span-2" placeholder="Search labs">
+          <select class="field"><option>Source: all</option></select>
+          <select class="field"><option>Order: all</option></select>
+          <select class="field span-2"><option>Results: all</option></select>
+        </div>
+      </div>
+      <div class="labs-split">
+        <div class="labs-list" id="labs-list"></div>
+        <div class="labs-detail">
+          <div class="labs-detail-head">
+            <div class="labs-detail-title">CBC w/ diff</div>
+            <div class="labs-detail-sub">02/04/2024 · LA County Department of Health Services · 13 results</div>
+          </div>
+          <div class="labs-detail-body">
+            <table class="result-table">
+              <thead><tr><th>Test</th><th>Result</th><th>Reference range</th><th>Interpretation</th></tr></thead>
+              <tbody>
+                <tr><td>WBC</td><td>11.8</td><td>4.0–10.5</td><td class="flag-H">High</td></tr>
+                <tr><td>RBC</td><td>4.6</td><td>4.2–5.8</td><td class="muted">Normal</td></tr>
+                <tr><td>Hemoglobin</td><td>12.1</td><td>13.0–17.0</td><td class="flag-L">Low</td></tr>
+                <tr><td>Hematocrit</td><td>38.4</td><td>38.0–50.0</td><td class="muted">Normal</td></tr>
+                <tr><td>Platelets</td><td>265</td><td>150–400</td><td class="muted">Normal</td></tr>
+                <tr><td>MCV</td><td>83.5</td><td>80–100</td><td class="muted">Normal</td></tr>
+                <tr><td>MCH</td><td>27.9</td><td>27–33</td><td class="muted">Normal</td></tr>
+                <tr><td>Neutrophils</td><td>68</td><td>40–70</td><td class="muted">Normal</td></tr>
+                <tr><td>Lymphocytes</td><td>24</td><td>20–45</td><td class="muted">Normal</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="table-note">All 9 orders are new since 02/03/2024. LA County DHS: LA County Department of Health Services.</div>
+    </section>
+
+    <!-- ===== Medications ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Medications <span class="sub" style="font-weight:400;">62 listed, 39 fills</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" placeholder="mm/dd/yyyy"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" value="02/13/2024"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu"><button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="subtabs" data-tabs="meds">
+        <button class="subtab active" data-tab="meds-list">Medication list <span class="sn-count">62</span></button>
+        <button class="subtab" data-tab="meds-fills">Pharmacy fills <span class="sn-count">39</span></button>
+      </div>
+      <div class="subpanel active" data-panel="meds-list">
+        <div class="panel-body">
+          <div class="filters">
+            <input type="text" class="field span-2" placeholder="Search medications">
+            <select class="field"><option>Source: all</option></select>
+            <select class="field"><option>Category: all</option></select>
+          </div>
+        </div>
+        <div class="table-scroll">
+          <table class="lanes-table">
+            <thead><tr><th>Date</th><th>Medication</th><th>Dose</th><th>Category</th><th>Source</th></tr></thead>
+            <tbody>
+              <tr><td>11/07/2023</td><td>lidocaine 5% patch</td><td>1 patch</td><td>Topical analgesic</td><td>UCLA</td></tr>
+              <tr><td>11/07/2023</td><td>loratadine 10 mg tablet</td><td>10 mg</td><td>Antihistamine</td><td>UCLA</td></tr>
+              <tr><td>11/07/2023</td><td>amLODIPine 5 mg tablet</td><td>5 mg</td><td>Antihypertensive</td><td>UCLA</td></tr>
+              <tr><td>11/07/2023</td><td>acetaminophen 500 mg tablet</td><td>1000 mg</td><td>Analgesic</td><td>UCLA</td></tr>
+              <tr><td>09/30/2023</td><td>ibuprofen 600 mg tablet</td><td>600 mg</td><td>NSAID</td><td>UCLA</td></tr>
+              <tr><td>09/30/2023</td><td>QUEtiapine 100 mg tablet</td><td>100 mg</td><td>Antipsychotic</td><td>UCLA</td></tr>
+              <tr><td>09/30/2023</td><td>LORazepam (ATIVAN) 1 mg tablet</td><td>1 mg</td><td>Benzodiazepine</td><td>UCLA</td></tr>
+              <tr><td>09/20/2023</td><td>cephalexin 500 mg capsule</td><td>500 mg</td><td>Antibiotic</td><td>UCLA</td></tr>
+              <tr><td>08/14/2023</td><td>acetaminophen 500 mg oral tablet</td><td>1000 mg</td><td>Analgesic</td><td>LA County Dept. of Health Services</td></tr>
+              <tr><td>08/14/2023</td><td>cephalexin 250 mg oral capsule</td><td>500 mg</td><td>Antibiotic</td><td>LA County Dept. of Health Services</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="lanes-pagination"><span>1 to 10 of 62</span>
+          <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1 of 7</span><button class="pg-btn icon">&rsaquo;</button></div>
+        </div>
+      </div>
+      <div class="subpanel" data-panel="meds-fills">
+        <div class="empty-row">Pharmacy fills (39) — dispensed medications as reported by the health plan (source: LA Care).</div>
+      </div>
+    </section>
+
+    <!-- ===== Allergies ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Allergies <span class="sn-count">10</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" placeholder="mm/dd/yyyy"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" placeholder="mm/dd/yyyy"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <button class="hbtn search-btn" title="Search"><svg class="svg-ico"><use href="#i-search"/></svg></button>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu"><button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button></div>
+          </div>
+          <div class="search-expand"><input type="text" class="field" placeholder="Search allergies…"><button class="hbtn search-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>
+        </div>
+      </div>
+      <div class="panel-body" style="padding-bottom:.5rem;">
+        <div class="filters">
+          <select class="field"><option>Source: all</option></select>
+          <select class="field"><option>Substance: all</option></select>
+        </div>
+      </div>
+      <div class="table-note" style="background:#fff;border-top:none;color:var(--gray-600);">Sources disagree — 2 records report no known allergies; 8 list codeine or Haldol.</div>
+      <div class="table-scroll">
+        <table class="lanes-table">
+          <thead><tr><th>Date</th><th>Substance</th><th>Reaction</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>02/28/2022</td><td>Codeine</td><td>Itching</td><td>UCLA</td></tr>
+            <tr><td>02/28/2022</td><td>Codeine</td><td>Itching</td><td>UCLA</td></tr>
+            <tr><td>01/29/2021</td><td>No known allergy</td><td class="muted">None</td><td>Beverly Hospital</td></tr>
+            <tr><td class="muted">Not recorded</td><td>Codeine</td><td class="muted">Unknown</td><td>St Johns Well Child and Family Center</td></tr>
+            <tr><td class="muted">Not recorded</td><td>Codeine</td><td class="muted">Unknown</td><td>LA County Dept. of Health Services</td></tr>
+            <tr><td class="muted">Not recorded</td><td>No known allergies</td><td class="muted">None</td><td>Alta Hospitals System</td></tr>
+            <tr><td class="muted">Not recorded</td><td>Haldol</td><td>Hives</td><td>Alta Hospitals System</td></tr>
+            <tr><td class="muted">Not recorded</td><td>Codeine</td><td>Hives</td><td>Alta Hospitals System</td></tr>
+            <tr><td class="muted">Not recorded</td><td>Codeine</td><td>Other, see description</td><td>Alta Hospitals System</td></tr>
+            <tr><td class="muted">Not recorded</td><td>Haldol</td><td class="muted">Unknown</td><td>Alta Hospitals System</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">10 total</div>
+    </section>
+
+    <!-- ===== Problems ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Problems <span class="badge-new">1 new</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" value="02/12/2021"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" value="02/13/2024"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <button class="hbtn search-btn" title="Search"><svg class="svg-ico"><use href="#i-search"/></svg></button>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu"><button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button></div>
+          </div>
+          <div class="search-expand"><input type="text" class="field" placeholder="Search problems…"><button class="hbtn search-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="filters">
+          <select class="field"><option>Source: all</option></select>
+          <select class="field"><option>Problem: all</option></select>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table class="lanes-table">
+          <thead><tr><th>Date</th><th>Problem</th><th>Diagnosis code</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>02/12/2024</td><td>Leg pain <span class="badge-new">New</span></td><td class="muted">Not coded</td><td>Cedars-Sinai Medical Center</td></tr>
+            <tr><td>02/01/2024</td><td>Pain in right hip</td><td>M25.551</td><td>Cedars-Sinai Medical Center</td></tr>
+            <tr><td>01/27/2024</td><td>Unspecified abdominal pain</td><td>R10.9</td><td>LA County Dept. of Health Services</td></tr>
+            <tr><td>01/26/2024</td><td>Ventral hernia without obstruction or gangrene</td><td>K43.9</td><td>LA County Dept. of Health Services</td></tr>
+            <tr><td>01/18/2024</td><td>Fibromyalgia</td><td>M79.7</td><td>Alta Hospitals System</td></tr>
+            <tr><td>01/18/2024</td><td>Schizophrenia, unspecified</td><td>F20.9</td><td>Alta Hospitals System</td></tr>
+            <tr><td>01/18/2024</td><td>Pain, unspecified</td><td>R52</td><td>Alta Hospitals System</td></tr>
+            <tr><td>01/10/2024</td><td>Pain in other specified joint</td><td>M25.59</td><td>LA County Dept. of Health Services</td></tr>
+            <tr><td>01/10/2024</td><td>Elevated blood-pressure reading, without diagnosis of hypertension</td><td>R03.0</td><td>LA County Dept. of Health Services</td></tr>
+            <tr><td>01/09/2024</td><td>Personal history of COVID-19</td><td>Z86.16</td><td>LA County Dept. of Health Services</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lanes-pagination"><span>1 to 10 of 241</span>
+        <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1 of 25</span><button class="pg-btn icon">&rsaquo;</button></div>
+      </div>
+    </section>
+
+    <!-- ===== Vitals ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Vitals <span class="sn-count">318</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" value="02/12/2021"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" value="02/13/2024"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <button class="hbtn search-btn" title="Search"><svg class="svg-ico"><use href="#i-search"/></svg></button>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu"><button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button></div>
+          </div>
+          <div class="search-expand"><input type="text" class="field" placeholder="Search vitals…"><button class="hbtn search-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="filters"><select class="field"><option>Source: all</option></select><select class="field"><option>Measurement: all</option></select></div>
+      </div>
+      <div class="table-scroll">
+        <table class="lanes-table">
+          <thead><tr><th>Date</th><th>Measurement</th><th>Value</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>01/31/2024</td><td>Blood pressure</td><td>118/81 mmHg</td><td>UCLA</td></tr>
+            <tr><td>01/31/2024</td><td>Heart rate</td><td>72 /min</td><td>UCLA</td></tr>
+            <tr><td>01/31/2024</td><td>Respiratory rate</td><td>17 /min</td><td>UCLA</td></tr>
+            <tr><td>01/31/2024</td><td>Body temperature</td><td>36.67 °C</td><td>UCLA</td></tr>
+            <tr><td>01/31/2024</td><td>Oxygen saturation, pulse oximetry</td><td>98%</td><td>UCLA</td></tr>
+            <tr><td>01/30/2024</td><td>BMI</td><td>31.25 kg/m²</td><td>UCLA</td></tr>
+            <tr><td>01/30/2024</td><td>Body weight</td><td>72.58 kg</td><td>UCLA</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lanes-pagination"><span>1 to 7 of 318</span>
+        <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1 of 46</span><button class="pg-btn icon">&rsaquo;</button></div>
+      </div>
+    </section>
+
+    <!-- ===== Encounters ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Encounters <span class="badge-new">1 new</span></h6>
+        <div class="header-tools">
+          <span class="date-field"><input type="text" value="02/12/2021"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <span class="date-field"><input type="text" value="02/13/2024"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu">
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button>
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-file"/></svg> Include QHIO data</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="subtabs" data-tabs="enc">
+        <button class="subtab active" data-tab="enc-list">List</button>
+        <button class="subtab" data-tab="enc-timeline">Timeline</button>
+      </div>
+      <div class="subpanel active" data-panel="enc-list">
+        <div class="panel-body">
+          <div class="filters"><select class="field"><option>Source: all</option></select><select class="field"><option>Visit type: all</option></select></div>
+        </div>
+        <div class="table-scroll">
+          <table class="lanes-table">
+            <thead><tr><th>Admitted</th><th>Discharged</th><th>Visit type</th><th>Location</th><th>Admit reason</th><th>Documents</th></tr></thead>
+            <tbody>
+              <tr><td>02/05/2024<div class="sub">09:57 AM</div> <span class="badge-new">New</span></td><td>02/05/2024</td><td>Outpatient</td><td>Memorial Hospital of Gardena</td><td>Lower extremity pain, right leg</td><td class="muted">None linked</td></tr>
+              <tr><td>02/03/2024<div class="sub">08:01 PM</div></td><td>02/04/2024</td><td>Emergency</td><td>LAC + USC Medical Center</td><td>Body aches</td><td><a href="#">1 document</a></td></tr>
+              <tr><td>01/31/2024<div class="sub">11:24 AM</div></td><td>01/31/2024</td><td>Emergency</td><td class="muted">Not recorded</td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+              <tr><td>01/31/2024<div class="sub">12:09 AM</div></td><td class="muted">Not recorded</td><td>Emergency</td><td>Ronald Reagan UCLA Medical Center</td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+              <tr><td>01/30/2024<div class="sub">11:05 PM</div></td><td>01/31/2024</td><td>Emergency</td><td>Ronald Reagan UCLA Medical Center</td><td class="muted">Not recorded</td><td><a href="#">1 document</a></td></tr>
+              <tr><td>01/30/2024<div class="sub">04:57 PM</div></td><td class="muted">Not recorded</td><td>Emergency</td><td>Ronald Reagan UCLA Medical Center</td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+              <tr><td>01/03/2024<div class="sub">04:28 AM</div></td><td>01/03/2024</td><td>Emergency</td><td>Olive View-UCLA Medical Center<div class="sub">Admitting: Oehbach, Daniel</div></td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+              <tr><td>01/02/2024<div class="sub">09:20 AM</div></td><td>01/02/2024</td><td>Emergency</td><td>Olive View-UCLA Medical Center<div class="sub">Admitting: Tiene, Sophia</div></td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+              <tr><td>12/13/2023<div class="sub">10:15 PM</div></td><td>12/21/2023</td><td>Outpatient</td><td>LA County Dept. of Mental Health</td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+              <tr><td>12/13/2023<div class="sub">01:32 AM</div></td><td>12/13/2023</td><td>Emergency</td><td>Olive View-UCLA Medical Center<div class="sub">Admitting: Cardenas, Jeffrey</div></td><td class="muted">Not recorded</td><td class="muted">None linked</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="lanes-pagination"><span>1 to 10 of 197</span>
+          <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1 of 20</span><button class="pg-btn icon">&rsaquo;</button></div>
+        </div>
+      </div>
+      <div class="subpanel" data-panel="enc-timeline">
+        <div class="empty-row">Timeline view — encounters plotted over time (197 total).</div>
+      </div>
+    </section>
+
+    <!-- ===== Social history ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Social history <span class="sn-count">9</span></h6>
+        <div class="header-tools">
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu"><button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="table-scroll-sm">
+        <table class="lanes-table">
+          <thead><tr><th>Date</th><th>Question</th><th>Answer</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>01/30/2024</td><td>Tobacco smoking status</td><td>Smokes tobacco daily</td><td>UCLA</td></tr>
+            <tr><td>01/30/2024</td><td>Smokeless tobacco status</td><td>Non-user</td><td>UCLA</td></tr>
+            <tr><td>01/30/2024</td><td>Alcohol use history</td><td>Lifetime non-drinker</td><td>UCLA</td></tr>
+            <tr><td>06/29/2022</td><td>Tobacco smoking status</td><td>Current smoker</td><td>St Johns Well Child and Family Center</td></tr>
+            <tr><td>06/29/2022</td><td>Alcohol use history</td><td>Occasional drinker</td><td>St Johns Well Child and Family Center</td></tr>
+            <tr><td>03/15/2022</td><td>Drug use history</td><td>Denies illicit drug use</td><td>Alta Hospitals System</td></tr>
+            <tr><td>03/15/2022</td><td>Housing status</td><td>Stable housing</td><td>Alta Hospitals System</td></tr>
+            <tr><td>11/02/2021</td><td>Employment status</td><td>Employed full-time</td><td>Beverly Hospital</td></tr>
+            <tr><td>11/02/2021</td><td>Tobacco smoking status</td><td>Former smoker</td><td>Beverly Hospital</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="table-footer">9 total</div>
+    </section>
+
+    <!-- ===== Encounters by location (chart) ===== -->
+    <section class="panel">
+      <div class="panel-header">
+        <h6 class="panel-title">Encounters by location</h6>
+        <div class="header-tools">
+          <div class="kebab-wrap">
+            <button class="hbtn kebab-btn" title="More actions"><svg class="svg-ico"><use href="#i-dots"/></svg></button>
+            <div class="kebab-menu">
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-fullscreen"/></svg> Full Screen</button>
+              <button class="kebab-item"><svg class="svg-ico"><use href="#i-printer"/></svg> Print</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chart-title">Encounters by location — last 6 months</div>
+        <div class="chart-legend">
+          <span><i class="sw-emergency"></i>Emergency</span>
+          <span><i class="sw-inpatient"></i>Inpatient</span>
+          <span><i class="sw-outpatient"></i>Outpatient</span>
+        </div>
+        <div class="chart-grid" id="loc-chart"></div>
+      </div>
+    </section>
+
+    <!-- ===== Consent by source ===== -->
+    <section class="panel">
+      <div class="panel-header"><h6 class="panel-title">Consent by source <span class="sn-count">30</span></h6></div>
+      <div class="table-note" style="background:#fff;border-top:none;color:var(--gray-600);">Opted out 1 facility. Records from that facility are not shown on this page. The facility is not named, to protect the patient's privacy.</div>
+      <div class="table-scroll-sm">
+        <table class="lanes-table">
+          <thead><tr><th>Date</th><th>State</th><th>Source</th></tr></thead>
+          <tbody>
+            <tr><td>07/03/2023</td><td><span class="badge-opt-in">Opt-in</span></td><td>Avanti Hospital</td></tr>
+            <tr><td>06/12/2023</td><td><span class="badge-opt-in">Opt-in</span></td><td>UCLA</td></tr>
+            <tr><td>06/08/2023</td><td><span class="badge-opt-out">Opt-out</span></td><td class="muted">Not shown, patient privacy</td></tr>
+            <tr><td>06/08/2023</td><td><span class="badge-opt-in">Opt-in</span></td><td>Cedars-Sinai Medical Center</td></tr>
+            <tr><td>06/05/2023</td><td><span class="badge-opt-in">Opt-in</span></td><td>Cedars-Sinai Medical Center</td></tr>
+            <tr><td>05/31/2023</td><td><span class="badge-opt-in">Opt-in</span></td><td>JWCH Institute</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lanes-pagination"><span>1 to 6 of 30</span>
+        <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1 of 5</span><button class="pg-btn icon">&rsaquo;</button></div>
+      </div>
+    </section>
+
+    <!-- ===== Ordered procedures / Specialty referrals / Immunizations ===== -->
+    <section class="panel span-all">
+      <div class="panel-header"><h6 class="panel-title">Procedures &amp; referrals</h6></div>
+      <div class="subtabs" data-tabs="proc">
+        <button class="subtab active" data-tab="proc-ordered">Ordered procedures</button>
+        <button class="subtab" data-tab="proc-referrals">Specialty referrals <span class="badge-new">1 new</span> <span class="sn-count">12</span></button>
+        <button class="subtab" data-tab="proc-imm">Immunizations <span class="sn-count">1</span></button>
+      </div>
+      <div class="subpanel active" data-panel="proc-ordered">
+        <div class="panel-body">
+          <div class="filters"><select class="field"><option>Source: all</option></select><input type="text" class="field" placeholder="Search ordered procedures"></div>
+        </div>
+        <div class="table-scroll">
+          <table class="lanes-table">
+            <thead><tr><th>Date</th><th>Procedure</th><th>Source</th></tr></thead>
+            <tbody>
+              <tr><td>01/31/2024</td><td>Radex hip unilateral with pelvis 2-3 views</td><td>UCLA</td></tr>
+              <tr><td>01/30/2024</td><td>ED information exchange</td><td>UCLA</td></tr>
+              <tr><td>01/03/2024</td><td>Emergency department visit for the evaluation and management of a patient, which requires a medically appropriate history and/or examination and low level of medical decision making</td><td>LA County Dept. of Health Services</td></tr>
+              <tr><td>01/02/2024</td><td>Emergency department visit for the evaluation and management of a patient, which requires a medically appropriate history and/or examination and low level of medical decision making</td><td>LA County Dept. of Health Services</td></tr>
+              <tr><td>12/13/2023</td><td>Therapeutic prophylactic/dx injection subq/im</td><td>LA County Dept. of Health Services</td></tr>
+              <tr><td>12/13/2023</td><td>Emergency department visit for the evaluation and management of a patient, which requires a medically appropriate history and/or examination and moderate level of medical decision making</td><td>LA County Dept. of Health Services</td></tr>
+              <tr><td>12/10/2023</td><td>HB infect agent influenza AB COVID19 multi amp probe1</td><td>UCLA</td></tr>
+              <tr><td>11/26/2023</td><td>Radiologic examination femur minimum 2 views</td><td>UCLA</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="lanes-pagination"><span>1 to 8 of total</span>
+          <div class="pg-controls"><button class="pg-btn icon">&lsaquo;</button><span style="padding:0 .4rem;">Page 1</span><button class="pg-btn icon">&rsaquo;</button></div>
+        </div>
+      </div>
+      <div class="subpanel" data-panel="proc-referrals">
+        <div class="empty-row">Specialty referrals (12) — 1 new since 02/03/2024.</div>
+      </div>
+      <div class="subpanel" data-panel="proc-imm">
+        <div class="empty-row">Immunizations (1).</div>
+      </div>
+    </section>
+
+  </div><!-- /main-grid -->
+  </div><!-- /content -->
+ </div><!-- /layout -->
+</div><!-- /page -->
+
+<script>
+  /* Live date-time in the header */
+  (function(){
+    const el = document.getElementById('user-datetime');
+    function tick(){
+      const d = new Date();
+      el.textContent = d.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'}) + ' · ' +
+                       d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+    }
+    tick(); setInterval(tick,1000);
+  })();
+
+  /* Kebab menus */
+  document.addEventListener('click', function(e){
+    const btn = e.target.closest('.kebab-btn');
+    const menus = document.querySelectorAll('.kebab-menu');
+    if(btn){ const m = btn.parentElement.querySelector('.kebab-menu'); const open = m.classList.contains('open');
+      menus.forEach(x=>x.classList.remove('open')); if(!open) m.classList.add('open'); e.stopPropagation(); return; }
+    if(!e.target.closest('.kebab-menu')) menus.forEach(x=>x.classList.remove('open'));
+  });
+
+  /* Expanding header search */
+  document.addEventListener('click', function(e){
+    const open = e.target.closest('.search-btn');
+    if(open){ const t=open.closest('.header-tools'); t.classList.add('searching'); const f=t.querySelector('.search-expand .field'); if(f) f.focus(); return; }
+    const close = e.target.closest('.search-close');
+    if(close){ const t=close.closest('.header-tools'); t.classList.remove('searching'); const f=t.querySelector('.search-expand .field'); if(f) f.value=''; return; }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'){ const t=e.target.closest && e.target.closest('.header-tools.searching'); if(t){ t.classList.remove('searching'); e.target.blur(); } }
+  });
+
+  /* Sub-tabs (Medications, Encounters, Ordered procedures) */
+  document.querySelectorAll('.subtabs').forEach(function(bar){
+    const section = bar.closest('.panel');
+    bar.querySelectorAll('.subtab').forEach(function(tab){
+      tab.addEventListener('click', function(){
+        bar.querySelectorAll('.subtab').forEach(t=>t.classList.remove('active'));
+        tab.classList.add('active');
+        const key = tab.getAttribute('data-tab');
+        section.querySelectorAll('.subpanel').forEach(p=>p.classList.toggle('active', p.getAttribute('data-panel')===key));
+      });
+    });
+  });
+
+  /* ===== Layout grouping + 2-level left navigation + scroll-spy ===== */
+  (function(){
+    const grid = document.querySelector('.main-grid');
+    const orderIds = ['sec-documents','sec-labs','sec-medications','sec-allergies','sec-problems','sec-vitals','sec-encounters','sec-social','sec-loc','sec-consent','sec-procedures'];
+    Array.from(grid.querySelectorAll(':scope > section')).forEach((s,i)=>{ if(orderIds[i]) s.id=orderIds[i]; });
+
+    // ids on the overview info-cards
+    const infoIds = ['sec-demographics','sec-coverage','sec-enc6','sec-readmissions'];
+    Array.from(document.querySelectorAll('.info-cards > .info-card')).forEach((c,i)=>{ if(infoIds[i]) c.id=infoIds[i]; });
+
+    // --- per table-card: expanding quick-search button + collapsible selects (funnel) ---
+    grid.querySelectorAll(':scope > section').forEach(section=>{
+      const hasTable = section.querySelector('.lanes-table') || section.querySelector('.labs-split');
+      if(!hasTable) return;
+      const header = section.querySelector('.panel-header');
+      if(!header) return; // no header toolbar (e.g. Ordered procedures) -> leave inline filters
+      let tools = header.querySelector('.header-tools');
+      if(!tools){ tools=document.createElement('div'); tools.className='header-tools'; header.appendChild(tools); }
+
+      // selects go into a collapsible panel; any search input is dropped (search lives in header)
+      const filters = section.querySelector('.filters');
+      let hasSelects=false;
+      if(filters){
+        filters.querySelectorAll('input[type=text]').forEach(i=>i.remove());
+        hasSelects = !!filters.querySelector('select');
+        const body=filters.closest('.panel-body'); if(body) body.classList.add('filters-panel');
+      }
+
+      // funnel for the dropdown filters
+      if(hasSelects && !tools.querySelector('.filter-btn')){
+        const fb=document.createElement('button'); fb.className='hbtn filter-btn'; fb.title='Filters';
+        fb.innerHTML='<svg class="svg-ico"><use href="#i-filter"/></svg>';
+        const kebab=tools.querySelector('.kebab-wrap'); if(kebab) tools.insertBefore(fb,kebab); else tools.appendChild(fb);
+      }
+
+      // expanding quick-search button
+      if(!tools.querySelector('.search-btn')){
+        const sb=document.createElement('button'); sb.className='hbtn search-btn'; sb.title='Search';
+        sb.innerHTML='<svg class="svg-ico"><use href="#i-search"/></svg>';
+        const anchor = tools.querySelector('.hbtn.primary')||tools.querySelector('.filter-btn')||tools.querySelector('.kebab-wrap');
+        if(anchor) tools.insertBefore(sb, anchor); else tools.appendChild(sb);
+      }
+      if(!tools.querySelector('.search-expand')){
+        const ex=document.createElement('div'); ex.className='search-expand';
+        ex.innerHTML='<input type="text" class="field" placeholder="Search…"><button class="hbtn search-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button>';
+        tools.appendChild(ex);
+      }
+    });
+    document.addEventListener('click', e=>{ const fb=e.target.closest('.filter-btn'); if(fb) fb.closest('.panel').classList.toggle('filters-open'); });
+
+    // --- categories (primary) with their card sections (secondary) ---
+    const groups = [
+      { id:'cat-overview', label:'Overview', heading:false,
+        items:[['sec-demographics','Demographics'],['sec-coverage','Coverage'],['sec-enc6','Last 6 months'],['sec-readmissions','Readmissions']] },
+      { id:'cat-clinical', label:'Clinical', heading:true,
+        items:[['sec-problems','Problems'],['sec-allergies','Allergies'],['sec-medications','Medications'],['sec-labs','Labs'],['sec-vitals','Vitals']] },
+      { id:'cat-encdocs', label:'Records', heading:true,
+        items:[['sec-encounters','Encounters'],['sec-loc','By location'],['sec-documents','Documents'],['sec-procedures','Procedures']] },
+      { id:'cat-social', label:'Social & consent', heading:true,
+        items:[['sec-social','Social history'],['sec-consent','Consent']] },
+    ];
+
+    // put the Overview heading + info-cards at the top of the single content flow
+    const infoCards = document.querySelector('.info-cards');
+    grid.insertBefore(infoCards, grid.firstChild);
+    const ovH = document.createElement('div'); ovH.className='cat-heading'; ovH.id='cat-overview'; ovH.textContent='Overview';
+    ovH.dataset.cat='cat-overview'; infoCards.dataset.cat='cat-overview';
+    grid.insertBefore(ovH, infoCards);
+
+    // Overview "at a glance" cards — appended into the SAME grid so all cards are one size
+    // with one consistent gap. Shown only in Tabs mode (hidden in Sidebar via CSS).
+    infoCards.insertAdjacentHTML('beforeend', `
+      <div class="info-card glance-card">
+        <div class="ic-head"><span class="ic-title">Allergies</span><span class="ic-badge">review</span></div>
+        <div class="allergy-chips"><span class="allergy-chip">Codeine</span><span class="allergy-chip">Haldol</span></div>
+        <div class="sub">Sources disagree — 2 records report no known allergies; 8 list codeine or Haldol.</div>
+        <a href="#" class="sum-more">View all allergies</a>
+      </div>
+      <div class="info-card glance-card">
+        <div class="ic-head"><span class="ic-title">Active problems</span><span class="ic-badge">241</span></div>
+        <div class="sum-list">
+          <div class="sl"><span class="sum-name">Schizophrenia, unspecified</span><span class="sum-meta">F20.9</span></div>
+          <div class="sl"><span class="sum-name">Fibromyalgia</span><span class="sum-meta">M79.7</span></div>
+          <div class="sl"><span class="sum-name">Ventral hernia</span><span class="sum-meta">K43.9</span></div>
+          <div class="sl"><span class="sum-name">Pain in right hip</span><span class="sum-meta">M25.551</span></div>
+          <div class="sl"><span class="sum-name">Unspecified abdominal pain</span><span class="sum-meta">R10.9</span></div>
+        </div>
+        <a href="#" class="sum-more">View all problems</a>
+      </div>
+      <div class="info-card glance-card">
+        <div class="ic-head"><span class="ic-title">Current medications</span><span class="ic-badge">62</span></div>
+        <div class="sum-list">
+          <div class="sl"><span class="sum-name">amLODIPine</span><span class="sum-meta">5 mg</span></div>
+          <div class="sl"><span class="sum-name">QUEtiapine</span><span class="sum-meta">100 mg</span></div>
+          <div class="sl"><span class="sum-name">LORazepam</span><span class="sum-meta">1 mg</span></div>
+          <div class="sl"><span class="sum-name">loratadine</span><span class="sum-meta">10 mg</span></div>
+          <div class="sl"><span class="sum-name">lidocaine 5% patch</span><span class="sum-meta">1 patch</span></div>
+        </div>
+        <a href="#" class="sum-more">View all medications</a>
+      </div>
+      <div class="info-card glance-card">
+        <div class="ic-head"><span class="ic-title">Recent vitals</span><span class="sub" style="font-weight:400;">01/31/2024</span></div>
+        <div class="sum-list">
+          <div class="sl"><span class="sum-name">Blood pressure</span><span class="sum-meta">118/81 mmHg</span></div>
+          <div class="sl"><span class="sum-name">Heart rate</span><span class="sum-meta">72 /min</span></div>
+          <div class="sl"><span class="sum-name">Temperature</span><span class="sum-meta">36.67 °C</span></div>
+          <div class="sl"><span class="sum-name">O₂ saturation</span><span class="sum-meta">98%</span></div>
+          <div class="sl"><span class="sum-name">BMI</span><span class="sum-meta">31.25 kg/m²</span></div>
+        </div>
+        <a href="#" class="sum-more">View all vitals</a>
+      </div>`);
+
+    // reorder the main sections into category order, each under its heading (tag by category)
+    groups.filter(g=>g.heading).forEach(g=>{
+      const h=document.createElement('div'); h.className='cat-heading'; h.id=g.id; h.textContent=g.label; h.dataset.cat=g.id; grid.appendChild(h);
+      g.items.forEach(([id])=>{ const el=document.getElementById(id); if(el){ el.dataset.cat=g.id; grid.appendChild(el); } });
+    });
+
+    // --- build 2-level nav ---
+    const toc = document.getElementById('toc');
+    const mkItem=(id,label)=>{ const d=document.createElement('div'); d.className='toc-item'; d.dataset.target=id; d.textContent=label; return d; };
+    groups.forEach(g=>{
+      const cat=document.createElement('div'); cat.className='toc-cat'; cat.textContent=g.label; cat.dataset.target=g.id; cat.style.cursor='pointer';
+      toc.appendChild(cat);
+      const sub=document.createElement('div'); sub.className='toc-sub';
+      g.items.forEach(([id,l])=>sub.appendChild(mkItem(id,l)));
+      toc.appendChild(sub);
+    });
+
+    // --- nav click + scroll-spy ---
+    const spyTargets = groups.flatMap(g=>g.items.map(it=>it[0])).map(id=>document.getElementById(id)).filter(Boolean);
+    const goTo=id=>{ const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); };
+    const setActive=id=>{ toc.querySelectorAll('.toc-item').forEach(x=>x.classList.toggle('active', x.dataset.target===id)); };
+    toc.addEventListener('click', e=>{
+      const it=e.target.closest('.toc-item'); if(it){ goTo(it.dataset.target); setActive(it.dataset.target); return; }
+      const cat=e.target.closest('.toc-cat'); if(cat) goTo(cat.dataset.target);
+    });
+    let ticking=false;
+    function spy(){ const line=96; let cur=spyTargets[0]&&spyTargets[0].id;
+      for(const s of spyTargets){ if(s.getBoundingClientRect().top-line<=0) cur=s.id; } setActive(cur); }
+    function onScroll(){ spy(); tabsSpy(); ticking=false; }
+    window.addEventListener('scroll', ()=>{ if(!ticking){ticking=true; requestAnimationFrame(onScroll);} }, {passive:true});
+    spy();
+
+    // ===== Alternative navigation: category tabs =====
+    const catTabs = document.createElement('div'); catTabs.className='cat-tabs';
+    groups.forEach(g=>{ const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id; t.textContent=g.label; catTabs.appendChild(t); });
+    document.querySelector('.patient-header').insertAdjacentElement('afterend', catTabs);
+
+    // secondary nav: sections inside the active tab
+    const subnav = document.createElement('div'); subnav.className='cat-subnav';
+    catTabs.insertAdjacentElement('afterend', subnav);
+    subnav.addEventListener('click', e=>{ const c=e.target.closest('.subnav-chip'); if(c){ const el=document.getElementById(c.dataset.target); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } });
+
+    let activeCat = groups[0].id;
+    function buildSubnav(catId){
+      const g = groups.find(x=>x.id===catId);
+      subnav.innerHTML = g.items.map(([id,label],i)=>`<button class="subnav-chip${i===0?' active':''}" data-target="${id}">${label}</button>`).join('');
+    }
+    function tabsSpy(){
+      if(!document.body.classList.contains('nav-tabs')) return;
+      const chips = Array.from(subnav.querySelectorAll('.subnav-chip')); if(!chips.length) return;
+      let cur=chips[0].dataset.target;
+      if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4){
+        cur = chips[chips.length-1].dataset.target; // bottom of page → last section
+      } else {
+        const line=160;
+        chips.forEach(ch=>{ const el=document.getElementById(ch.dataset.target); if(el && el.getBoundingClientRect().top-line<=0) cur=ch.dataset.target; });
+      }
+      chips.forEach(ch=>ch.classList.toggle('active', ch.dataset.target===cur));
+    }
+    function showCategory(catId){
+      activeCat = catId;
+      grid.querySelectorAll(':scope > [data-cat]').forEach(el=>{ el.style.display = (el.dataset.cat===catId)?'':'none'; });
+      catTabs.querySelectorAll('.cat-tab').forEach(t=>t.classList.toggle('active', t.dataset.cat===catId));
+      // Overview cards are all visible at a glance, so skip the section chips there
+      if(catId==='cat-overview'){ subnav.style.display='none'; }
+      else { subnav.style.display=''; buildSubnav(catId); }
+      window.scrollTo({top:0});
+    }
+    catTabs.addEventListener('click', e=>{ const t=e.target.closest('.cat-tab'); if(t) showCategory(t.dataset.cat); });
+
+    // ===== settings dropdown on the gear: switch nav mode =====
+    const navUser = document.querySelector('.nav-user'); navUser.style.position='relative';
+    const gearMenu = document.createElement('div'); gearMenu.className='gear-menu';
+    gearMenu.innerHTML =
+      '<div class="gm-title">Navigation</div>'+
+      '<button class="gm-item active" data-mode="sidebar"><span>Sidebar</span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="tabs"><span>Tabs</span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
+    navUser.appendChild(gearMenu);
+
+    function setMode(mode){
+      if(mode==='tabs'){
+        document.body.classList.add('nav-tabs'); document.body.classList.remove('nav-sidebar');
+        showCategory(activeCat);
+      } else {
+        document.body.classList.add('nav-sidebar'); document.body.classList.remove('nav-tabs');
+        grid.querySelectorAll(':scope > [data-cat]').forEach(el=>{ el.style.display=''; });
+        spy();
+      }
+      gearMenu.querySelectorAll('.gm-item').forEach(i=>i.classList.toggle('active', i.dataset.mode===mode));
+    }
+
+    const gear = document.querySelector('.gear');
+    gear.addEventListener('click', e=>{ e.stopPropagation(); gearMenu.classList.toggle('open'); });
+    gearMenu.addEventListener('click', e=>{ const it=e.target.closest('.gm-item'); if(it){ setMode(it.dataset.mode); gearMenu.classList.remove('open'); } });
+    document.addEventListener('click', e=>{ if(!e.target.closest('.gear-menu') && !e.target.closest('.gear')) gearMenu.classList.remove('open'); });
+
+    document.body.classList.add('nav-sidebar');
+  })();
+
+  /* Encounters-by-location bar chart */
+  (function(){
+    const rows = [
+      ["East Los Angeles Doctors Hospital",      {emergency:1,  inpatient:0, outpatient:11}],
+      ["Olive View-UCLA Medical Center",         {emergency:9,  inpatient:0, outpatient:0}],
+      ["Memorial Hospital of Gardena",           {emergency:0,  inpatient:0, outpatient:9}],
+      ["Harbor-UCLA Medical Center",             {emergency:3,  inpatient:0, outpatient:0}],
+      ["Ronald Reagan UCLA Medical Center",      {emergency:3,  inpatient:0, outpatient:0}],
+      ["Community Hospital of Huntington Park",  {emergency:2,  inpatient:0, outpatient:0}],
+      ["Southern California Hospital at Hollywood",{emergency:2,inpatient:0, outpatient:0}],
+      ["LAC + USC Medical Center",               {emergency:1,  inpatient:0, outpatient:0}],
+      ["Santa Monica UCLA Medical Center",       {emergency:0,  inpatient:0, outpatient:1}],
+      ["UCLA HHC Community Care Vans",            {emergency:0,  inpatient:0, outpatient:1}],
+    ];
+    const order = ["emergency","inpatient","outpatient"];
+    const axisMax = 15, ticks = [0,5,10,15];
+    const el = document.getElementById('loc-chart');
+    let html = '';
+    rows.forEach(([name,seg])=>{
+      const total = seg.emergency+seg.inpatient+seg.outpatient;
+      const parts = order.filter(k=>seg[k]>0);
+      let bars = parts.map((k,i)=>{
+        const only = parts.length===1 ? ' only' : '';
+        return `<span class="seg ${k}${only}" style="width:${(seg[k]/axisMax*100).toFixed(2)}%" title="${seg[k]} ${k}"></span>`;
+      }).join('');
+      html += `<div class="crow">
+        <div class="clabel" title="${name} · ${total} total">${name}</div>
+        <div class="cbar-wrap"><div class="cbar"><div class="cbar-inner">${bars}</div></div></div>
+      </div>`;
+    });
+    html += `<div class="chart-axis">${ticks.map(t=>`<span>${t}</span>`).join('')}</div>`;
+    el.innerHTML = html;
+  })();
+
+  /* Labs list */
+  const labs = [
+    ["Auto diff","02/04/2024","LA County DHS","10",false],
+    ["CBC w/ diff","02/04/2024","LA County DHS","13",true],
+    ["CK","02/04/2024","LA County DHS","1",true],
+    ["Chem QA","02/04/2024","LA County DHS","9",false],
+    ["BMP","02/04/2024","LA County DHS","10",true],
+    ["Lipase","02/04/2024","LA County DHS","1",false],
+    ["Hep func panel","02/04/2024","LA County DHS","7",true],
+    ["D-dimer","02/04/2024","LA County DHS","1",false],
+    ["Trop T HS","02/04/2024","LA County DHS","1",false],
+  ];
+  const llist = document.getElementById('labs-list');
+  llist.innerHTML = labs.map((l,i)=>`
+    <div class="lab-item ${i===1?'active':''}">
+      <div class="lab-row">
+        <span class="lab-name">${l[0]}</span>
+        <span>${l[3]} ${l[4]?'<span class="badge-abn">Abnormal</span>':''}</span>
+      </div>
+      <div class="lab-meta">${l[1]} · ${l[2]}</div>
+    </div>`).join('');
+  llist.addEventListener('click', e=>{
+    const it=e.target.closest('.lab-item'); if(!it) return;
+    llist.querySelectorAll('.lab-item').forEach(x=>x.classList.remove('active')); it.classList.add('active');
+  });
+</script>
+</body>
+</html>
