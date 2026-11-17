@@ -69,6 +69,9 @@
     position:sticky; top:62px; z-index:1020; overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; }
   .cat-tabs::-webkit-scrollbar{ display:none; }
   body.nav-tabs .cat-tabs{ display:flex; }
+  /* tabs live inside the page header, next to the title */
+  .ph-row .cat-tabs{ position:static; background:transparent; border-bottom:none; padding:0; margin-left:1.25rem; align-self:stretch; align-items:center; }
+  .ph-row .cat-tab{ padding:.4rem .9rem; }
   .cat-tab{ padding:.8rem 1rem; font-size:.9rem; font-weight:500; color:var(--gray-600); cursor:pointer;
     border:none; background:none; border-bottom:2px solid transparent; margin-bottom:-1px; white-space:nowrap; }
   .cat-tab:hover{ color:var(--gray-900); }
@@ -93,8 +96,10 @@
 
   /* ===== Patient header strip ===== */
   .patient-header{ background:#fff; border-bottom:1px solid var(--gray-200); padding:1rem 1.5rem; }
-  /* keep the page header pinned below the navbar while content scrolls (sidebar mode) */
-  body.nav-sidebar .patient-header{ position:sticky; top:62px; z-index:1021; }
+  /* keep the page header pinned below the navbar while content scrolls */
+  body.nav-sidebar .patient-header, body.nav-tabs .patient-header{ position:sticky; top:62px; z-index:1021; }
+  /* in tabs mode the chip sub-nav pins flush under the sticky header (no body-bg gap) */
+  body.nav-tabs .cat-subnav{ top:calc(var(--stick,134px) - 6px); }
   .ph-row{ display:flex; align-items:center; gap:1rem 1.25rem; flex-wrap:wrap; }
   .ph-id{ display:flex; align-items:baseline; gap:.75rem; flex-wrap:wrap; }
   .ph-name{ font-size:1.5rem; font-weight:700; color:var(--gray-900); line-height:1.1; }
@@ -484,7 +489,15 @@
   body.v2 .patient-header{ background:var(--body-bg); border-bottom:1px solid var(--gray-300); padding:.65rem 1.5rem; }
   /* tab rows blend into the page (no distinct white/gray background) */
   body.v2 .cat-tabs{ background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
+  /* tabs live inside the page header, which already carries the divider — no second line */
+  body.v2 .ph-row .cat-tabs{ border-bottom:none; background:transparent; }
   body.v2 .cat-subnav{ background:var(--body-bg); }
+  /* in tabs mode the header + sub-nav line up with the centered cards section (same inset as the cards) */
+  body.v2.nav-tabs .patient-header, body.v2.nav-tabs .cat-subnav{ max-width:1440px; margin-left:auto; margin-right:auto; padding-left:1.25rem; padding-right:1.25rem; }
+  /* tabs mode: the content + overview rail share the same centered 1440 band as the header,
+     so cards stay left-aligned with the header and the rail docks to the header's right edge */
+  body.v2.nav-tabs .layout{ max-width:1440px; margin-left:auto; margin-right:auto; padding-left:1.25rem; padding-right:1.25rem; }
+  body.v2.nav-tabs .main-grid{ max-width:none; margin:0; }
   body.v2 .ph-name{ font-size:1.6rem; font-weight:400; line-height:1.15; }
   body.v2 .ph-meta{ display:block; color:var(--gray-500); font-size:.82rem; }
   .ph-avatar{ display:none; }
@@ -496,7 +509,7 @@
   #ph-filter-btn{ position:relative; }
   #ph-overview-btn.active, #ph-filter-btn.active{ background:var(--primary); border-color:var(--primary); color:#fff; }
   /* rail is toggled from the header button; collapsed = fully hidden (main content widens) */
-  body.v2.nav-sidebar .ov-rail.collapsed{ display:none; }
+  body.v2.nav-sidebar .ov-rail.collapsed, body.v2.nav-tabs .ov-rail.collapsed{ display:none; }
   #ph-filter-btn .fb-dot{ position:absolute; top:3px; right:3px; width:8px; height:8px; border-radius:50%; background:var(--primary); border:1.5px solid #fff; display:none; }
   #ph-filter-btn.active .fb-dot{ border-color:var(--primary); }
   #ph-filter-btn.has-set .fb-dot{ display:block; }
@@ -612,7 +625,7 @@
   .cp-close:hover, .cp-reset:hover{ background:var(--gray-200); }
 
   /* 8 — Overview as a right-side card (toggled from the header button) */
-  body.v2.nav-sidebar .ov-rail{ display:flex; }
+  body.v2.nav-sidebar .ov-rail, body.v2.nav-tabs .ov-rail{ display:flex; }
   .ov-rail{ display:none; flex-direction:column; flex:0 0 260px; width:260px; align-self:stretch;
     border-left:1px solid var(--gray-300); padding-left:1.1rem; position:sticky; top:calc(var(--stick,76px) - 6px); max-height:calc(100vh - var(--stick,76px) - 10px);
     overflow-y:auto; overflow-x:hidden; margin-top:-1.25rem; padding-top:1.25rem; }
@@ -669,7 +682,8 @@
   .ov-kpi-num{ font-size:1.5rem; font-weight:500; color:var(--gray-900); line-height:1; }
   .ov-kpi-lbl{ font-size:.52rem; text-transform:uppercase; color:var(--gray-500); letter-spacing:.02em; margin-top:.3rem; white-space:nowrap; }
   /* in v2 sidebar mode the overview moves to the rail (tabs mode keeps the Overview tab) */
-  body.v2.nav-sidebar #cat-overview, body.v2.nav-sidebar .info-cards{ display:none !important; }
+  body.v2.nav-sidebar #cat-overview, body.v2.nav-sidebar .info-cards,
+  body.v2.nav-tabs #cat-overview, body.v2.nav-tabs .info-cards{ display:none !important; }
   /* the overview is in the right rail now, so drop its left-nav group in v2 sidebar */
   body.v2.nav-sidebar .toc-overview{ display:none !important; }
   @media (max-width:1100px){ .ov-rail{ display:none !important; } }
@@ -1501,15 +1515,19 @@
 
     // ===== Alternative navigation: category tabs =====
     const catTabs = document.createElement('div'); catTabs.className='cat-tabs';
-    groups.forEach(g=>{ const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id; t.textContent=g.label; catTabs.appendChild(t); });
-    document.querySelector('.patient-header').insertAdjacentElement('afterend', catTabs);
+    // Overview has no tab — it's opened from the header person button instead
+    groups.forEach(g=>{ if(g.id==='cat-overview') return; const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id; t.textContent=g.label; catTabs.appendChild(t); });
+    // place the category tabs inside the page header, next to the title (before the actions)
+    const phRow = document.querySelector('.patient-header .ph-row');
+    const phActions = phRow.querySelector('.ph-actions');
+    phRow.insertBefore(catTabs, phActions);
 
     // secondary nav: sections inside the active tab
     const subnav = document.createElement('div'); subnav.className='cat-subnav';
-    catTabs.insertAdjacentElement('afterend', subnav);
+    document.querySelector('.patient-header').insertAdjacentElement('afterend', subnav);
     subnav.addEventListener('click', e=>{ const c=e.target.closest('.subnav-chip'); if(c){ const el=document.getElementById(c.dataset.target); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); } });
 
-    let activeCat = groups[0].id;
+    let activeCat = (groups.find(g=>g.id!=='cat-overview')||groups[0]).id;
     function buildSubnav(catId){
       const g = groups.find(x=>x.id===catId);
       subnav.innerHTML = g.items.map(([id,label],i)=>`<button class="subnav-chip${i===0?' active':''}" data-target="${id}">${label}</button>`).join('');
@@ -1530,11 +1548,11 @@
       activeCat = catId;
       grid.querySelectorAll(':scope > [data-cat]').forEach(el=>{ el.style.display = (el.dataset.cat===catId)?'':'none'; });
       catTabs.querySelectorAll('.cat-tab').forEach(t=>t.classList.toggle('active', t.dataset.cat===catId));
-      // Overview cards are all visible at a glance, so skip the section chips there
-      if(catId==='cat-overview'){ subnav.style.display='none'; }
-      else { subnav.style.display=''; buildSubnav(catId); }
+      // Overview is not a tab — it lives in the right-side rail, toggled from the header button
+      subnav.style.display=''; buildSubnav(catId);
       window.scrollTo({top:0});
     }
+    window.__showCategory = showCategory;
     catTabs.addEventListener('click', e=>{ const t=e.target.closest('.cat-tab'); if(t) showCategory(t.dataset.cat); });
 
     // ===== settings dropdown: user info · navigation mode · design version =====
