@@ -271,6 +271,7 @@
   body.v2 .lanes-table thead th{ font-size:.76rem; font-weight:500; color:var(--gray-400); }
   body.v2 .result-table th{ font-size:.76rem; font-weight:500; color:var(--gray-400); text-transform:none;
     letter-spacing:normal; background:var(--gray-100); border-bottom:none; padding:.6rem 1rem; }
+  body.v2 .result-table td{ padding:.6rem 1rem; }
   .sort-caret{ color:var(--gray-400); font-size:.7rem; margin-left:.2rem; }
   .lanes-table tbody td{ padding:.6rem 1rem; border-bottom:1px solid var(--gray-200); color:var(--gray-700); vertical-align:top; }
   .lanes-table tbody tr:hover{ background:var(--gray-100); }
@@ -346,7 +347,7 @@
   .chart-title{ text-align:left; font-weight:600; color:var(--gray-900); font-size:.9rem; margin-bottom:.6rem; }
   .chart-legend{ display:flex; justify-content:flex-start; gap:1.25rem; font-size:.78rem; color:var(--gray-700); margin-bottom:1rem; flex-wrap:wrap; }
   .chart-legend span{ display:inline-flex; align-items:center; gap:.4rem; }
-  .chart-legend i{ width:22px; height:11px; border-radius:3px; display:inline-block; }
+  .chart-legend i{ width:12px; height:12px; border-radius:3px; display:inline-block; }
   .sw-emergency{ background:var(--chart-emergency); } .sw-inpatient{ background:var(--chart-inpatient); } .sw-outpatient{ background:var(--chart-outpatient); }
 
   .chart-grid{ display:grid; grid-template-columns:minmax(120px,250px) 1fr; column-gap:.75rem; max-width:1100px; }
@@ -522,7 +523,8 @@
   body.v2 .panel-body{ padding:1.1rem 1.25rem; }
   body.v2 .lanes-table th, body.v2 .lanes-table td{ padding-left:1.25rem; padding-right:1.25rem; }
   body.v2 .lanes-pagination, body.v2 .table-footer, body.v2 .table-note{ padding:1.1rem 1.25rem; }
-  body.v2 .labs-detail-body, body.v2 .labs-detail > .result-wrap{ padding-left:1.25rem; padding-right:1.25rem; }
+  /* table fills the detail pane width; cell padding (1rem) keeps text aligned with the title */
+  body.v2 .labs-detail-body{ padding-left:0; padding-right:0; }
 
   /* the left nav stays fully visible and doesn't scroll on its own */
   body.nav-sidebar .toc{ max-height:none; overflow:visible; }
