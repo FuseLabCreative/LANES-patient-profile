@@ -517,26 +517,30 @@
   .ph-clear:hover{ text-decoration:underline; }
   .ph-clear.show{ display:inline-flex; }
   .ph-filter-row{ display:none; }
-  /* full-bleed filter band: single top + bottom lines spanning the page width */
-  .ph-filter-row.open{ display:block; margin:.7rem -1.5rem 0; }
-  body.v2 .patient-header:has(#ph-filter-row.open){ padding-bottom:0; border-bottom:none; }
-  .filter-bar{ display:flex; width:100%; border:none; border-top:1px solid var(--gray-400); border-bottom:1px solid var(--gray-400); border-radius:0; }
-  .filter-cell{ flex:1; position:relative; padding:.5rem .85rem; cursor:pointer; border-right:1px solid var(--gray-400); background:transparent; }
-  .filter-cell:first-child{ padding-left:1.5rem; }
-  .filter-cell:last-child{ border-right:none; padding-right:1.5rem; }
-  .filter-cell:hover{ background:rgba(255,255,255,.5); }
-  .filter-cell.active{ background:#fff; }
+  /* tabs mode: no header filters — hide the filter button, clear link and the row itself */
+  body.nav-tabs #ph-filter-btn, body.nav-tabs #ph-clear{ display:none !important; }
+  body.nav-tabs #ph-filter-row{ display:none !important; }
+  /* discrete rounded filter controls — self-contained plates in a left-aligned row,
+     no full-bleed band or hard dividers, so it sits naturally on the card layout */
+  .ph-filter-row.open{ display:block; margin-top:.7rem; }
+  .filter-bar{ display:flex; flex-wrap:wrap; gap:.5rem; width:100%; border:none; }
+  .filter-cell{ position:relative; flex:0 0 auto; min-width:148px; display:flex; flex-direction:column; gap:.08rem;
+    padding:.38rem .7rem; cursor:pointer; background:#fff; border:1px solid var(--gray-200); border-radius:.5rem;
+    box-shadow:0 1px 2px rgba(31,45,61,.04); transition:border-color .12s, box-shadow .12s, background .12s; }
+  .filter-cell:hover{ border-color:var(--gray-300); box-shadow:0 1px 3px rgba(31,45,61,.09); }
+  .filter-cell.active{ border-color:var(--primary); box-shadow:0 0 0 3px rgba(44,123,229,.12); }
+  .filter-cell.set{ border-color:var(--primary); background:#f4f9ff; }
   .filter-cell.set .fc-value{ color:var(--primary); font-weight:600; }
   .filter-cell.set .fc-label{ color:var(--primary); }
-  .fc-label{ display:block; font-size:.62rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-500); font-weight:600; margin-bottom:.12rem; }
-  .fc-value-row{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
-  .fc-value{ font-size:.85rem; color:var(--gray-800); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .fc-chev{ color:var(--gray-500); font-size:.8rem; display:flex; flex:0 0 auto; transition:transform .15s; }
+  .fc-label{ display:block; font-size:.6rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-500); font-weight:600; }
+  .fc-value-row{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; }
+  .fc-value{ font-size:.84rem; color:var(--gray-800); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .fc-chev{ color:var(--gray-500); font-size:.72rem; display:flex; flex:0 0 auto; transition:transform .15s; }
   .filter-cell.active .fc-chev{ transform:rotate(180deg); }
-  .filter-list{ position:absolute; top:calc(100% + 1px); left:-1px; right:-1px; background:#fff; border:1px solid var(--gray-300);
-    border-radius:0 0 .375rem .375rem; box-shadow:var(--card-shadow); z-index:60; display:none; max-height:280px; overflow:auto; }
+  .filter-list{ position:absolute; top:calc(100% + .35rem); left:0; min-width:100%; background:#fff; border:1px solid var(--gray-200);
+    border-radius:.5rem; box-shadow:0 6px 20px rgba(31,45,61,.14); z-index:60; display:none; max-height:280px; overflow:auto; padding:.25rem; }
   .filter-cell.active .filter-list{ display:block; }
-  .fl-opt{ padding:.5rem .85rem; font-size:.84rem; color:var(--gray-700); cursor:pointer; white-space:nowrap; }
+  .fl-opt{ padding:.44rem .6rem; font-size:.83rem; color:var(--gray-700); cursor:pointer; white-space:nowrap; border-radius:.35rem; }
   .fl-opt:hover{ background:var(--gray-100); color:var(--gray-900); }
   .fl-opt.selected{ color:var(--primary); font-weight:600; background:#eaf2fd; }
 
