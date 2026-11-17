@@ -491,8 +491,8 @@
   /* full-bleed filter band: single top + bottom lines spanning the page width */
   .ph-filter-row.open{ display:block; margin:.7rem -1.5rem 0; }
   body.v2 .patient-header:has(#ph-filter-row.open){ padding-bottom:0; border-bottom:none; }
-  .filter-bar{ display:flex; width:100%; border:none; border-top:1px solid var(--gray-300); border-bottom:1px solid var(--gray-300); border-radius:0; }
-  .filter-cell{ flex:1; position:relative; padding:.5rem .85rem; cursor:pointer; border-right:1px solid var(--gray-300); background:transparent; }
+  .filter-bar{ display:flex; width:100%; border:none; border-top:1px solid var(--gray-400); border-bottom:1px solid var(--gray-400); border-radius:0; }
+  .filter-cell{ flex:1; position:relative; padding:.5rem .85rem; cursor:pointer; border-right:1px solid var(--gray-400); background:transparent; }
   .filter-cell:first-child{ padding-left:1.5rem; }
   .filter-cell:last-child{ border-right:none; padding-right:1.5rem; }
   .filter-cell:hover{ background:rgba(255,255,255,.5); }
@@ -597,7 +597,7 @@
   /* 8 — Overview as a thin collapsible right rail (no background, left border) */
   body.v2.nav-sidebar .ov-rail{ display:flex; }
   .ov-rail{ display:none; flex-direction:column; flex:0 0 250px; width:250px; align-self:stretch;
-    border-left:1px solid var(--gray-300); padding-left:1.1rem; position:sticky; top:var(--stick,76px); max-height:calc(100vh - var(--stick,76px) - 16px);
+    border-left:1px solid var(--gray-300); padding-left:1.1rem; position:sticky; top:calc(var(--stick,76px) - 6px); max-height:calc(100vh - var(--stick,76px) - 10px);
     overflow-y:auto; overflow-x:hidden; margin-top:-1.25rem; padding-top:1.25rem; }
   .ov-rail.collapsed{ flex-basis:46px; width:46px; padding-left:0; align-items:center; border-left:none; }
   .ov-rail-head{ display:flex; align-items:center; justify-content:space-between; gap:.4rem; margin-bottom:.4rem; }
