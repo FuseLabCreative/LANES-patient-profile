@@ -34,7 +34,7 @@
   /* ===== Navbar ===== */
   .lanes-navbar{ background:linear-gradient(180deg,#5aa9e6 0%,#7ec0ee 48%,#acd6f6 100%);
     box-shadow:0 2px 6px rgba(0,0,0,.08); position:sticky; top:0; z-index:1030; }
-  .nav-inner{ display:flex; align-items:center; padding:.7rem 1.5rem; min-height:62px; position:relative; }
+  .nav-inner{ display:flex; align-items:center; padding:.7rem 1.5rem; min-height:62px; position:relative; max-width:1440px; margin:0 auto; }
   .lanes-logo{ font-weight:700; letter-spacing:.42em; font-size:1.35rem; color:#0b3b66; margin-right:1.1rem; padding-right:.1em; }
   .demo-badge{ background:var(--danger); color:#fff; font-weight:600; font-size:.8rem; letter-spacing:.06em;
     padding:.5rem .9rem; border-radius:.375rem; box-shadow:0 2px 4px rgba(230,55,87,.35); white-space:nowrap; }
@@ -92,7 +92,7 @@
   body.nav-sidebar .glance-card{ display:none !important; }
 
   /* ===== Patient header strip ===== */
-  .patient-header{ background:#fff; border-bottom:1px solid var(--gray-200); padding:1rem 1.5rem; }
+  .patient-header{ background:#fff; border-bottom:1px solid var(--gray-200); padding:1rem 1.5rem; max-width:1440px; margin-left:auto; margin-right:auto; }
   /* keep the page header pinned below the navbar while content scrolls (sidebar mode) */
   body.nav-sidebar .patient-header{ position:sticky; top:62px; z-index:1021; }
   .ph-row{ display:flex; align-items:center; gap:1rem 1.25rem; flex-wrap:wrap; }
@@ -135,17 +135,23 @@
   .sn-item.active .sn-count{ background:rgba(255,255,255,.25); }
 
   /* ===== Layout ===== */
-  .page{ padding:1.25rem; max-width:100%; overflow-x:clip; }
+  .page{ padding:1.25rem; max-width:1440px; margin:0 auto; overflow-x:clip; }
 
   /* ===== Layout with minimalistic left navigation ===== */
   .layout{ display:flex; gap:1.5rem; align-items:flex-start; }
   .content{ flex:1 1 auto; min-width:0; }
   /* sticky nav: stays put while the right-side content scrolls */
-  .toc{ position:sticky; top:var(--stick,76px); width:140px; flex:0 0 140px; align-self:flex-start;
+  .toc{ position:sticky; top:var(--stick,76px); width:176px; flex:0 0 176px; align-self:flex-start;
     max-height:calc(100vh - var(--stick,76px) - 16px); overflow:auto; }
   .toc-item{ display:block; padding:.4rem .65rem; font-size:.82rem; color:var(--gray-700); cursor:pointer; border-radius:.3rem; }
   .toc-item:hover{ color:var(--gray-900); background:var(--gray-100); }
   .toc-item.active{ color:var(--primary); font-weight:600; }
+  .ti-main{ display:flex; align-items:center; gap:.35rem; }
+  .ti-label{ flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ti-alert{ width:6px; height:6px; border-radius:50%; background:var(--danger); flex:0 0 auto; }
+  .ti-count{ font-size:.66rem; font-weight:600; color:var(--gray-500); background:var(--gray-200); padding:.03rem .32rem; border-radius:.25rem; flex:0 0 auto; }
+  .ti-sub{ font-size:.64rem; font-weight:400; color:var(--gray-400); margin-top:.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .toc-item.active .ti-count{ background:#dbeafe; color:var(--primary); }
   .toc-cat{ padding:.3rem .65rem .3rem .25rem; font-size:.66rem; text-transform:uppercase; letter-spacing:.07em; color:var(--gray-600); font-weight:600; margin-top:.9rem; }
   .toc-cat:first-child{ margin-top:0; }
   .toc-sub{ display:flex; flex-direction:column; margin-left:.9rem; border-left:1px solid var(--gray-300); padding-left:.2rem; }
@@ -479,8 +485,12 @@
   /* tab rows blend into the page (no distinct white/gray background) */
   body.v2 .cat-tabs{ background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
   body.v2 .cat-subnav{ background:var(--body-bg); }
-  body.v2 .ph-name{ font-size:1.4rem; font-weight:400; }
-  body.v2 .ph-meta{ display:none; }  /* patient details moved to the overview rail */
+  body.v2 .ph-name{ font-size:1.6rem; font-weight:400; line-height:1.15; }
+  body.v2 .ph-meta{ display:block; color:var(--gray-500); font-size:.82rem; }
+  .ph-avatar{ display:none; }
+  body.v2 .ph-avatar{ display:flex; align-items:center; justify-content:center; width:46px; height:46px; flex:0 0 auto;
+    border-radius:50%; background:linear-gradient(135deg, #a9d4f2 0%, #47b0ff 100%); color:#0b101a; font-size:.95rem; font-weight:600; letter-spacing:.02em; }
+  body.v2 .ph-id{ display:flex; flex-direction:column; align-items:flex-start; gap:.1rem; }
 
   /* 5b — Header filters: icon button reveals a divided "plates" filter bar with list dropdowns */
   #ph-filter-btn{ position:relative; }
@@ -706,9 +716,10 @@
 <!-- ============ PATIENT HEADER ============ -->
 <div class="patient-header">
   <div class="ph-row">
+    <div class="ph-avatar">MS</div>
     <div class="ph-id">
       <span class="ph-name">Maria Sanchez</span>
-      <span class="ph-meta">DOB 01/01/2001 · 23 yrs · Female</span>
+      <span class="ph-meta">DOB 01/01/2001 · 23 yrs · Female · MRN 00482915</span>
     </div>
     <!-- Patient tags hidden for now — remove display:none to restore -->
     <div class="ph-tags" style="display:none;">
@@ -1379,13 +1390,13 @@
     // --- categories (primary) with their card sections (secondary) ---
     const groups = [
       { id:'cat-overview', label:'Overview', heading:false,
-        items:[['sec-demographics','Demographics'],['sec-coverage','Coverage'],['sec-enc6','Last 6 months'],['sec-readmissions','Readmissions']] },
+        items:[['sec-demographics','Demographics'],['sec-coverage','Coverage'],['sec-enc6','Last 6 months',{c:43}],['sec-readmissions','Readmissions',{c:4, alert:true}]] },
       { id:'cat-clinical', label:'Clinical', heading:true,
-        items:[['sec-problems','Problems'],['sec-allergies','Allergies'],['sec-medications','Medications'],['sec-labs','Labs'],['sec-vitals','Vitals']] },
+        items:[['sec-problems','Problems',{c:241, sub:'1 new'}],['sec-allergies','Allergies',{c:10, alert:true, sub:'Sources disagree'}],['sec-medications','Medications',{c:62}],['sec-labs','Labs',{c:38, sub:'9 new'}],['sec-vitals','Vitals',{c:318}]] },
       { id:'cat-encdocs', label:'Records', heading:true,
-        items:[['sec-encounters','Encounters'],['sec-loc','By location'],['sec-documents','Documents'],['sec-procedures','Procedures']] },
+        items:[['sec-encounters','Encounters',{c:197}],['sec-loc','By location',{c:12}],['sec-documents','Documents',{c:34, sub:'2 new'}],['sec-procedures','Procedures',{c:14}]] },
       { id:'cat-social', label:'Social & consent', heading:true,
-        items:[['sec-social','Social history'],['sec-consent','Consent']] },
+        items:[['sec-social','Social history',{c:9}],['sec-consent','Consent',{c:30}]] },
     ];
 
     // put the Overview heading + info-cards at the top of the single content flow
@@ -1446,11 +1457,17 @@
 
     // --- build 2-level nav ---
     const toc = document.getElementById('toc');
-    const mkItem=(id,label)=>{ const d=document.createElement('div'); d.className='toc-item'; d.dataset.target=id; d.textContent=label; return d; };
+    const mkItem=(id,label,meta)=>{ meta=meta||{}; const d=document.createElement('div'); d.className='toc-item'; d.dataset.target=id;
+      let h='<div class="ti-main"><span class="ti-label">'+label+'</span>';
+      if(meta.alert) h+='<span class="ti-alert" title="Needs attention"></span>';
+      if(meta.c!=null) h+='<span class="ti-count">'+meta.c+'</span>';
+      h+='</div>';
+      if(meta.sub) h+='<div class="ti-sub">'+meta.sub+'</div>';
+      d.innerHTML=h; return d; };
     groups.forEach(g=>{
       const cat=document.createElement('div'); cat.className='toc-cat'; cat.textContent=g.label; cat.dataset.target=g.id; cat.style.cursor='pointer';
       const sub=document.createElement('div'); sub.className='toc-sub';
-      g.items.forEach(([id,l])=>sub.appendChild(mkItem(id,l)));
+      g.items.forEach(([id,l,meta])=>sub.appendChild(mkItem(id,l,meta)));
       if(g.id==='cat-overview'){ cat.classList.add('toc-overview'); sub.classList.add('toc-overview'); }
       toc.appendChild(cat);
       toc.appendChild(sub);
