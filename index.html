@@ -55,14 +55,18 @@
 
   /* settings dropdown on the gear */
   .gear-menu{ position:absolute; right:0; top:46px; background:#fff; border:1px solid var(--gray-200);
-    border-radius:.5rem; box-shadow:var(--card-shadow); padding:.35rem; min-width:196px; z-index:1050; display:none; }
+    border-radius:.5rem; box-shadow:var(--card-shadow); padding:.35rem; min-width:244px; z-index:1050; display:none; }
   .gear-menu.open{ display:block; }
   .gm-title{ font-size:.64rem; text-transform:uppercase; letter-spacing:.07em; color:var(--gray-500); font-weight:600; padding:.35rem .6rem; }
   .gm-item{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem .6rem; border-radius:.375rem;
     font-size:.85rem; color:var(--gray-700); cursor:pointer; background:none; border:none; width:100%; text-align:left; }
   .gm-item:hover{ background:var(--gray-100); color:var(--gray-900); }
-  .gm-item .chk{ color:var(--primary); opacity:0; }
+  .gm-item .chk{ color:var(--primary); opacity:0; flex:0 0 auto; align-self:center; }
   .gm-item.active .chk{ opacity:1; }
+  .gm-txt{ display:flex; flex-direction:column; gap:.1rem; min-width:0; }
+  .gm-name{ font-size:.85rem; font-weight:500; }
+  .gm-item.active .gm-name{ color:var(--primary); }
+  .gm-desc{ font-size:.72rem; font-weight:400; color:var(--gray-500); line-height:1.3; white-space:normal; }
 
   /* category tabs (alternative navigation) */
   .cat-tabs{ display:none; background:#fff; border-bottom:1px solid var(--gray-200); padding:0 1.5rem; gap:.25rem;
@@ -90,7 +94,7 @@
   /* in tabs mode: hide the sidebar + the in-content category headings; land sections below the sticky bars */
   body.nav-tabs .toc{ display:none; }
   body.nav-tabs .cat-heading{ display:none !important; }
-  body.nav-tabs .main-grid > section, body.nav-tabs .info-card{ scroll-margin-top:152px; }
+  body.nav-tabs .main-grid > section, body.nav-tabs .info-card, body.nav-tabs .cat-heading{ scroll-margin-top:var(--stick-sub,168px); }
   /* the Overview at-a-glance cards are shown only in Tabs mode */
   body.nav-sidebar .glance-card{ display:none !important; }
 
@@ -175,7 +179,7 @@
   .main-grid > *{ min-width:0; }
   .span-all{ width:100%; }
   /* category section heading: same space above and below for every heading */
-  .cat-heading{ font-size:1.2rem; font-weight:700; color:var(--gray-900); margin:.5rem 0 -.45rem; scroll-margin-top:calc(var(--stick,76px) + 14px); }
+  .cat-heading{ font-size:1.65rem; font-weight:700; color:var(--gray-900); margin:.5rem 0 -.45rem; scroll-margin-top:calc(var(--stick,76px) + 14px); }
   .cat-heading:first-child{ margin-top:0; }
 
   /* ===== Panels ===== */
@@ -494,6 +498,12 @@
   body.v2 .cat-subnav{ background:var(--body-bg); }
   /* in tabs mode the header + sub-nav line up with the centered cards section (same inset as the cards) */
   body.v2.nav-tabs .patient-header, body.v2.nav-tabs .cat-subnav{ max-width:1440px; margin-left:auto; margin-right:auto; padding-left:1.25rem; padding-right:1.25rem; }
+  /* tabs mode: center the tabs in the header band and sit them on the header's bottom border,
+     with the labels dropped to the patient-description line; center the pills row too */
+  body.v2.nav-tabs .ph-row .cat-tabs{ position:absolute; left:50%; bottom:-1px; transform:translateX(-50%);
+    margin:0; align-items:flex-end; gap:.1rem; overflow:visible; }
+  body.v2.nav-tabs .ph-row .cat-tab{ padding:.4rem .95rem; }
+  body.v2.nav-tabs .cat-subnav{ justify-content:center; }
   /* tabs mode: the content + overview rail share the same centered 1440 band as the header,
      so cards stay left-aligned with the header and the rail docks to the header's right edge */
   body.v2.nav-tabs .layout{ max-width:1440px; margin-left:auto; margin-right:auto; padding-left:1.25rem; padding-right:1.25rem; }
@@ -517,9 +527,33 @@
   .ph-clear:hover{ text-decoration:underline; }
   .ph-clear.show{ display:inline-flex; }
   .ph-filter-row{ display:none; }
-  /* tabs mode: no header filters — hide the filter button, clear link and the row itself */
-  body.nav-tabs #ph-filter-btn, body.nav-tabs #ph-clear{ display:none !important; }
+  /* tabs mode: the header filter button opens a popover; the old inline row + header clear are unused */
+  body.nav-tabs #ph-clear{ display:none !important; }
   body.nav-tabs #ph-filter-row{ display:none !important; }
+  /* shared filter popover (used by Version 2 header button and Version 3 panel button) */
+  .filter-pop{ position:fixed; z-index:1100; width:264px; background:#fff; border:1px solid var(--gray-200);
+    border-radius:.6rem; box-shadow:0 12px 34px rgba(31,45,61,.2); padding:.65rem; display:none; }
+  .filter-pop.open{ display:block; }
+  .filter-pop-head{ display:flex; align-items:center; justify-content:space-between; margin:0 .15rem .5rem; }
+  .filter-pop-head .t{ font-size:.66rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-500); font-weight:600; }
+  .filter-pop-clear{ font-size:.75rem; color:var(--primary); background:none; border:none; cursor:pointer; padding:0; display:none; }
+  .filter-pop-clear.show{ display:inline; }
+  .filter-pop .filter-bar{ display:flex; flex-direction:column; gap:.4rem; flex-wrap:nowrap; }
+  .filter-pop .filter-cell{ width:100%; min-width:0; }
+  /* when filters are applied: tint the filter button and show a count badge */
+  #ph-filter-btn.has-set, #v3-filter-btn.has-set{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.08); }
+  .filter-count{ position:absolute; top:-5px; right:-5px; min-width:15px; height:15px; padding:0 3px; border-radius:8px;
+    background:var(--primary); color:#fff; font-size:.58rem; font-weight:700; line-height:1; display:none; align-items:center; justify-content:center; }
+  .has-set .filter-count{ display:inline-flex; }
+  /* "needs attention" indicator shown on tabs/chips (V2) and nav buttons/links (V3) */
+  .alert-dot{ display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--danger); vertical-align:middle; margin-left:.3rem; flex:0 0 auto; }
+  .cat-tab .alert-dot{ margin-bottom:.12rem; }
+  /* on a blue (active) tab/button the red dot needs a white ring to stay readable */
+  .v3-cat.active .alert-dot, .subnav-chip.active .alert-dot{ box-shadow:0 0 0 1.5px rgba(255,255,255,.55); }
+  /* attention badge on the section header itself, so the issue is visible on landing */
+  .attn-badge{ display:inline-flex; align-items:center; gap:.3rem; font-size:.7rem; font-weight:600; color:var(--danger);
+    background:rgba(230,55,87,.1); border:1px solid rgba(230,55,87,.28); padding:.12rem .55rem; border-radius:1rem; white-space:nowrap; }
+  .attn-badge .svg-ico{ width:12px; height:12px; }
   /* discrete rounded filter controls — self-contained plates in a left-aligned row,
      no full-bleed band or hard dividers, so it sits naturally on the card layout */
   .ph-filter-row.open{ display:block; margin-top:.7rem; }
@@ -691,11 +725,74 @@
   /* the overview is in the right rail now, so drop its left-nav group in v2 sidebar */
   body.v2.nav-sidebar .toc-overview{ display:none !important; }
   @media (max-width:1100px){ .ov-rail{ display:none !important; } }
+
+  /* ============ VERSION 3 — left rail layout ============ */
+  body:not(.nav-v3) .v3-left{ display:none; }
+  /* v3 replaces the top patient header, left toc, right rail and tab sub-nav with one left panel */
+  body.nav-v3 .patient-header, body.nav-v3 .cat-subnav, body.nav-v3 .toc, body.nav-v3 .ov-rail{ display:none !important; }
+  /* page = left column (~1/4, the grid gap is the space between the two) + main area */
+  body.nav-v3 .page{ display:grid; grid-template-columns:1fr 3fr; gap:0; padding:0; align-items:start; }
+  body.nav-v3 .layout{ display:block; min-width:0; padding:1.5rem; }
+  body.nav-v3 .content{ min-width:0; }
+  /* line the main heading up with the patient name in the left panel */
+  body.nav-v3 .cat-heading{ margin-top:0; line-height:1.18; }
+  body.nav-v3 .main-grid{ max-width:1440px; margin:0 auto; }
+  /* no Overview tab — the overview data lives in the left panel, so hide it in the main flow */
+  body.v2.nav-v3 #cat-overview, body.v2.nav-v3 .info-cards{ display:none !important; }
+  /* panel: no fill, just a divider on the right; stays put while the main area scrolls */
+  body.nav-v3 .v3-left{ position:sticky; top:62px; align-self:start; height:calc(100vh - 62px);
+    display:flex; flex-direction:column; background:transparent; border-right:1px solid var(--gray-400); }
+  /* each subsection: equal padding on all sides; the divider spans the full panel width */
+  .v3-sec{ padding:1.5rem; border-bottom:1px solid var(--gray-400); }
+  .v3-sec:last-child{ border-bottom:none; }
+  /* header: patient profile on top, actions beside it */
+  .v3-phead{ display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+  .v3-actions{ display:flex; align-items:center; gap:.5rem; }
+  /* Add note: design-system outline-primary button, full-row width, with a + icon */
+  .v3-addnote{ display:flex; align-items:center; justify-content:center; gap:.4rem; width:100%; margin-top:.9rem; padding:.55rem 1rem;
+    border:1px solid var(--primary); border-radius:.55rem; background:transparent; color:var(--primary); font-size:.92rem; font-weight:600;
+    cursor:pointer; transition:background .14s,color .14s; }
+  .v3-addnote:hover{ background:var(--primary); color:#fff; }
+  .v3-addnote .svg-ico{ width:14px; height:14px; }
+  /* navigation: secondary buttons in one row */
+  .v3-nav{ display:flex; flex-wrap:wrap; gap:.45rem; }
+  .v3-cat{ flex:0 0 auto; padding:.45rem .9rem; border:1px solid var(--gray-300); border-radius:.55rem;
+    background:linear-gradient(180deg,#fff,#eef3f9); color:var(--gray-700); font-size:.86rem; font-weight:500; cursor:pointer;
+    box-shadow:0 1px 2px rgba(31,45,61,.08); transition:border-color .14s,color .14s,background .14s,box-shadow .14s,transform .14s; }
+  .v3-cat:hover{ border-color:var(--primary); color:var(--primary); box-shadow:0 2px 7px rgba(44,123,229,.2); transform:translateY(-1px); }
+  .v3-cat.active{ border-color:var(--primary-hover); color:#fff; font-weight:600;
+    background:linear-gradient(180deg,#4a93f0 0%,var(--primary) 55%,var(--primary-hover) 100%);
+    box-shadow:0 4px 14px rgba(44,123,229,.45), 0 0 0 3px rgba(44,123,229,.16); }
+  /* subtitle links in a row: selected = primary, others neutral */
+  .v3-sub{ display:flex; flex-wrap:wrap; gap:.3rem 1.1rem; margin-top:.95rem; }
+  .v3-link{ flex:0 0 auto; display:inline-flex; align-items:baseline; gap:.3rem; padding:.1rem 0; border:none; background:none;
+    font-size:.86rem; color:var(--gray-600); cursor:pointer; }
+  .v3-link:hover{ color:var(--gray-900); }
+  .v3-link.active{ color:var(--primary); font-weight:600; }
+  .v3-lcount{ font-size:.68rem; color:var(--gray-400); }
+  .v3-link.active .v3-lcount{ color:var(--primary); }
+  /* patient overview */
+  .v3-profile{ display:flex; align-items:center; gap:.6rem; }
+  .v3-avatar{ width:42px; height:42px; flex:0 0 auto; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg,#a9d4f2 0%,#47b0ff 100%); color:#0b101a; font-size:.9rem; font-weight:400; }
+  .v3-id{ display:flex; flex-direction:column; min-width:0; }
+  .v3-name{ font-size:1.6rem; font-weight:600; color:var(--gray-900); line-height:1.15; }
+  .v3-meta{ font-size:.78rem; color:var(--gray-500); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  /* patient overview subsection — scrolls within the panel if it runs long, header/nav stay put */
+  .v3-ovsec{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+  .v3-ovlabel{ font-size:.6rem; text-transform:uppercase; letter-spacing:.05em; color:var(--gray-500); font-weight:600; margin-bottom:.5rem; }
+  .v3-ov{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; }
+  .v3-ov::-webkit-scrollbar{ display:none; }
+  /* the overview blocks were built for the narrow rail (negative side margins) — neutralize here */
+  .v3-ov .ov-block{ margin-left:0; margin-right:0; padding-left:0; padding-right:0; }
+  .v3-ov .ov-kv .v{ min-width:0; overflow-wrap:anywhere; }
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-plus" viewBox="0 0 16 16"><path d="M8 2.25a.75.75 0 0 1 .75.75v4.25H13a.75.75 0 0 1 0 1.5H8.75V13a.75.75 0 0 1-1.5 0V8.75H3a.75.75 0 0 1 0-1.5h4.25V3A.75.75 0 0 1 8 2.25z"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 16 16"><path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></symbol>
   <symbol id="i-calendar" viewBox="0 0 16 16"><path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/></symbol>
   <symbol id="i-printer" viewBox="0 0 16 16"><path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/><path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/></symbol>
   <symbol id="i-gear" viewBox="0 0 16 16"><path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.93 2.93 0 1 1 0-5.86 2.93 2.93 0 0 1 0 5.86z"/></symbol>
@@ -1513,14 +1610,15 @@
     const stickLine=()=> (parseInt(getComputedStyle(document.body).getPropertyValue('--stick'))||110) + 20;
     function spy(){ const line=stickLine(); let cur=spyTargets[0]&&spyTargets[0].id;
       for(const s of spyTargets){ if(s.getBoundingClientRect().top-line<=0) cur=s.id; } setActive(cur); }
-    function onScroll(){ spy(); tabsSpy(); ticking=false; }
+    function onScroll(){ spy(); tabsSpy(); if(window.__v3Spy) window.__v3Spy(); ticking=false; }
     window.addEventListener('scroll', ()=>{ if(!ticking){ticking=true; requestAnimationFrame(onScroll);} }, {passive:true});
     spy();
 
     // ===== Alternative navigation: category tabs =====
     const catTabs = document.createElement('div'); catTabs.className='cat-tabs';
     // Overview has no tab — it's opened from the header person button instead
-    groups.forEach(g=>{ if(g.id==='cat-overview') return; const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id; t.textContent=g.label; catTabs.appendChild(t); });
+    const catHasAlert = g => g.items.some(it=>it[2]&&it[2].alert);
+    groups.forEach(g=>{ if(g.id==='cat-overview') return; const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id; t.innerHTML=g.label+(catHasAlert(g)?'<span class="alert-dot" title="Needs attention"></span>':''); catTabs.appendChild(t); });
     // place the category tabs inside the page header, next to the title (before the actions)
     const phRow = document.querySelector('.patient-header .ph-row');
     const phActions = phRow.querySelector('.ph-actions');
@@ -1534,7 +1632,7 @@
     let activeCat = (groups.find(g=>g.id!=='cat-overview')||groups[0]).id;
     function buildSubnav(catId){
       const g = groups.find(x=>x.id===catId);
-      subnav.innerHTML = g.items.map(([id,label],i)=>`<button class="subnav-chip${i===0?' active':''}" data-target="${id}">${label}</button>`).join('');
+      subnav.innerHTML = g.items.map(([id,label,meta],i)=>`<button class="subnav-chip${i===0?' active':''}" data-target="${id}">${label}${meta&&meta.alert?'<span class="alert-dot" title="Needs attention"></span>':''}</button>`).join('');
     }
     function tabsSpy(){
       if(!document.body.classList.contains('nav-tabs')) return;
@@ -1543,7 +1641,7 @@
       if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4){
         cur = chips[chips.length-1].dataset.target; // bottom of page → last section
       } else {
-        const line=168;
+        const line=(parseInt(getComputedStyle(document.body).getPropertyValue('--stick-sub'))||168)+4;
         chips.forEach(ch=>{ const el=document.getElementById(ch.dataset.target); if(el && el.getBoundingClientRect().top-line<=0) cur=ch.dataset.target; });
       }
       chips.forEach(ch=>ch.classList.toggle('active', ch.dataset.target===cur));
@@ -1559,22 +1657,78 @@
     window.__showCategory = showCategory;
     catTabs.addEventListener('click', e=>{ const t=e.target.closest('.cat-tab'); if(t) showCategory(t.dataset.cat); });
 
+    // ===== Version 3: left rail — patient header on top, then nav buttons, then section links =====
+    const v3 = document.createElement('aside'); v3.className='v3-left'; v3.id='v3-left';
+    // header subsection: the patient profile stays on top, with the actions beside it
+    const v3header = document.createElement('div'); v3header.className='v3-sec v3-header';
+    v3header.innerHTML =
+      '<div class="v3-phead">'+
+        '<div class="v3-profile"><div class="v3-avatar">MS</div><div class="v3-id"><span class="v3-name">Maria Sanchez</span><span class="v3-meta">23 yrs · Female · MRN 00482915</span></div></div>'+
+        '<div class="v3-actions"><button class="notes-btn" title="Notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge">3</span></button><button class="notes-btn" id="v3-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg></button></div>'+
+      '</div>'+
+      '<button class="v3-addnote"><svg class="svg-ico"><use href="#i-plus"/></svg>Add note</button>';
+    // navigation subsection: secondary category buttons + section links together (one band)
+    const v3navsec = document.createElement('div'); v3navsec.className='v3-sec v3-navsec';
+    const v3nav = document.createElement('nav'); v3nav.className='v3-nav';
+    groups.forEach(g=>{ if(g.id==='cat-overview') return; const btn=document.createElement('button'); btn.className='v3-cat'; btn.dataset.cat=g.id; btn.innerHTML=g.label+(g.items.some(it=>it[2]&&it[2].alert)?'<span class="alert-dot" title="Needs attention"></span>':''); v3nav.appendChild(btn); });
+    const v3sub = document.createElement('div'); v3sub.className='v3-sub';
+    v3navsec.appendChild(v3nav); v3navsec.appendChild(v3sub);
+    // patient overview subsection: the overview data (same as Version 1's "Patient overview" rail)
+    const v3ovsec = document.createElement('div'); v3ovsec.className='v3-sec v3-ovsec';
+    v3ovsec.innerHTML = '<div class="v3-ovlabel">Patient overview</div><div class="v3-ov" id="v3-ov"></div>';
+    [v3header, v3navsec, v3ovsec].forEach(el=>v3.appendChild(el));
+    const pageEl = document.querySelector('.page'); pageEl.insertBefore(v3, pageEl.firstChild);
+    window.__v3OvMount = v3ovsec.querySelector('#v3-ov');
+
+    function updateV3Cats(){ v3nav.querySelectorAll('.v3-cat').forEach(b=>b.classList.toggle('active', b.dataset.cat===activeCat)); }
+    function buildV3Sub(catId){ const g=groups.find(x=>x.id===catId); if(!g) return;
+      v3sub.innerHTML = g.items.map(([id,label,meta],i)=>{ meta=meta||{};
+        return '<button class="v3-link'+(i===0?' active':'')+'" data-target="'+id+'"><span>'+label+(meta.alert?'<span class="alert-dot" title="Needs attention"></span>':'')+'</span>'+(meta.c!=null?'<span class="v3-lcount">'+meta.c+'</span>':'')+'</button>'; }).join('');
+    }
+    v3nav.addEventListener('click', e=>{ const b=e.target.closest('.v3-cat'); if(!b) return; showCategory(b.dataset.cat); buildV3Sub(b.dataset.cat); updateV3Cats(); window.scrollTo({top:0}); });
+    v3sub.addEventListener('click', e=>{ const l=e.target.closest('.v3-link'); if(!l) return; const el=document.getElementById(l.dataset.target); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); });
+    function v3Spy(){ if(!document.body.classList.contains('nav-v3')) return; const links=[...v3sub.querySelectorAll('.v3-link')]; if(!links.length) return;
+      let cur=links[0].dataset.target; const line=90;
+      if(window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4){ cur=links[links.length-1].dataset.target; }
+      else { links.forEach(l=>{ const el=document.getElementById(l.dataset.target); if(el && el.getBoundingClientRect().top-line<=0) cur=l.dataset.target; }); }
+      links.forEach(l=>l.classList.toggle('active', l.dataset.target===cur));
+    }
+    window.__v3Spy = v3Spy; window.__buildV3Sub = buildV3Sub; window.__updateV3Cats = updateV3Cats;
+
+    // flag the actual section headers that need attention, so the issue is visible on landing
+    groups.forEach(g=>g.items.forEach(([id,label,meta])=>{
+      if(meta && meta.alert){
+        const sec=document.getElementById(id); const title=sec && sec.querySelector('.panel-title');
+        if(title && !title.querySelector('.attn-badge')){
+          const badge=document.createElement('span'); badge.className='attn-badge';
+          badge.innerHTML='<svg class="svg-ico"><use href="#i-warn"/></svg>'+(meta.sub||'Needs attention');
+          title.appendChild(badge);
+        }
+      }
+    }));
+
     // ===== settings dropdown: user info · navigation mode · design version =====
     const navUser = document.querySelector('.nav-user'); navUser.style.position='relative';
     const gearMenu = document.createElement('div'); gearMenu.className='gear-menu';
     gearMenu.innerHTML =
       '<div class="gm-userhead"><div class="n">Jane Doe</div><div class="r">Care coordinator</div><div class="dt" id="gm-datetime"></div></div>'+
-      '<div class="gm-title">Navigation</div>'+
-      '<button class="gm-item active" data-mode="sidebar"><span>Sidebar</span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
-      '<button class="gm-item" data-mode="tabs"><span>Tabs</span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
+      '<div class="gm-title">Layouts</div>'+
+      '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Grouped tabs with section chips</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="v3"><span class="gm-txt"><span class="gm-name">Version 3</span><span class="gm-desc">Left panel with nav, profile and section links</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
     navUser.appendChild(gearMenu);
 
     function setMode(mode){
+      document.body.classList.remove('nav-sidebar','nav-tabs','nav-v3');
       if(mode==='tabs'){
-        document.body.classList.add('nav-tabs'); document.body.classList.remove('nav-sidebar');
+        document.body.classList.add('nav-tabs');
         showCategory(activeCat);
+      } else if(mode==='v3'){
+        document.body.classList.add('nav-v3');
+        showCategory(activeCat); buildV3Sub(activeCat); updateV3Cats();
+        window.scrollTo({top:0});
       } else {
-        document.body.classList.add('nav-sidebar'); document.body.classList.remove('nav-tabs');
+        document.body.classList.add('nav-sidebar');
         grid.querySelectorAll(':scope > [data-cat]').forEach(el=>{ el.style.display=''; });
         spy();
       }
@@ -1608,9 +1762,23 @@
   (function(){
     // Filters icon button toggles the plates filter bar
     const fbtn = document.getElementById('ph-filter-btn');
-    const frow = document.getElementById('ph-filter-row');
     const fbar = document.getElementById('filter-bar');
-    if(fbtn && frow) fbtn.addEventListener('click', ()=>{ const open=!frow.classList.contains('open'); frow.classList.toggle('open', open); fbtn.classList.toggle('active', open); });
+    // shared filter popover: move the plates into a floating panel that both the V2 header button
+    // and the V3 panel button open — keeps filters available without disturbing the page layout
+    const fpop = document.createElement('div'); fpop.className='filter-pop'; fpop.id='filter-pop';
+    fpop.innerHTML = '<div class="filter-pop-head"><span class="t">Filters</span><button class="filter-pop-clear" id="filter-pop-clear">Clear all</button></div>';
+    document.body.appendChild(fpop);
+    if(fbar) fpop.appendChild(fbar);
+    const filterBtns = [fbtn, document.getElementById('v3-filter-btn')].filter(Boolean);
+    filterBtns.forEach(b=>{ if(!b.querySelector('.filter-count')){ const s=document.createElement('span'); s.className='filter-count'; b.appendChild(s); } });
+    let fpopAnchor = null;
+    function positionPop(a){ const r=a.getBoundingClientRect(); let left=r.right-fpop.offsetWidth; left=Math.max(8, Math.min(left, window.innerWidth-fpop.offsetWidth-8)); fpop.style.left=left+'px'; fpop.style.top=(r.bottom+6)+'px'; }
+    function closePop(){ fpop.classList.remove('open'); filterBtns.forEach(b=>b.classList.remove('active')); fpopAnchor=null; }
+    function openPop(a){ fpopAnchor=a; fpop.classList.add('open'); positionPop(a); filterBtns.forEach(b=>b.classList.toggle('active', b===a)); }
+    filterBtns.forEach(b=> b.addEventListener('click', e=>{ e.stopPropagation(); if(fpop.classList.contains('open') && fpopAnchor===b) closePop(); else openPop(b); }));
+    document.addEventListener('click', e=>{ if(fpop.classList.contains('open') && !e.target.closest('#filter-pop') && !e.target.closest('#ph-filter-btn') && !e.target.closest('#v3-filter-btn')) closePop(); });
+    window.addEventListener('scroll', ()=>{ if(fpop.classList.contains('open') && fpopAnchor) positionPop(fpopAnchor); }, {passive:true});
+    window.addEventListener('resize', ()=>{ if(fpop.classList.contains('open') && fpopAnchor) positionPop(fpopAnchor); });
 
     // filter plates with custom list dropdowns (mock data)
     const filterDefs = [
@@ -1630,14 +1798,26 @@
         </div>`).join('');
       // mark cells whose value differs from the default, and reflect it on the Filters button + Clear action
       function refreshState(){
-        let any=false;
+        let count=0;
         fbar.querySelectorAll('.filter-cell').forEach(c=>{
           const set = c.querySelector('.fc-value').textContent.trim() !== defaults[c.dataset.key];
-          c.classList.toggle('set', set); if(set) any=true;
+          c.classList.toggle('set', set); if(set) count++;
         });
-        if(fbtn) fbtn.classList.toggle('has-set', any);
+        const any=count>0;
+        filterBtns.forEach(b=>{ b.classList.toggle('has-set', any); const badge=b.querySelector('.filter-count'); if(badge) badge.textContent=count; });
         if(fclear) fclear.classList.toggle('show', any);
+        const fpopClear=document.getElementById('filter-pop-clear'); if(fpopClear) fpopClear.classList.toggle('show', any);
       }
+      function clearAll(){
+        fbar.querySelectorAll('.filter-cell').forEach(c=>{
+          const d = defaults[c.dataset.key];
+          c.querySelector('.fc-value').textContent = d;
+          c.querySelectorAll('.fl-opt').forEach(o=>o.classList.toggle('selected', o.textContent===d));
+          c.classList.remove('active');
+        });
+        refreshState();
+      }
+      const fpopClearBtn=document.getElementById('filter-pop-clear'); if(fpopClearBtn) fpopClearBtn.addEventListener('click', clearAll);
       fbar.addEventListener('click', e=>{
         const opt = e.target.closest('.fl-opt');
         if(opt){
@@ -1656,15 +1836,7 @@
       });
       document.addEventListener('click', e=>{ if(!e.target.closest('#filter-bar')) fbar.querySelectorAll('.filter-cell').forEach(c=>c.classList.remove('active')); });
       // Clear all → reset every plate back to its default
-      if(fclear) fclear.addEventListener('click', ()=>{
-        fbar.querySelectorAll('.filter-cell').forEach(c=>{
-          const d = defaults[c.dataset.key];
-          c.querySelector('.fc-value').textContent = d;
-          c.querySelectorAll('.fl-opt').forEach(o=>o.classList.toggle('selected', o.textContent===d));
-          c.classList.remove('active');
-        });
-        refreshState();
-      });
+      if(fclear) fclear.addEventListener('click', clearAll);
       refreshState();
     }
 
@@ -1737,6 +1909,9 @@
           '</div>'+
         '</div>';
       layout.appendChild(rail);
+      // mirror the overview content into the Version 3 left panel (same data, no Overview tab)
+      const v3ovMount = window.__v3OvMount; const railBody = rail.querySelector('.ov-rail-body');
+      if(v3ovMount && railBody) v3ovMount.innerHTML = railBody.innerHTML;
       // the rail is toggled from the header "Patient overview" button (active = open)
       const ovBtn = document.getElementById('ph-overview-btn');
       function setOverview(open){
@@ -1814,10 +1989,14 @@
     const nav = document.querySelector('.lanes-navbar');
     const ph  = document.querySelector('.patient-header');
     if(!nav || !ph) return;
+    const subnav = document.querySelector('.cat-subnav');
     function updateStick(){
       document.body.style.setProperty('--stick', (nav.offsetHeight + ph.offsetHeight + 6) + 'px');
+      // tabs mode also has the sticky chip sub-nav below the header — include it in the scroll offset
+      const subH = (subnav && document.body.classList.contains('nav-tabs')) ? subnav.offsetHeight : 0;
+      document.body.style.setProperty('--stick-sub', (nav.offsetHeight + ph.offsetHeight + subH + 10) + 'px');
     }
-    if(window.ResizeObserver){ new ResizeObserver(updateStick).observe(ph); new ResizeObserver(updateStick).observe(nav); }
+    if(window.ResizeObserver){ new ResizeObserver(updateStick).observe(ph); new ResizeObserver(updateStick).observe(nav); if(subnav) new ResizeObserver(updateStick).observe(subnav); }
     window.addEventListener('resize', updateStick);
     updateStick();
   })();
