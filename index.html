@@ -782,7 +782,12 @@
   .ovx-ico{ width:28px; height:28px; border-radius:.5rem; display:flex; align-items:center; justify-content:center;
     background:#fff; border:1px solid var(--gray-200); color:var(--gray-600); flex:0 0 auto; }
   .ovx-ico svg{ width:15px; height:15px; }
-  .ovx-card-title{ font-weight:600; color:var(--gray-900); font-size:0.9rem; }
+  .ovx-card-title{ font-weight:600; color:var(--gray-900); font-size:0.9rem;
+    display:flex; align-items:center; min-height:28px; min-width:0;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ovx-card-head{ flex-wrap:nowrap; }
+  .ovx-badge{ flex:0 0 auto; align-self:center; font-size:0.75rem; font-weight:600; line-height:1; white-space:nowrap;
+    color:var(--gray-700); background:var(--gray-200); border:1px solid var(--gray-300); border-radius:1rem; padding:.2rem .5rem; }
   .ovx-viewall{ margin-top:auto; padding-top:.6rem; font-size:0.875rem; color:var(--primary); white-space:nowrap; }
   .ovx-item{ padding:.5rem 0; border-top:1px solid var(--gray-200); }
   .ovx-item:first-of-type{ border-top:none; }
@@ -1723,7 +1728,7 @@
     const ovxCards = [
       {title:'Coverage', icon:'i-shield', items:[
         {lbl:'Plan', val:'Medi-Cal — Health Net'}, {lbl:'Program', val:'Enhanced Care Management (ECM)'}]},
-      {title:'Current medications', viewall:true, icon:'i-pill', items:[
+      {title:'Medications', viewall:true, icon:'i-pill', items:[
         {lbl:'Antihypertensive', val:'amLODIPine 5 mg'}, {lbl:'Antipsychotic', val:'QUEtiapine 100 mg'}, {lbl:'Antihistamine', val:'loratadine 10 mg'}]},
       {title:'Active problems', viewall:true, icon:'i-warn', items:[
         {lbl:'F20.9', val:'Schizophrenia, unspecified'}, {lbl:'M79.7', val:'Fibromyalgia'}, {lbl:'K43.9', val:'Ventral hernia'}]},
@@ -1731,14 +1736,14 @@
         {lbl:'BP', val:'118/81 mmHg'}, {lbl:'Pulse rate', val:'72 bpm'}, {lbl:'Temperature', val:'36.67 °C'}]},
       {title:'Recent labs', viewall:true, icon:'i-flask', accent:true, items:[
         {lbl:'Hemoglobin', val:'12.1 (Low)'}, {lbl:'RBC', val:'4.6'}, {lbl:'Platelets', val:'265'}]},
-      {title:'Encounters · last 6 months', icon:'i-pulse', items:[
+      {title:'Encounters', badge:'6 mo', icon:'i-pulse', items:[
         {lbl:'Emergency', val:'20'}, {lbl:'Inpatient', val:'0'}, {lbl:'Outpatient', val:'23'}]},
       {title:'Readmissions', icon:'i-warn', accent:true, items:[
         {lbl:'Within 30 days', val:'4'}, {lbl:'Most recent', val:'Olive View-UCLA · 27 days'}]},
       {title:'Active allergies', icon:'i-warn', accent:true, items:[{lbl:'', val:'Codeine'}, {lbl:'', val:'Haldol'}]},
     ];
     ovPlate.querySelector('.ovp-body').innerHTML = '<div class="ovx-cards">'+ovxCards.map(c=>
-      '<div class="ovx-card'+(c.accent?' accent':'')+'"><div class="ovx-card-head"><span class="ovx-ico"><svg class="svg-ico"><use href="#'+c.icon+'"/></svg></span><span class="ovx-card-title">'+c.title+'</span></div>'+
+      '<div class="ovx-card'+(c.accent?' accent':'')+'"><div class="ovx-card-head"><span class="ovx-ico"><svg class="svg-ico"><use href="#'+c.icon+'"/></svg></span><span class="ovx-card-title">'+c.title+'</span>'+(c.badge?'<span class="ovx-badge">'+c.badge+'</span>':'')+'</div>'+
       '<div class="ovx-items">'+c.items.map(it=>'<div class="ovx-item">'+(it.lbl?'<div class="ovx-item-top"><span class="ovx-item-lbl">'+it.lbl+'</span><svg class="svg-ico ovx-item-chev"><use href="#i-cd"/></svg></div>':'')+'<div class="ovx-item-val">'+it.val+'</div></div>').join('')+'</div>'+
       (c.viewall?'<a href="#" class="ovx-viewall">View all</a>':'')+
       '</div>').join('')+'</div>';
