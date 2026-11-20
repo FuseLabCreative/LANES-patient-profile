@@ -1113,7 +1113,7 @@ body.flow-locked{ overflow:hidden; }
 .ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
 
 .portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
-.sa-pagehead{ display:flex; align-items:center; gap:1rem; margin-bottom:1.3rem; }
+.sa-pagehead{ display:flex; align-items:center; gap:1rem; margin-bottom:1.3rem; flex:none; }
 .sa-pagehead .sa-clinic-btn{ padding:.45rem .55rem; margin-left:-.55rem; }
 .sa-pagehead .sa-clinic-btn:hover{ background:var(--gray-100); }
 .sa-pagehead .sa-clinic-name{ font-size:1.5rem; }
@@ -1122,7 +1122,10 @@ body.flow-locked{ overflow:hidden; }
 .sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
 .sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
 .sa-change:hover{ background:var(--gray-100); }
-.sa-body{ max-width:1440px; margin:0 auto; padding:1.5rem 1.5rem 3rem; }
+#scr-alerts.portal-screen{ overflow:hidden; }
+#scr-alerts.portal-screen.active{ display:flex; flex-direction:column; }
+.sa-body{ max-width:1440px; width:100%; margin:0 auto; padding:1.5rem 1.5rem 0; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; box-sizing:border-box; }
+.sa-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; padding-bottom:3rem; }
 .sa-charts{ display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
 .sa-chart-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1rem 1.1rem; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
@@ -1230,6 +1233,7 @@ body.flow-locked{ overflow:hidden; }
         </div>
       </div>
     </div>
+    <div class="sa-scroll">
     <div class="sa-charts">
       <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
       <div class="sa-chart-card"><div class="sa-chart-title">Service Delivery Location &mdash; Last 30 Days</div><div id="sa-chart-sdl" class="sa-chart"></div></div>
@@ -1252,6 +1256,7 @@ body.flow-locked{ overflow:hidden; }
         </table>
       </div>
       <div class="sa-pager"><span id="sa-pager-info">&mdash;</span></div>
+    </div>
     </div>
   </div>
 </div>
