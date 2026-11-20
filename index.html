@@ -1286,12 +1286,12 @@ body.flow-locked{ overflow:hidden; }
 .sa-cnum{ font-weight:700; }
 
 /* ---- sticky right Patient column + avatar cell ---- */
-.sa-table th.sa-sticky-r, .sa-table td.sa-sticky-r{ position:sticky; right:0; z-index:2; background:#fff; }
-.sa-table td.sa-sticky-r{ box-shadow:-7px 0 9px -7px rgba(43,48,58,.18); }
-.sa-table thead th.sa-sticky-r{ z-index:3; background:var(--gray-100); box-shadow:-7px 0 9px -7px rgba(43,48,58,.14); }
-.sa-table tbody tr:hover td.sa-sticky-r{ background:var(--gray-100); }
+.sa-table th.sa-sticky-r, .sa-table td.sa-sticky-r{ position:sticky; right:0; z-index:2; border-left:1px solid var(--gray-200); background:#f5f8fc; }
+.sa-table td.sa-sticky-r{ box-shadow:-5px 0 8px -7px rgba(43,48,58,.1); }
+.sa-table thead th.sa-sticky-r{ z-index:3; background:var(--gray-100); box-shadow:-5px 0 8px -7px rgba(43,48,58,.08); }
+.sa-table tbody tr:hover td.sa-sticky-r{ background:#eef3fb; }
 .sa-pt-inner{ display:flex; align-items:center; gap:.65rem; }
-.sa-av{ width:38px; height:38px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:#3d3a66; background:linear-gradient(135deg,#c6c0f6,#9b91ee); }
+.sa-av{ width:38px; height:38px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:500; color:var(--primary); background:rgba(44,123,229,.14); }
 .sa-pt-txt{ display:flex; flex-direction:column; min-width:0; }
 .sa-pt-name{ display:flex; align-items:center; gap:.3rem; }
 .sa-pt-sub{ font-size:.76rem; color:var(--gray-500); margin-top:.05rem; }
@@ -3330,7 +3330,7 @@ body.flow-locked{ overflow:hidden; }
         '<td><span class="sa-cnum" style="color:var(--gray-700)">'+r.inp+'</span></td>'+
         '<td><button class="btn-ghost sa-note-btn2" type="button"><svg class="svg-ico" style="width:12px;height:12px"><use href="#i-plus"/></svg> Note</button></td>'+
         '<td class="sa-sticky-r sa-pt-cell"><div class="sa-pt-inner"><span class="sa-av">'+initials(r.name)+'</span>'+
-          '<span class="sa-pt-txt"><span class="sa-pt-name"><a class="sa-pname">'+r.name+'</a>'+(r.prog?'<span class="sa-pheart" title="'+r.prog+'">&#9829;</span>':'')+'</span>'+
+          '<span class="sa-pt-txt"><span class="sa-pt-name"><a class="sa-pname">'+r.name+'</a></span>'+
           '<span class="sa-pt-sub">DOB '+r.dob+'</span></span></div></td>';
       tr.querySelector('.sa-pname').addEventListener('click',()=>show('synopsis'));
       tr.querySelector('.sa-xp-btn').addEventListener('click',e=>toggleDetail(tr,r,e.currentTarget));
