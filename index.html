@@ -1113,7 +1113,7 @@ body.flow-locked{ overflow:hidden; }
 .ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
 
 .portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
-.sa-pagehead{ display:flex; align-items:center; gap:1rem; padding-bottom:1.15rem; margin-bottom:1.5rem; border-bottom:1px solid var(--gray-300); flex:none; }
+.sa-pagehead{ display:flex; align-items:center; gap:1rem; flex:none; }
 .sa-pagehead .sa-clinic-btn{ padding:.45rem .55rem; margin-left:-.55rem; }
 .sa-pagehead .sa-clinic-btn:hover{ background:var(--gray-100); }
 .sa-pagehead .sa-clinic-name{ font-size:1.5rem; }
@@ -1124,8 +1124,10 @@ body.flow-locked{ overflow:hidden; }
 .sa-change:hover{ background:var(--gray-100); }
 #scr-alerts.portal-screen{ overflow:hidden; }
 #scr-alerts.portal-screen.active{ display:flex; flex-direction:column; }
-.sa-body{ max-width:1440px; width:100%; margin:0 auto; padding:1.5rem 1.5rem 0; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; box-sizing:border-box; }
-.sa-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; padding-bottom:3rem; }
+.sa-headband{ flex:none; border-bottom:1px solid var(--gray-300); }
+.sa-headband-inner{ max-width:1440px; width:100%; margin:0 auto; padding:1.25rem 1.5rem; box-sizing:border-box; }
+.sa-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; }
+.sa-scroll-inner{ max-width:1440px; width:100%; margin:0 auto; padding:1.5rem 1.5rem 3rem; box-sizing:border-box; }
 .sa-charts{ display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
 .sa-chart-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1rem 1.1rem; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
@@ -1217,7 +1219,7 @@ body.flow-locked{ overflow:hidden; }
 <!-- ============ PORTAL FLOW: SMART ALERTS ============ -->
 <div id="scr-alerts" class="portal-screen">
   <div class="nav-host"></div>
-  <div class="sa-body">
+  <div class="sa-headband"><div class="sa-headband-inner">
     <div class="sa-pagehead">
       <div class="sa-clinic" id="sa-clinic">
         <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
@@ -1233,7 +1235,8 @@ body.flow-locked{ overflow:hidden; }
         </div>
       </div>
     </div>
-    <div class="sa-scroll">
+  </div></div>
+  <div class="sa-scroll"><div class="sa-scroll-inner">
     <div class="sa-charts">
       <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
       <div class="sa-chart-card"><div class="sa-chart-title">Service Delivery Location &mdash; Last 30 Days</div><div id="sa-chart-sdl" class="sa-chart"></div></div>
