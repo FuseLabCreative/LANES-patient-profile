@@ -113,7 +113,7 @@
   .hx-close{ flex:0 0 auto; width:34px; height:34px; border-radius:.375rem; border:1px solid var(--gray-300); background:#fff; cursor:pointer;
     color:var(--gray-600); display:flex; align-items:center; justify-content:center; }
   .hx-close svg{ width:16px; height:16px; } .hx-close:hover{ background:var(--gray-100); color:var(--gray-900); }
-  .hx-tools{ display:flex; gap:1.2rem; align-items:flex-end; padding:.2rem 1.6rem 1rem; flex-wrap:wrap; }
+  .hx-tools{ display:flex; gap:1.2rem; align-items:flex-end; padding:1.6rem 1.6rem 1rem; flex-wrap:wrap; }
   .hx-field{ display:flex; flex-direction:column; gap:.3rem; }
   .hx-field.grow{ flex:1 1 320px; min-width:200px; }
   .hx-field label{ font-size:0.875rem; color:var(--gray-700); font-weight:500; }
@@ -137,7 +137,7 @@
   .hx-dd-opt:hover{ background:var(--gray-100); }
   .hx-dd-opt.sel{ background:rgba(44,123,229,.1); color:var(--primary); font-weight:500; }
   .hx-shell{ display:flex; flex:1 1 auto; min-height:0; }
-  .hx-nav{ display:none; flex:0 0 256px; border-right:1px solid var(--gray-200); padding:1rem .8rem 1rem 1.6rem; overflow:auto; }
+  .hx-nav{ display:none; flex:0 0 256px; border-right:1px solid var(--gray-200); padding:.8rem; overflow:auto; }
   .hx-overlay.hub .hx-nav{ display:block; }
   .hx-navitem{ display:flex; align-items:center; gap:.6rem; width:100%; text-align:left; padding:.6rem .7rem; border:none;
     background:none; border-radius:.45rem; cursor:pointer; color:var(--gray-700); font:inherit; font-size:0.9rem; }
@@ -149,9 +149,9 @@
   .hx-navitem .hx-navcount{ margin-left:auto; font-size:0.8rem; color:var(--gray-500); font-weight:500; }
   .hx-navitem.active .hx-navcount{ color:var(--primary); }
   .hx-content{ display:flex; flex-direction:column; flex:1 1 auto; min-width:0; min-height:0; background:#fff; }
-  .hx-tablewrap{ overflow:auto; margin:0 1.6rem 1.4rem; border:1px solid var(--gray-200); border-radius:.5rem; flex:1 1 auto; min-height:0; background:#fff; }
-  .hx-overlay.hx-notools .hx-tablewrap{ margin-top:1.4rem; }
-  .hx-overlay.hub .hx-tools{ padding-top:1rem; }
+  .hx-tablewrap{ overflow:auto; margin:0 1.6rem 1.6rem; border:1px solid var(--gray-200); border-radius:.5rem; flex:1 1 auto; min-height:0; background:#fff; }
+  .hx-overlay.hx-notools .hx-tablewrap{ margin-top:1.6rem; }
+  .hx-overlay.hub .hx-tools{ padding-top:1.6rem; }
   .hx-table{ width:100%; border-collapse:collapse; font-size:0.875rem; }
   .hx-table th{ position:sticky; top:0; background:var(--gray-100); color:var(--gray-700); font-weight:600; text-align:left;
     padding:.7rem 1rem; white-space:nowrap; border-bottom:1px solid var(--gray-200); cursor:pointer; user-select:none; }
@@ -1324,10 +1324,10 @@ body.flow-locked{ overflow:hidden; }
 .sa-fcount{ background:var(--primary); color:#fff; font-size:.7rem; font-weight:700; border-radius:9px; padding:.02rem .4rem; margin-left:.1rem; }
 
 /* ---- visit / event badges ---- */
-.sa-vbadge{ display:inline-flex; align-items:center; gap:.3rem; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; }
+.sa-vbadge{ display:inline-flex; align-items:center; gap:.3rem; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; background:none; border:1px solid currentColor; }
 .sa-vbadge .svg-ico{ width:12px; height:12px; }
-.vb-emg{ background:rgba(230,55,87,.12); color:#c42a46; } .vb-inp{ background:rgba(92,124,250,.15); color:#3f5bb5; }
-.vb-out{ background:rgba(44,155,143,.15); color:#1a7d72; } .vb-spec{ background:rgba(44,123,229,.12); color:#1e62c0; }
+.vb-emg{ color:#c42a46; } .vb-inp{ color:#3f5bb5; }
+.vb-out{ color:#1a7d72; } .vb-spec{ color:#1e62c0; }
 .sa-ebadge{ display:inline-block; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; }
 .eb-admit{ background:rgba(230,55,87,.12); color:#c42a46; } .eb-disch{ background:rgba(44,155,143,.15); color:#1a7d72; }
 .eb-trans{ background:rgba(245,128,62,.16); color:#c25a1b; } .eb-reg{ background:rgba(44,123,229,.12); color:#1e62c0; }
