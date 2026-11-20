@@ -1286,6 +1286,10 @@ body.flow-locked{ overflow:hidden; }
 .sa-cnum{ font-weight:700; }
 
 /* ---- sticky right Patient column + avatar cell ---- */
+.sa-table th.sa-sticky-l, .sa-table td.sa-sticky-l{ position:sticky; left:0; z-index:2; background:#fff; }
+.sa-table td.sa-sticky-l{ box-shadow:5px 0 8px -7px rgba(43,48,58,.1); }
+.sa-table thead th.sa-sticky-l{ z-index:3; background:var(--gray-100); box-shadow:5px 0 8px -7px rgba(43,48,58,.08); }
+.sa-table tbody tr:hover td.sa-sticky-l{ background:var(--gray-100); }
 .sa-table th.sa-sticky-r, .sa-table td.sa-sticky-r{ position:sticky; right:0; z-index:2; border-left:1px solid var(--gray-200); background:#f5f8fc; }
 .sa-table td.sa-sticky-r{ box-shadow:-5px 0 8px -7px rgba(43,48,58,.1); }
 .sa-table thead th.sa-sticky-r{ z-index:3; background:var(--gray-100); box-shadow:-5px 0 8px -7px rgba(43,48,58,.08); }
@@ -1363,7 +1367,7 @@ body.flow-locked{ overflow:hidden; }
       <div class="table-scroll">
         <table class="lanes-table sa-table">
           <thead><tr>
-            <th class="sa-xp-col"></th>
+            <th class="sa-xp-col sa-sticky-l"></th>
             <th class="sortable" data-sort="dt">Action Date / Time<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="loc">Service Delivery Location<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="spec">Specialty<span class="sort-ar">&#8597;</span></th>
@@ -3321,7 +3325,7 @@ body.flow-locked{ overflow:hidden; }
     const tb=document.getElementById('sa-tbody'); const shown=visibleRows();
     tb.innerHTML='';
     shown.forEach(r=>{ const tr=document.createElement('tr');
-      tr.innerHTML='<td class="sa-ico-cell"><button class="sa-xp-btn" type="button" title="Details"><svg class="svg-ico"><use href="#i-cr"/></svg></button></td>'+
+      tr.innerHTML='<td class="sa-ico-cell sa-sticky-l"><button class="sa-xp-btn" type="button" title="Details"><svg class="svg-ico"><use href="#i-cr"/></svg></button></td>'+
         '<td>'+r.dt+'</td><td>'+r.loc+'</td><td>'+r.spec+'</td>'+
         '<td>'+visitBadge(r.visit)+'</td>'+
         '<td>'+eventBadge(r.event)+'</td>'+
