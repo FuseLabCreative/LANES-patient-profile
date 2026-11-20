@@ -137,9 +137,9 @@
   .hx-dd-opt:hover{ background:var(--gray-100); }
   .hx-dd-opt.sel{ background:rgba(44,123,229,.1); color:var(--primary); font-weight:500; }
   .hx-shell{ display:flex; flex:1 1 auto; min-height:0; }
-  .hx-nav{ display:none; flex:0 0 256px; border-right:1px solid var(--gray-200); padding:.5rem; overflow:auto; }
+  .hx-nav{ display:none; flex:0 0 256px; border-right:1px solid var(--gray-200); padding:1rem .8rem 1rem 1.6rem; overflow:auto; }
   .hx-overlay.hub .hx-nav{ display:block; }
-  .hx-navitem{ display:flex; align-items:center; gap:.6rem; width:100%; text-align:left; padding:.6rem .7rem .6rem 1.1rem; border:none;
+  .hx-navitem{ display:flex; align-items:center; gap:.6rem; width:100%; text-align:left; padding:.6rem .7rem; border:none;
     background:none; border-radius:.45rem; cursor:pointer; color:var(--gray-700); font:inherit; font-size:0.9rem; }
   .hx-navitem > span:not(.hx-navcount){ flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .hx-navitem:hover{ background:var(--gray-100); }
@@ -313,8 +313,29 @@
 
   /* header tools */
   .header-tools{ display:flex; align-items:center; gap:.5rem; margin-left:auto; flex-wrap:wrap; justify-content:flex-end; }
-  /* section list/visualization segmented control */
-  .sec-seg{ display:inline-flex; flex:0 0 auto; gap:2px; padding:2px; background:var(--gray-200); border-radius:.45rem; }
+  /* section list/visualization segmented control — hidden for now */
+  .sec-seg{ display:none !important; }
+  /* full-page single-section view (overlay) */
+  body.sec-full-open{ overflow:hidden; }
+  .sec-fp{ position:fixed; inset:0; z-index:1600; background:var(--body-bg); display:none; flex-direction:column; }
+  .sec-fp.open{ display:flex; }
+  .sec-fp-top{ display:flex; align-items:center; gap:1rem; padding:1rem 2rem; background:#fff; border-bottom:1px solid var(--gray-200); flex:0 0 auto; }
+  .sec-fp-title{ font-size:1.15rem; font-weight:600; color:var(--gray-900); }
+  .sec-back{ display:inline-flex; align-items:center; gap:.4rem; border:1px solid var(--gray-300); background:#fff;
+    color:var(--gray-700); font:inherit; font-size:0.9rem; font-weight:500; padding:.45rem .85rem; border-radius:.45rem; cursor:pointer; }
+  .sec-back:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .sec-back .svg-ico{ width:14px; height:14px; }
+  .sec-fp-body{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:1.5rem;
+    align-items:start; max-width:1600px; width:100%; margin:0 auto; padding:1.5rem 2rem; overflow:auto; box-sizing:border-box; }
+  .sec-fp-main{ min-width:0; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; overflow:hidden; }
+  .sec-fp-side{ position:sticky; top:0; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1.1rem; }
+  .sec-fp-side h3{ margin:0 0 .9rem; font-size:0.95rem; font-weight:600; color:var(--gray-900); }
+  .sec-fp-side .filters{ display:flex; flex-direction:column; gap:.85rem; align-items:stretch; }
+  .sec-fp-side .filters > *{ width:100%; flex:0 0 auto !important; margin:0 !important; }
+  .sec-fp-main .table-scroll{ margin:0; overflow-x:auto; }
+  .sec-fp-main .lanes-table{ width:100%; }
+  .sec-fp-main .lanes-pagination, .sec-fp-main .table-footer{ padding:.9rem 1.25rem; }
+  .sec-fp.fp-nofilters .sec-fp-body{ grid-template-columns:minmax(0,1fr); }
   .sec-seg-btn{ display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; padding:0;
     border:none; background:none; border-radius:.35rem; cursor:pointer; color:var(--gray-600); }
   .sec-seg-btn .svg-ico{ width:15px; height:15px; }
@@ -1062,7 +1083,167 @@
   <symbol id="i-cr" viewBox="0 0 16 16"><path d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></symbol>
   <symbol id="i-filter" viewBox="0 0 16 16"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/></symbol>
   <symbol id="i-check" viewBox="0 0 16 16"><path d="M13.485 1.929a.75.75 0 0 1 .086 1.057l-7 8.25a.75.75 0 0 1-1.102.043l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.93 2.929 6.47-7.62a.75.75 0 0 1 1.056-.099z"/></symbol>
+  <symbol id="i-hospital" viewBox="0 0 16 16"><path d="M4 0a1 1 0 0 0-1 1v14H1.75a.75.75 0 0 0 0 1.5h12.5a.75.75 0 0 0 0-1.5H13V1a1 1 0 0 0-1-1H4zm3.5 2.75h1v1.5H10v1H8.5v1.5h-1v-1.5H6v-1h1.5v-1.5zM6 8.5h4V10H6V8.5zm0 2.75h1.5V15H6v-3.75zm2.5 0H10V15H8.5v-3.75z"/></symbol>
 </svg>
+
+<style>
+/* ===== Portal flow screens (Select Institution → Smart Alerts) ===== */
+.portal-screen{ position:fixed; inset:0; z-index:3000; background:var(--body-bg); overflow-y:auto; display:none; }
+.portal-screen.active{ display:block; }
+body.flow-locked{ overflow:hidden; }
+.ps-top{ height:60px; display:flex; align-items:center; gap:.9rem; padding:0 1.5rem; background:#fff; border-bottom:1px solid var(--gray-200); }
+.ps-logo-img{ height:26px; width:auto; display:block; }
+.ps-select-wrap{ min-height:calc(100vh - 60px); display:flex; align-items:center; justify-content:center; padding:2rem 1rem; }
+.ps-card{ width:100%; max-width:440px; background:#fff; border:1px solid var(--gray-200); border-radius:.75rem; box-shadow:0 10px 30px rgba(43,48,58,.08); padding:2rem 2rem 1.75rem; }
+.ps-card h1{ font-size:1.35rem; font-weight:600; color:var(--gray-900); margin:0 0 .35rem; }
+.ps-sub{ font-size:.9rem; color:var(--gray-600); margin:0 0 1.5rem; line-height:1.5; }
+.ps-field{ margin-bottom:1.1rem; }
+.ps-field > label{ display:block; font-size:.8rem; font-weight:600; color:var(--gray-700); margin-bottom:.4rem; }
+.ps-continue{ width:100%; margin-top:.6rem; padding:.7rem 1rem; background:var(--primary); color:#fff; border:none; border-radius:.4rem; font-size:.92rem; font-weight:600; cursor:pointer; font-family:inherit; }
+.ps-continue:hover{ background:#1a68d1; }
+.ps-continue:disabled{ background:var(--gray-300); cursor:not-allowed; }
+.ps-sel{ position:relative; }
+.ps-sel-btn{ width:100%; text-align:left; padding:.6rem .8rem; background:#fff; border:1px solid var(--gray-300); border-radius:.4rem; font-size:.9rem; color:var(--gray-800); cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:space-between; gap:.5rem; }
+.ps-sel-btn .svg-ico{ width:11px; height:11px; color:var(--gray-500); flex:none; }
+.ps-sel-btn.placeholder{ color:var(--gray-500); }
+.ps-sel-menu{ position:absolute; top:calc(100% + 4px); left:0; right:0; background:#fff; border:1px solid var(--gray-200); border-radius:.4rem; box-shadow:0 8px 24px rgba(43,48,58,.14); max-height:240px; overflow-y:auto; z-index:20; display:none; }
+.ps-sel-menu.open{ display:block; }
+.ps-sel-opt{ padding:.55rem .8rem; font-size:.88rem; color:var(--gray-800); cursor:pointer; }
+.ps-sel-opt:hover{ background:var(--gray-100); }
+.ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
+
+#scr-alerts .lanes-navbar{ position:sticky; top:0; z-index:5; }
+.sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
+.sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
+.sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
+.sa-change:hover{ background:var(--gray-100); }
+.sa-body{ max-width:1400px; margin:0 auto; padding:1.5rem 1.5rem 3rem; }
+.sa-charts{ display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
+.sa-chart-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1rem 1.1rem; }
+.sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
+.sa-chart{ height:260px; width:100%; }
+@media(max-width:900px){ .sa-charts{ grid-template-columns:1fr; } }
+.sa-tabs{ display:flex; gap:.3rem; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); }
+.sa-tab{ display:inline-flex; align-items:center; gap:.5rem; padding:.7rem 1rem; background:none; border:none; border-bottom:2px solid transparent; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); cursor:pointer; }
+.sa-tab.active{ color:var(--primary); border-bottom-color:var(--primary); }
+.sa-tab .sa-count{ background:var(--gray-200); color:var(--gray-700); font-size:.72rem; font-weight:600; border-radius:10px; padding:.05rem .5rem; }
+.sa-tab.active .sa-count{ background:var(--primary); color:#fff; }
+.sa-panel{ background:#fff; border:1px solid var(--gray-200); border-top:none; border-radius:0 0 .6rem .6rem; }
+.sa-panel-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.25rem .9rem; gap:1rem; flex-wrap:wrap; }
+.sa-panel-head h2{ font-size:1.05rem; font-weight:600; color:var(--gray-900); margin:0; }
+.sa-search{ position:relative; }
+.sa-search input{ padding:.45rem .7rem .45rem 2rem; border:1px solid var(--gray-300); border-radius:.4rem; font-size:.85rem; font-family:inherit; width:220px; }
+.sa-search .svg-ico{ position:absolute; left:.6rem; top:50%; transform:translateY(-50%); width:13px; height:13px; color:var(--gray-500); }
+.sa-table{ width:100%; }
+.sa-table th, .sa-table td{ white-space:nowrap; }
+.sa-pname{ color:var(--primary); font-weight:600; cursor:pointer; }
+.sa-pname:hover{ text-decoration:underline; }
+.sa-ico-cell{ text-align:center; }
+.sa-chip-ico{ width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; }
+.sa-chip-ico .svg-ico{ width:13px; height:13px; color:#fff; }
+.sa-count-badge{ display:inline-flex; align-items:center; gap:.3rem; font-weight:600; }
+.sa-note-btn{ width:30px; height:26px; border-radius:.3rem; border:1px solid #bcd4f5; background:#eaf2fd; color:var(--primary); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.sa-note-btn .svg-ico{ width:13px; height:13px; }
+.sa-pager{ display:flex; align-items:center; justify-content:space-between; padding:.9rem 1.25rem; border-top:1px solid var(--gray-100); font-size:.82rem; color:var(--gray-600); }
+.sa-syn-back{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .75rem; margin-right:.9rem; border:1px solid var(--gray-300); background:#fff; border-radius:.4rem; font-size:.82rem; font-weight:600; color:var(--gray-700); cursor:pointer; font-family:inherit; }
+.sa-syn-back .svg-ico{ width:12px; height:12px; }
+.sa-syn-back:hover{ background:var(--gray-100); }
+
+/* ---- clinical site grid (select screen) ---- */
+.cs-wrap{ max-width:1440px; margin:0 auto; padding:2rem 2rem 3rem; }
+.cs-title{ font-size:1.6rem; font-weight:600; color:var(--gray-900); margin:0 0 1.5rem; }
+.cs-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1.1rem; }
+@media(max-width:1100px){ .cs-grid{ grid-template-columns:repeat(2,1fr); } }
+@media(max-width:640px){ .cs-grid{ grid-template-columns:1fr; } }
+.cs-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1.1rem 1.2rem 1.2rem; cursor:pointer; text-align:left; transition:box-shadow .15s,border-color .15s,transform .05s; font-family:inherit; }
+.cs-card:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(43,48,58,.1); }
+.cs-card:active{ transform:translateY(1px); }
+.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-500); display:block; margin-bottom:1.3rem; }
+.cs-name{ font-size:1rem; font-weight:600; color:var(--gray-900); margin:0 0 .25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.cs-count{ font-size:.85rem; color:var(--gray-500); }
+
+/* ---- clinic switcher dropdown (Smart Alerts header) ---- */
+.sa-clinic{ position:relative; }
+.sa-clinic-btn{ display:inline-flex; align-items:center; gap:.6rem; background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .45rem; border-radius:.45rem; }
+.sa-clinic-btn:hover{ background:rgba(255,255,255,.55); }
+.sa-clinic-ico{ width:20px; height:20px; color:var(--gray-600); flex:none; }
+.sa-clinic-name{ font-size:1.05rem; font-weight:600; color:var(--gray-900); }
+.sa-clinic-badge{ font-size:.75rem; font-weight:600; color:var(--gray-600); background:var(--gray-200); border-radius:6px; padding:.15rem .5rem; }
+.sa-clinic-chev{ width:12px; height:12px; color:var(--gray-500); flex:none; }
+.sa-clinic-menu{ position:absolute; top:calc(100% + 6px); left:0; width:430px; max-width:92vw; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; box-shadow:0 12px 34px rgba(43,48,58,.18); padding:.9rem; display:none; z-index:30; }
+.sa-clinic.open .sa-clinic-menu{ display:block; }
+.sa-clinic-search{ position:relative; margin-bottom:.8rem; }
+.sa-clinic-search .svg-ico{ position:absolute; left:.75rem; top:50%; transform:translateY(-50%); width:14px; height:14px; color:var(--gray-500); }
+.sa-clinic-search input{ width:100%; padding:.6rem .7rem .6rem 2.15rem; border:1px solid var(--gray-300); border-radius:.45rem; font-family:inherit; font-size:.9rem; }
+.sa-clinic-search input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.sa-clinic-eyebrow{ font-size:.72rem; font-weight:600; letter-spacing:.06em; color:var(--gray-500); margin:.2rem 0 .5rem; }
+.sa-clinic-list{ max-height:360px; overflow-y:auto; }
+.sa-clinic-opt{ padding:.6rem .7rem; border-radius:.45rem; cursor:pointer; }
+.sa-clinic-opt:hover{ background:var(--gray-100); }
+.sa-clinic-opt.sel{ background:var(--gray-100); }
+.sa-clinic-opt .n{ font-size:.95rem; font-weight:600; color:var(--gray-900); }
+.sa-clinic-opt .c{ font-size:.82rem; color:var(--gray-500); margin-top:.1rem; }
+</style>
+
+<!-- ============ PORTAL FLOW: SELECT INSTITUTION ============ -->
+<div id="scr-select" class="portal-screen active">
+  <header class="ps-top">
+    <span class="lanes-logo"><img class="ps-logo-img" alt="LANES"></span>
+    <span class="demo-badge">Demo mode</span>
+  </header>
+  <div class="cs-wrap">
+    <h1 class="cs-title">Please select a clinical institution</h1>
+    <div class="cs-grid" id="cs-grid"></div>
+  </div>
+</div>
+
+<!-- ============ PORTAL FLOW: SMART ALERTS ============ -->
+<div id="scr-alerts" class="portal-screen">
+  <nav class="lanes-navbar">
+    <div class="nav-inner">
+      <span class="lanes-logo"><img class="ps-logo-img" alt="LANES"></span>
+      <span class="demo-badge">Demo mode</span>
+      <div class="sa-clinic" id="sa-clinic">
+        <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
+          <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
+          <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+          <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
+          <svg class="svg-ico sa-clinic-chev"><use href="#i-cr"/></svg>
+        </button>
+        <div class="sa-clinic-menu" id="sa-clinic-menu">
+          <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
+          <div class="sa-clinic-eyebrow">CLINICS</div>
+          <div class="sa-clinic-list" id="sa-clinic-list"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="sa-body">
+    <div class="sa-charts">
+      <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
+      <div class="sa-chart-card"><div class="sa-chart-title">Service Delivery Location &mdash; Last 30 Days</div><div id="sa-chart-sdl" class="sa-chart"></div></div>
+    </div>
+    <div class="sa-tabs" id="sa-tabs"></div>
+    <div class="sa-panel">
+      <div class="sa-panel-head">
+        <h2 id="sa-tabtitle">Adult Encounters</h2>
+        <div class="sa-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" placeholder="Search" id="sa-search-input"></div>
+      </div>
+      <div class="table-scroll">
+        <table class="lanes-table sa-table">
+          <thead><tr>
+            <th>Action Date / Time</th><th>Service Delivery Location</th><th>Specialty</th>
+            <th>Visit Type</th><th>Event Type</th><th>Patient Name</th><th>Birth Date</th>
+            <th>Discharge Date</th><th>Length of Stay</th><th>Last 6 Months Emergency</th>
+            <th>Last 6 Months Inpatient</th><th>Smart Alerts Notes</th>
+          </tr></thead>
+          <tbody id="sa-tbody"></tbody>
+        </table>
+      </div>
+      <div class="sa-pager"><span id="sa-pager-info">&mdash;</span></div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ NAVBAR ============ -->
 <nav class="lanes-navbar">
@@ -2796,6 +2977,11 @@
           '<button type="button" class="sec-seg-btn" data-v="viz" title="Chart"><svg class="svg-ico"><use href="#i-chart"/></svg></button>';
         const kebab=tools.querySelector('.kebab-wrap');
         if(kebab) tools.insertBefore(seg, kebab); else tools.appendChild(seg);
+        // expand-to-full-page button (seg switcher hidden for now)
+        const expand=document.createElement('button'); expand.type='button'; expand.className='hbtn sec-expand'; expand.title='Open full page';
+        expand.innerHTML='<svg class="svg-ico"><use href="#i-fullscreen"/></svg>';
+        if(kebab) tools.insertBefore(expand, kebab); else tools.appendChild(expand);
+        expand.addEventListener('click', ()=>openFull(panel));
         const viz=document.createElement('div'); viz.className='sec-viz'; viz.style.display='none';
         const headHtml='<span class="sv-head-main">'+cd.title+'</span><span class="sv-scope"><svg class="svg-ico"><use href="#i-filter"/></svg>Current table page</span>';
         viz.innerHTML='<div class="sv-head">'+headHtml+'</div><div class="sec-chart"></div><div class="sv-fallback">'+fallbackRows(cd)+'</div>';
@@ -2816,12 +3002,189 @@
         panel.dataset.segDone=1;
       });
       window.addEventListener('resize', ()=>{ document.querySelectorAll('.sec-chart').forEach(el=>{ if(el._chart) el._chart.resize(); }); });
+
+      // ===== full-page single-section overlay =====
+      const fp=document.createElement('div'); fp.className='sec-fp'; fp.id='sec-fp';
+      fp.innerHTML='<div class="sec-fp-top"><button type="button" class="sec-back" id="sec-fp-back"><svg class="svg-ico"><use href="#i-cl"/></svg> Back</button><span class="sec-fp-title" id="sec-fp-title"></span></div>'+
+        '<div class="sec-fp-body"><div class="sec-fp-main" id="sec-fp-main"></div><div class="sec-fp-side"><h3>Filters</h3><div id="sec-fp-filters"></div></div></div>';
+      document.body.appendChild(fp);
+      const fpMain=fp.querySelector('#sec-fp-main'), fpFilters=fp.querySelector('#sec-fp-filters'), fpTitle=fp.querySelector('#sec-fp-title'), fpSide=fp.querySelector('.sec-fp-side');
+      let fpState=null;
+      function openFull(panel){
+        const title=panel.querySelector('.panel-title');
+        const host=panel.querySelector('.table-scroll')||(panel.querySelector('table.lanes-table')||{}).parentElement;
+        const filters=panel.querySelector('.filters');
+        const pager=panel.querySelector('.lanes-pagination'); const footer=panel.querySelector('.table-footer'); const note=panel.querySelector('.table-note');
+        const ph=[];
+        const move=(el,dest)=>{ if(!el) return; const m=document.createComment('ph'); el.parentNode.insertBefore(m, el); ph.push([el,m]); dest.appendChild(el); };
+        fpTitle.innerHTML = title?title.innerHTML:'';
+        move(note, fpMain); move(host, fpMain); move(footer, fpMain); move(pager, fpMain);
+        if(filters){ move(filters, fpFilters); fpSide.style.display=''; fp.classList.remove('fp-nofilters'); }
+        else { fpSide.style.display='none'; fp.classList.add('fp-nofilters'); }
+        fpState={ph};
+        fp.classList.add('open'); document.body.classList.add('sec-full-open');
+      }
+      function closeFull(){ if(!fpState) return;
+        fpState.ph.forEach(([el,m])=>{ m.parentNode.insertBefore(el, m); m.remove(); });
+        fpState=null; fp.classList.remove('open'); document.body.classList.remove('sec-full-open');
+      }
+      window.__openFull=openFull;
+      fp.querySelector('#sec-fp-back').addEventListener('click', closeFull);
+      document.addEventListener('keydown', e=>{ if(e.key==='Escape' && fp.classList.contains('open')) closeFull(); });
     })();
     decorateAll();
     // re-run after version switches rebuild/clone the overview (debounced so per-second clock ticks don't churn)
     let dq=null; new MutationObserver(()=>{ if(dq) return; dq=setTimeout(()=>{ dq=null; decorateAll(); }, 150); })
       .observe(document.body, {childList:true, subtree:true});
   })();
+</script>
+
+<script>
+/* ===== Portal flow controller: Select Institution -> Smart Alerts -> Patient Synopsis ===== */
+(function(){
+  const scrSelect=document.getElementById('scr-select'), scrAlerts=document.getElementById('scr-alerts');
+  function setLogos(){ const s=document.querySelector('.lanes-navbar .lanes-logo-img'); if(s&&s.src) document.querySelectorAll('.ps-logo-img').forEach(i=>{ i.src=s.src; }); }
+  function show(which){
+    scrSelect.classList.toggle('active', which==='select');
+    scrAlerts.classList.toggle('active', which==='alerts');
+    document.body.classList.toggle('flow-synopsis', which==='synopsis');
+    document.body.classList.toggle('flow-locked', which!=='synopsis');
+    window.scrollTo(0,0);
+    if(which==='alerts') setTimeout(renderCharts, 60);
+    if(which==='synopsis') window.dispatchEvent(new Event('resize'));
+  }
+  window.LANESflow={ show };
+
+  /* ---- clinical sites ---- */
+  const CLINICS=[
+    {n:'UCLA Health Clinic',p:124},{n:"Children's Hospital of Orange County",p:98},{n:'San Diego Clinical Trial Facilities',p:72},
+    {n:'Summit Health Clinic',p:34},{n:'Marian Medical Center, Santa Maria',p:52},{n:'Coastal Wellness Center',p:76},
+    {n:'Cedar Valley Medical Clinic',p:23},{n:'Valleyview Family Clinic',p:26},{n:'Pine Grove Health Center',p:88},
+    {n:'Maplewood Medical Associates',p:41},{n:'Harborview Community Clinic',p:63},{n:'Oak Ridge Health Center',p:57},
+    {n:'Riverside Medical Group',p:112},{n:'Sunset Hills Family Health',p:29},{n:'Lakeside Medical Center',p:94},
+    {n:'Clearview Clinic',p:38},{n:'Mountain Vista Healthcare',p:67},{n:'Evergreen Wellness Center',p:45},
+    {n:'Springbrook Family Clinic',p:81},{n:'Oceanview Medical Group',p:53},{n:'Hilltop Community Health Center',p:70},
+    {n:'Pinecrest Family Practice',p:36},{n:'Willowbrook Health Clinic',p:49},{n:'Aspen Grove Medical Associates',p:61}
+  ];
+  let activeClinic=CLINICS[0];
+
+  /* ---- clinic card grid (select screen) ---- */
+  function buildClinicGrid(){ const g=document.getElementById('cs-grid'); g.innerHTML='';
+    CLINICS.forEach(c=>{ const d=document.createElement('button'); d.type='button'; d.className='cs-card';
+      d.innerHTML='<svg class="svg-ico"><use href="#i-hospital"/></svg><div class="cs-name" title="'+c.n+'">'+c.n+'</div><div class="cs-count">'+c.p+' patients</div>';
+      d.addEventListener('click',()=>selectClinic(c)); g.appendChild(d); });
+  }
+  function selectClinic(c){ activeClinic=c; updateClinicHeader(); buildTabs(); show('alerts'); }
+  buildClinicGrid();
+
+  /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
+  const clinicWrap=document.getElementById('sa-clinic'), clinicBtn=document.getElementById('sa-clinic-btn'), clinicSearch=document.getElementById('sa-clinic-search-input');
+  function updateClinicHeader(){ document.getElementById('sa-clinic-name').textContent=activeClinic.n; document.getElementById('sa-clinic-badge').textContent=activeClinic.p+' Patients'; }
+  function buildClinicMenu(filter){ const list=document.getElementById('sa-clinic-list'); list.innerHTML=''; const q=(filter||'').toLowerCase();
+    const shown=CLINICS.filter(c=>!q||c.n.toLowerCase().includes(q));
+    if(!shown.length){ list.innerHTML='<div class="sa-clinic-opt"><div class="c">No clinics match your search.</div></div>'; return; }
+    shown.forEach(c=>{ const d=document.createElement('div'); d.className='sa-clinic-opt'+(c===activeClinic?' sel':'');
+      d.innerHTML='<div class="n">'+c.n+'</div><div class="c">'+c.p+' patients</div>';
+      d.addEventListener('click',()=>{ activeClinic=c; updateClinicHeader(); buildTabs(); clinicWrap.classList.remove('open'); });
+      list.appendChild(d); });
+  }
+  clinicBtn.addEventListener('click',e=>{ e.stopPropagation(); const willOpen=!clinicWrap.classList.contains('open'); if(willOpen){ clinicSearch.value=''; buildClinicMenu(''); } clinicWrap.classList.toggle('open'); if(willOpen) setTimeout(()=>clinicSearch.focus(),30); });
+  clinicSearch.addEventListener('input',e=>buildClinicMenu(e.target.value));
+  clinicSearch.addEventListener('click',e=>e.stopPropagation());
+  document.getElementById('sa-clinic-menu').addEventListener('click',e=>e.stopPropagation());
+  document.addEventListener('click',()=>clinicWrap.classList.remove('open'));
+
+  /* ---- dummy patient data (random, realistic-looking) ---- */
+  let seed=20251120; function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
+  function pick(a){ return a[Math.floor(rnd()*a.length)]; }
+  function pad(n){ return (n<10?'0':'')+n; }
+  const FIRST=['Maria','James','Linda','Robert','Patricia','John','Jennifer','Michael','Elizabeth','David','Barbara','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Carlos','Nancy','Daniel','Karen','Jose','Lisa','Mark','Betty','Angela','Kevin','Sandra','Brian','Ashley','Luis','Rosa','Hector','Grace','Kenji','Mei','Omar','Fatima','Andre','Diane'];
+  const LAST=['Sanchez','Johnson','Williams','Brown','Garcia','Miller','Davis','Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin','Lee','Perez','Thompson','White','Harris','Clark','Lewis','Robinson','Walker','Young','Allen','King','Wright','Scott','Torres','Nguyen','Hill','Flores','Green','Adams','Nelson'];
+  const LOC=['Harbor – UCLA Medical Center','Valley Community Healthcare','LAC + USC Medical Center','Arroyo Vista Family Health Center','Cedars-Sinai Medical Center','Northeast Valley Health Corporation','All for Health Health For All Clinic','Glendale Adventist','Community Hospital of Huntington Park','Edward R. Roybal CHC','MLKCH – Wilmington Clinic','Valley Presbyterian Hospital'];
+  const SPEC=['Hospital','Clinic','Specialty','Primary Care'];
+  const VISIT=['Emergency','Inpatient','Outpatient','Specialty'];
+  const EVENT=['Admit','Discharge','Transfer','Registration'];
+  const NOTES=['','Follow-up needed','High ED utilizer','Care plan updated','New member','Pending review'];
+  const TABS=[{key:'adult',name:'Adult Encounters'},{key:'peds',name:'Pediatrics'},{key:'bh',name:'Behavioral Health'},{key:'covid',name:'COVID-19'},{key:'a1c',name:'A1C'},{key:'ed',name:'ED Utilization'}];
+  const COUNTS={adult:250,peds:250,bh:47,covid:189,a1c:250,ed:50};
+  function genRows(n,kind){ const rows=[]; for(let i=0;i<n;i++){
+      const hh=pad(1+Math.floor(rnd()*12)), mm=pad(Math.floor(rnd()*60)), ap=rnd()>.5?'AM':'PM';
+      const by = kind==='peds' ? (2008+Math.floor(rnd()*15)) : (1945+Math.floor(rnd()*60));
+      const hasD = rnd()>.5;
+      const disch = hasD ? (pad(1+Math.floor(rnd()*12))+'/'+pad(1+Math.floor(rnd()*28))+'/2026') : '';
+      rows.push({ dt:'10/'+pad(1+Math.floor(rnd()*18))+'/2026 '+hh+':'+mm+' '+ap, loc:pick(LOC), spec:pick(SPEC),
+        visit:pick(VISIT), event:pick(EVENT), name:pick(LAST)+', '+pick(FIRST),
+        dob:pad(1+Math.floor(rnd()*12))+'/'+pad(1+Math.floor(rnd()*28))+'/'+by+' ('+(2026-by)+')',
+        disch, los: hasD?(1+Math.floor(rnd()*9))+' days':'', emg:Math.floor(rnd()*12), inp:Math.floor(rnd()*6), note:pick(NOTES) });
+    } return rows; }
+  const DATA={}; TABS.forEach(t=>DATA[t.key]=genRows(14,t.key));
+  let activeTab='adult';
+  function visitColor(v){ return v==='Emergency'?'#e63757':v==='Inpatient'?'#748194':v==='Outpatient'?'#2c9b8f':'#2c7be5'; }
+  function chip(c,ic){ return '<span class="sa-chip-ico" style="background:'+c+'"><svg class="svg-ico"><use href="#'+ic+'"/></svg></span>'; }
+  function renderTable(){
+    const rows=DATA[activeTab], tb=document.getElementById('sa-tbody');
+    const q=(document.getElementById('sa-search-input').value||'').toLowerCase();
+    const shown=rows.filter(r=>!q||r.name.toLowerCase().includes(q)||r.loc.toLowerCase().includes(q));
+    tb.innerHTML='';
+    shown.forEach(r=>{ const tr=document.createElement('tr');
+      tr.innerHTML='<td>'+r.dt+'</td><td>'+r.loc+'</td><td>'+r.spec+'</td>'+
+        '<td class="sa-ico-cell">'+chip(visitColor(r.visit),'i-pulse')+'</td>'+
+        '<td class="sa-ico-cell">'+chip('#2c9b8f','i-calendar')+'</td>'+
+        '<td><a class="sa-pname">'+r.name+'</a></td><td>'+r.dob+'</td>'+
+        '<td>'+(r.disch||'—')+'</td><td>'+(r.los||'—')+'</td>'+
+        '<td><span class="sa-count-badge" style="color:'+(r.emg>5?'#e63757':'var(--gray-700)')+'">'+r.emg+' <svg class="svg-ico" style="width:13px;height:13px;color:#e63757"><use href="#i-warn"/></svg></span></td>'+
+        '<td><span class="sa-count-badge" style="color:var(--gray-700)">'+r.inp+' <svg class="svg-ico" style="width:13px;height:13px;color:#748194"><use href="#i-shield"/></svg></span></td>'+
+        '<td class="sa-ico-cell"><button class="sa-note-btn" title="Smart Alerts Notes"><svg class="svg-ico"><use href="#i-file"/></svg></button></td>';
+      tr.querySelector('.sa-pname').addEventListener('click',()=>show('synopsis'));
+      tb.appendChild(tr); });
+    document.getElementById('sa-pager-info').textContent='Showing 1 to '+shown.length+' of '+COUNTS[activeTab].toLocaleString()+' encounters';
+  }
+  function buildTabs(){ const host=document.getElementById('sa-tabs'); host.innerHTML='';
+    TABS.forEach(t=>{ const b=document.createElement('button'); b.className='sa-tab'+(t.key===activeTab?' active':'');
+      b.innerHTML=t.name+' <span class="sa-count">'+COUNTS[t.key]+'</span>';
+      b.addEventListener('click',()=>{ activeTab=t.key; document.getElementById('sa-tabtitle').textContent=t.name;
+        host.querySelectorAll('.sa-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTable(); });
+      host.appendChild(b); });
+    renderTable();
+  }
+  document.getElementById('sa-search-input').addEventListener('input', renderTable);
+
+  /* ---- charts (ECharts via LC helper) ---- */
+  let charted=false, tries=0;
+  function renderCharts(){
+    if(charted) return;
+    if(!(window.LC&&window.LC.ready())){ if(tries++<50) setTimeout(renderCharts,150); return; }
+    charted=true;
+    const C={emg:'#e63757',inp:'#6c8ae4',out:'#2c9b8f',spec:'#b6c1d2',uniq:'#5a2a82'};
+    const axL={color:'#8a97ab',fontSize:11,fontFamily:'Poppins, sans-serif'}, split={lineStyle:{color:'rgba(116,129,148,.12)'}}, axLine={lineStyle:{color:'rgba(116,129,148,.3)'}};
+    const weeks=[]; { const d=new Date('2026-10-18'); for(let i=7;i>=0;i--){ const x=new Date(d); x.setDate(d.getDate()-i*7); weeks.push(pad(x.getMonth()+1)+'/'+pad(x.getDate())); } }
+    function ln(name,color,base,amp,ph){ const d=[]; for(let i=0;i<8;i++){ d.push(Math.max(0,Math.round(base+amp*Math.sin(i/1.6+ph)+(rnd()-0.5)*amp*0.4))); } return {name:name,type:'line',smooth:true,symbol:'circle',symbolSize:5,lineStyle:{width:2,color:color},itemStyle:{color:color},data:d}; }
+    window.LC.init(document.getElementById('sa-chart-activities'),{
+      tooltip:{trigger:'axis'}, legend:{bottom:0,icon:'roundRect',itemWidth:12,itemHeight:8,textStyle:{color:'#5e6e82',fontSize:11}},
+      grid:{left:46,right:16,top:14,bottom:42},
+      xAxis:{type:'category',data:weeks,axisLabel:axL,axisLine:axLine,axisTick:{show:false}},
+      yAxis:{type:'value',axisLabel:axL,splitLine:split},
+      series:[ln('Emergency',C.emg,4200,1500,0),ln('Inpatient',C.inp,3100,900,1),ln('Outpatient',C.out,33000,8000,2),ln('Specialty',C.spec,45000,14000,1.5),ln('Unique Patients',C.uniq,15000,3000,0.5)]
+    });
+    const sdl=[['Cedars-Sinai Medical Center',620],['Northeast Valley Health',540],['CHLA',470],['Valley Community Healthcare',430],['South Central Family HC',360],['All for Health For All',330],['Glendale Adventist',300],['Saban Community Clinic',280],['Central Neighborhood HF',250],['Clinica Romero',220]].reverse();
+    window.LC.init(document.getElementById('sa-chart-sdl'),{
+      tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
+      legend:{top:0,data:['Outpatient','Emergency','Inpatient'],icon:'roundRect',itemWidth:12,itemHeight:8,textStyle:{color:'#5e6e82',fontSize:11}},
+      grid:{left:168,right:20,top:30,bottom:10},
+      xAxis:{type:'value',axisLabel:axL,splitLine:split},
+      yAxis:{type:'category',data:sdl.map(x=>x[0]),axisLabel:{color:'#5e6e82',fontSize:11,fontFamily:'Poppins, sans-serif'},axisLine:axLine,axisTick:{show:false}},
+      series:[
+        {name:'Outpatient',type:'bar',stack:'t',barMaxWidth:16,itemStyle:{color:C.out,borderRadius:[0,0,0,0]},data:sdl.map(x=>Math.round(x[1]*0.8))},
+        {name:'Emergency',type:'bar',stack:'t',barMaxWidth:16,itemStyle:{color:C.emg},data:sdl.map(x=>Math.round(x[1]*0.12))},
+        {name:'Inpatient',type:'bar',stack:'t',barMaxWidth:16,itemStyle:{color:C.inp,borderRadius:[0,2,2,0]},data:sdl.map(x=>Math.round(x[1]*0.08))}
+      ]
+    });
+  }
+  window.addEventListener('resize',()=>{ if(charted){ ['sa-chart-activities','sa-chart-sdl'].forEach(id=>{ const el=document.getElementById(id); if(el&&el._chart) el._chart.resize(); }); } });
+
+  document.body.classList.add('flow-locked'); // select screen is active on load
+  setLogos(); setTimeout(setLogos,250); setTimeout(setLogos,800);
+})();
 </script>
 </body>
 </html>
