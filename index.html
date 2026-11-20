@@ -319,12 +319,12 @@
   body.sec-full-open{ overflow:hidden; }
   .sec-fp{ position:fixed; inset:0; z-index:1600; background:var(--body-bg); display:none; flex-direction:column; }
   .sec-fp.open{ display:flex; }
-  .sec-fp-top{ display:flex; align-items:center; gap:1rem; padding:1rem 2rem; background:#fff; border-bottom:1px solid var(--gray-200); flex:0 0 auto; }
+  .sec-fp-top{ display:flex; align-items:center; gap:1rem; padding:1rem 2rem; background:transparent; flex:0 0 auto; }
   .sec-fp-title{ font-size:1.15rem; font-weight:600; color:var(--gray-900); }
-  .sec-back{ display:inline-flex; align-items:center; gap:.4rem; border:1px solid var(--gray-300); background:#fff;
-    color:var(--gray-700); font:inherit; font-size:0.9rem; font-weight:500; padding:.45rem .85rem; border-radius:.45rem; cursor:pointer; }
-  .sec-back:hover{ background:var(--gray-100); color:var(--gray-900); }
-  .sec-back .svg-ico{ width:14px; height:14px; }
+  .sec-back{ display:inline-flex; align-items:center; justify-content:center; border:none; background:none;
+    color:var(--gray-600); font:inherit; padding:.2rem .3rem; border-radius:.45rem; cursor:pointer; flex:none; }
+  .sec-back:hover{ background:none; color:var(--gray-900); }
+  .sec-back .svg-ico{ width:22px; height:22px; }
   .sec-fp-body{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:1.5rem;
     align-items:stretch; max-width:1600px; width:100%; margin:0 auto; padding:1.5rem 2rem; overflow:hidden; box-sizing:border-box; }
   .sec-fp-main{ min-width:0; min-height:0; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; overflow:hidden; display:flex; flex-direction:column; }
@@ -364,6 +364,7 @@
   .header-tools.searching > .filter-btn,
   .header-tools.searching > .hbtn.primary,
   .header-tools.searching > .sec-seg,
+  .header-tools.searching > .sec-expand,
   .header-tools.searching > .kebab-wrap{ display:none; }
   .header-tools.searching > .search-expand{ display:flex; }
 
@@ -646,6 +647,7 @@
   .notes-btn{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px;
     border:1px solid var(--gray-300); background:#fff; border-radius:.4rem; color:var(--gray-700); cursor:pointer; }
   .notes-btn:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .notes-btn.has-label{ width:auto; gap:.45rem; padding:0 .8rem; font:inherit; font-size:.9rem; font-weight:500; white-space:nowrap; }
   .notes-badge{ position:absolute; top:-6px; right:-6px; min-width:16px; height:16px; padding:0 4px; border-radius:8px;
     background:var(--danger); color:#fff; font-size:0.875rem; font-weight:700; display:flex; align-items:center; justify-content:center; line-height:1; }
 
@@ -1118,11 +1120,13 @@ body.flow-locked{ overflow:hidden; }
 .ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
 
 .portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
+/* share the 1440 column so the logo lines up with the page header + cards below */
+.portal-screen .nav-inner{ max-width:1440px; margin:0 auto; width:100%; box-sizing:border-box; }
 .sa-pagehead{ display:flex; align-items:center; gap:1rem; flex:none; }
 .sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; }
 .sa-pagehead .sa-clinic-btn:hover{ background:none; }
 .sa-pagehead .sa-clinic-name{ font-size:1.5rem; }
-.sa-pagehead .sa-clinic-ico{ width:24px; height:24px; }
+.sa-pagehead .sa-clinic-ico{ width:24px; height:24px; padding:9px; background:var(--gray-200); border-radius:10px; box-sizing:content-box; color:var(--gray-600); }
 .sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
 .sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
 .sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
@@ -1202,7 +1206,7 @@ body.flow-locked{ overflow:hidden; }
 /* ---- clinical institution grid (select screen) ---- */
 #scr-select.portal-screen{ overflow:hidden; }
 #scr-select.portal-screen.active{ display:flex; flex-direction:column; }
-.cs-wrap{ max-width:1440px; width:100%; margin:0 auto; padding:2rem 2rem 0; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; box-sizing:border-box; }
+.cs-wrap{ max-width:1440px; width:100%; margin:0 auto; padding:2rem 1.5rem 0; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; box-sizing:border-box; }
 .cs-head{ display:flex; align-items:center; justify-content:space-between; gap:1rem 1.5rem; margin-bottom:1.35rem; flex-wrap:wrap; }
 .cs-title{ font-size:1.6rem; font-weight:600; color:var(--gray-900); margin:0; }
 .cs-search{ position:relative; }
@@ -1217,17 +1221,19 @@ body.flow-locked{ overflow:hidden; }
 .cs-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1.75rem 1.75rem 1.85rem; cursor:pointer; text-align:left; transition:box-shadow .15s,border-color .15s,transform .05s; font-family:inherit; }
 .cs-card:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(43,48,58,.1); }
 .cs-card:active{ transform:translateY(1px); }
-.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-500); display:block; margin-bottom:.7rem; }
+.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-600); display:block; margin-bottom:.9rem; padding:9px; background:var(--gray-200); border-radius:10px; box-sizing:content-box; }
 .cs-name{ font-size:1rem; font-weight:600; color:var(--gray-900); margin:0 0 .25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cs-count{ font-size:.85rem; color:var(--gray-500); }
 
 /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
 .sa-clinic{ position:relative; }
-.sa-clinic-btn{ display:inline-flex; align-items:center; gap:.6rem; background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .45rem; border-radius:.45rem; }
+.sa-clinic-btn{ display:inline-flex; align-items:center; gap:.65rem; background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .45rem; border-radius:.45rem; text-align:left; }
 .sa-clinic-btn:hover .sa-clinic-name{ text-decoration:underline; }
+.sa-clinic-text{ display:flex; flex-direction:column; align-items:flex-start; gap:.1rem; }
+.sa-clinic-line{ display:inline-flex; align-items:center; gap:.5rem; }
 .sa-clinic-ico{ width:20px; height:20px; color:var(--gray-600); flex:none; }
 .sa-clinic-name{ font-size:1.05rem; font-weight:600; color:var(--gray-900); }
-.sa-clinic-badge{ font-size:.75rem; font-weight:600; color:var(--gray-600); background:var(--gray-200); border-radius:6px; padding:.15rem .5rem; }
+.sa-clinic-badge{ font-size:.8rem; font-weight:600; color:var(--gray-600); }
 .sa-clinic-chev{ width:12px; height:12px; color:var(--gray-500); flex:none; transition:transform .15s; }
 .sa-clinic.open .sa-clinic-chev{ transform:rotate(180deg); }
 .sa-clinic-menu{ position:absolute; top:calc(100% + 6px); left:0; width:430px; max-width:92vw; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; box-shadow:0 12px 34px rgba(43,48,58,.18); padding:.9rem; display:none; z-index:30; }
@@ -1336,7 +1342,7 @@ body.flow-locked{ overflow:hidden; }
 .sa-table thead th.sa-sticky-r{ z-index:3; background:var(--gray-100); box-shadow:-5px 0 8px -7px rgba(43,48,58,.08); }
 .sa-table tbody tr:hover td.sa-sticky-r{ background:#eef3fb; }
 .sa-pt-inner{ display:flex; align-items:center; gap:.65rem; }
-.sa-av{ width:38px; height:38px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:500; color:var(--primary); background:rgba(44,123,229,.14); }
+.sa-av{ width:38px; height:38px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:600; color:var(--gray-700); background:rgba(44,123,229,.14); }
 .sa-pt-txt{ display:flex; flex-direction:column; min-width:0; }
 .sa-pt-name{ display:flex; align-items:center; gap:.3rem; }
 .sa-pt-sub{ font-size:.76rem; color:var(--gray-500); margin-top:.05rem; }
@@ -1377,9 +1383,13 @@ body.flow-locked{ overflow:hidden; }
       <div class="sa-clinic" id="sa-clinic">
         <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
           <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
-          <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
-          <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
-          <svg class="svg-ico sa-clinic-chev"><use href="#i-cd"/></svg>
+          <span class="sa-clinic-text">
+            <span class="sa-clinic-line">
+              <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+              <svg class="svg-ico sa-clinic-chev"><use href="#i-cd"/></svg>
+            </span>
+            <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
+          </span>
         </button>
         <div class="sa-clinic-menu" id="sa-clinic-menu">
           <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
@@ -1530,7 +1540,7 @@ body.flow-locked{ overflow:hidden; }
       <button class="ph-clear v2-only" id="ph-clear">Clear filters</button>
       <button class="notes-btn v2-only active" id="ph-overview-btn" title="Patient overview"><svg class="svg-ico"><use href="#i-person"/></svg></button>
       <button class="notes-btn v2-only" id="ph-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="fb-dot"></span></button>
-      <button class="notes-btn v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg></button>
+      <button class="notes-btn has-label v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
       <a href="#" class="btn-ghost v1-only"><svg class="svg-ico"><use href="#i-note"/></svg> Notes (0)</a>
       <button class="notes-btn v2-only" title="Notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge">3</span></button>
       <button class="btn-primary">Add note</button>
@@ -2459,15 +2469,24 @@ body.flow-locked{ overflow:hidden; }
       gearMenu.querySelectorAll('.gm-item[data-ver]').forEach(i=>i.classList.toggle('active', i.dataset.ver===ver));
     }
 
-    function closeMenu(){ gearMenu.classList.remove('open'); navUser.classList.remove('menu-open'); }
-    function toggleMenu(e){ e.stopPropagation(); const open=!gearMenu.classList.contains('open'); gearMenu.classList.toggle('open', open); navUser.classList.toggle('menu-open', open); }
-    document.querySelector('.gear').addEventListener('click', toggleMenu);
-    const userCard = document.getElementById('user-card'); if(userCard) userCard.addEventListener('click', toggleMenu);
+    function closeMenu(){ gearMenu.classList.remove('open'); document.querySelectorAll('.nav-user.menu-open').forEach(n=>n.classList.remove('menu-open')); }
+    function toggleMenu(e, host){ e.stopPropagation(); const open=!gearMenu.classList.contains('open');
+      if(open){ host.style.position='relative'; host.appendChild(gearMenu); }
+      gearMenu.classList.toggle('open', open);
+      document.querySelectorAll('.nav-user.menu-open').forEach(n=>n.classList.remove('menu-open'));
+      host.classList.toggle('menu-open', open);
+    }
+    // delegated so the cloned navbars on the select / Smart Alerts screens open the same menu
+    document.addEventListener('click', e=>{
+      const trigger = e.target.closest('.user-card, .gear');
+      if(!trigger) return;
+      const host = trigger.closest('.nav-user'); if(host) toggleMenu(e, host);
+    });
     gearMenu.addEventListener('click', e=>{
       const m=e.target.closest('.gm-item[data-mode]'); if(m){ setMode(m.dataset.mode); closeMenu(); return; }
       const v=e.target.closest('.gm-item[data-ver]'); if(v){ setVersion(v.dataset.ver); closeMenu(); return; }
     });
-    document.addEventListener('click', e=>{ if(!e.target.closest('.gear-menu') && !e.target.closest('.gear') && !e.target.closest('#user-card')) closeMenu(); });
+    document.addEventListener('click', e=>{ if(!e.target.closest('.gear-menu') && !e.target.closest('.gear') && !e.target.closest('.user-card')) closeMenu(); });
 
     // mirror the navbar clock into the dropdown
     const gmDt = document.getElementById('gm-datetime');
@@ -3222,7 +3241,7 @@ body.flow-locked{ overflow:hidden; }
 
       // ===== full-page single-section overlay =====
       const fp=document.createElement('div'); fp.className='sec-fp'; fp.id='sec-fp';
-      fp.innerHTML='<div class="sec-fp-top"><button type="button" class="sec-back" id="sec-fp-back"><svg class="svg-ico"><use href="#i-cl"/></svg> Back</button><span class="sec-fp-title" id="sec-fp-title"></span></div>'+
+      fp.innerHTML='<div class="sec-fp-top"><button type="button" class="sec-back" id="sec-fp-back" title="Back"><svg class="svg-ico"><use href="#i-cl"/></svg></button><span class="sec-fp-title" id="sec-fp-title"></span></div>'+
         '<div class="sec-fp-body"><div class="sec-fp-main" id="sec-fp-main"></div><div class="sec-fp-side"><h3>Filters</h3><div id="sec-fp-filters"></div></div></div>';
       document.body.appendChild(fp);
       // bring the app navbar onto this full-page view
@@ -3543,7 +3562,9 @@ body.flow-locked{ overflow:hidden; }
 
   /* ---- shared navbar: reuse the real app navbar on every screen ---- */
   const realNav=document.querySelector('body > nav.lanes-navbar');
-  function cloneNav(){ const n=realNav.cloneNode(true); n.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); return n; }
+  function cloneNav(){ const n=realNav.cloneNode(true); n.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
+    // drop any deep-cloned pop-up menus (the real ones are singletons moved in on demand)
+    n.querySelectorAll('.gear-menu').forEach(e=>e.remove()); return n; }
   (function mountNavs(){
     if(!realNav) return;
     // Select screen: same navbar, no Search (nothing to search yet)
