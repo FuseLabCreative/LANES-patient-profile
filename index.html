@@ -1112,12 +1112,13 @@ body.flow-locked{ overflow:hidden; }
 .ps-sel-opt:hover{ background:var(--gray-100); }
 .ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
 
-#scr-alerts .lanes-navbar{ position:sticky; top:0; z-index:5; }
+.portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
+.nav-inner .sa-clinic{ margin-left:.6rem; }
 .sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
 .sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
 .sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
 .sa-change:hover{ background:var(--gray-100); }
-.sa-body{ max-width:1400px; margin:0 auto; padding:1.5rem 1.5rem 3rem; }
+.sa-body{ max-width:1440px; margin:0 auto; padding:1.5rem 1.5rem 3rem; }
 .sa-charts{ display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
 .sa-chart-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1rem 1.1rem; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
@@ -1187,10 +1188,7 @@ body.flow-locked{ overflow:hidden; }
 
 <!-- ============ PORTAL FLOW: SELECT INSTITUTION ============ -->
 <div id="scr-select" class="portal-screen active">
-  <header class="ps-top">
-    <span class="lanes-logo"><img class="ps-logo-img" alt="LANES"></span>
-    <span class="demo-badge">Demo mode</span>
-  </header>
+  <div class="nav-host"></div>
   <div class="cs-wrap">
     <h1 class="cs-title">Please select a clinical institution</h1>
     <div class="cs-grid" id="cs-grid"></div>
@@ -1199,25 +1197,20 @@ body.flow-locked{ overflow:hidden; }
 
 <!-- ============ PORTAL FLOW: SMART ALERTS ============ -->
 <div id="scr-alerts" class="portal-screen">
-  <nav class="lanes-navbar">
-    <div class="nav-inner">
-      <span class="lanes-logo"><img class="ps-logo-img" alt="LANES"></span>
-      <span class="demo-badge">Demo mode</span>
-      <div class="sa-clinic" id="sa-clinic">
-        <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
-          <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
-          <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
-          <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
-          <svg class="svg-ico sa-clinic-chev"><use href="#i-cr"/></svg>
-        </button>
-        <div class="sa-clinic-menu" id="sa-clinic-menu">
-          <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
-          <div class="sa-clinic-eyebrow">CLINICS</div>
-          <div class="sa-clinic-list" id="sa-clinic-list"></div>
-        </div>
-      </div>
+  <div class="nav-host"></div>
+  <div class="sa-clinic" id="sa-clinic" hidden>
+    <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
+      <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
+      <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+      <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
+      <svg class="svg-ico sa-clinic-chev"><use href="#i-cr"/></svg>
+    </button>
+    <div class="sa-clinic-menu" id="sa-clinic-menu">
+      <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
+      <div class="sa-clinic-eyebrow">CLINICS</div>
+      <div class="sa-clinic-list" id="sa-clinic-list"></div>
     </div>
-  </nav>
+  </div>
   <div class="sa-body">
     <div class="sa-charts">
       <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
@@ -3074,7 +3067,7 @@ body.flow-locked{ overflow:hidden; }
       d.innerHTML='<svg class="svg-ico"><use href="#i-hospital"/></svg><div class="cs-name" title="'+c.n+'">'+c.n+'</div><div class="cs-count">'+c.p+' patients</div>';
       d.addEventListener('click',()=>selectClinic(c)); g.appendChild(d); });
   }
-  function selectClinic(c){ activeClinic=c; updateClinicHeader(); buildTabs(); show('alerts'); }
+  function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
   buildClinicGrid();
 
   /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
@@ -3085,7 +3078,7 @@ body.flow-locked{ overflow:hidden; }
     if(!shown.length){ list.innerHTML='<div class="sa-clinic-opt"><div class="c">No clinics match your search.</div></div>'; return; }
     shown.forEach(c=>{ const d=document.createElement('div'); d.className='sa-clinic-opt'+(c===activeClinic?' sel':'');
       d.innerHTML='<div class="n">'+c.n+'</div><div class="c">'+c.p+' patients</div>';
-      d.addEventListener('click',()=>{ activeClinic=c; updateClinicHeader(); buildTabs(); clinicWrap.classList.remove('open'); });
+      d.addEventListener('click',()=>{ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); clinicWrap.classList.remove('open'); });
       list.appendChild(d); });
   }
   clinicBtn.addEventListener('click',e=>{ e.stopPropagation(); const willOpen=!clinicWrap.classList.contains('open'); if(willOpen){ clinicSearch.value=''; buildClinicMenu(''); } clinicWrap.classList.toggle('open'); if(willOpen) setTimeout(()=>clinicSearch.focus(),30); });
@@ -3106,7 +3099,12 @@ body.flow-locked{ overflow:hidden; }
   const EVENT=['Admit','Discharge','Transfer','Registration'];
   const NOTES=['','Follow-up needed','High ED utilizer','Care plan updated','New member','Pending review'];
   const TABS=[{key:'adult',name:'Adult Encounters'},{key:'peds',name:'Pediatrics'},{key:'bh',name:'Behavioral Health'},{key:'covid',name:'COVID-19'},{key:'a1c',name:'A1C'},{key:'ed',name:'ED Utilization'}];
-  const COUNTS={adult:250,peds:250,bh:47,covid:189,a1c:250,ed:50};
+  let COUNTS={}, DATA={};
+  function refreshClinicData(){
+    COUNTS={ adult:150+Math.floor(rnd()*220), peds:60+Math.floor(rnd()*230), bh:12+Math.floor(rnd()*70),
+             covid:40+Math.floor(rnd()*180), a1c:80+Math.floor(rnd()*200), ed:10+Math.floor(rnd()*80) };
+    DATA={}; TABS.forEach(t=>DATA[t.key]=genRows(14,t.key));
+  }
   function genRows(n,kind){ const rows=[]; for(let i=0;i<n;i++){
       const hh=pad(1+Math.floor(rnd()*12)), mm=pad(Math.floor(rnd()*60)), ap=rnd()>.5?'AM':'PM';
       const by = kind==='peds' ? (2008+Math.floor(rnd()*15)) : (1945+Math.floor(rnd()*60));
@@ -3117,7 +3115,6 @@ body.flow-locked{ overflow:hidden; }
         dob:pad(1+Math.floor(rnd()*12))+'/'+pad(1+Math.floor(rnd()*28))+'/'+by+' ('+(2026-by)+')',
         disch, los: hasD?(1+Math.floor(rnd()*9))+' days':'', emg:Math.floor(rnd()*12), inp:Math.floor(rnd()*6), note:pick(NOTES) });
     } return rows; }
-  const DATA={}; TABS.forEach(t=>DATA[t.key]=genRows(14,t.key));
   let activeTab='adult';
   function visitColor(v){ return v==='Emergency'?'#e63757':v==='Inpatient'?'#748194':v==='Outpatient'?'#2c9b8f':'#2c7be5'; }
   function chip(c,ic){ return '<span class="sa-chip-ico" style="background:'+c+'"><svg class="svg-ico"><use href="#'+ic+'"/></svg></span>'; }
@@ -3181,6 +3178,24 @@ body.flow-locked{ overflow:hidden; }
     });
   }
   window.addEventListener('resize',()=>{ if(charted){ ['sa-chart-activities','sa-chart-sdl'].forEach(id=>{ const el=document.getElementById(id); if(el&&el._chart) el._chart.resize(); }); } });
+
+  /* ---- shared navbar: reuse the real app navbar on every screen ---- */
+  const realNav=document.querySelector('body > nav.lanes-navbar');
+  function cloneNav(){ const n=realNav.cloneNode(true); n.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id')); return n; }
+  (function mountNavs(){
+    if(!realNav) return;
+    // Select screen: same navbar, no Search (nothing to search yet)
+    const selNav=cloneNav(); const ps=selNav.querySelector('.patient-search'); if(ps) ps.remove();
+    const selHost=document.querySelector('#scr-select .nav-host'); if(selHost) selHost.appendChild(selNav);
+    // Smart Alerts screen: same navbar, Search replaced by the clinic switcher
+    const alNav=cloneNav(); const ap=alNav.querySelector('.patient-search'); if(ap) ap.remove();
+    const demo=alNav.querySelector('.demo-badge'), clinic=document.getElementById('sa-clinic');
+    if(demo && clinic){ clinic.hidden=false; demo.insertAdjacentElement('afterend', clinic); }
+    const alHost=document.querySelector('#scr-alerts .nav-host'); if(alHost) alHost.appendChild(alNav);
+    // keep the cloned date/time in step with the live navbar
+    const syncDt=()=>{ const t=(realNav.querySelector('#user-datetime')||{}).textContent||''; document.querySelectorAll('.nav-host .user-datetime').forEach(d=>d.textContent=t); };
+    syncDt(); setInterval(syncDt,1000);
+  })();
 
   document.body.classList.add('flow-locked'); // select screen is active on load
   setLogos(); setTimeout(setLogos,250); setTimeout(setLogos,800);
