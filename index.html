@@ -1119,8 +1119,8 @@ body.flow-locked{ overflow:hidden; }
 
 .portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
 .sa-pagehead{ display:flex; align-items:center; gap:1rem; flex:none; }
-.sa-pagehead .sa-clinic-btn{ padding:.45rem .55rem; margin-left:-.55rem; }
-.sa-pagehead .sa-clinic-btn:hover{ background:var(--gray-100); }
+.sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; }
+.sa-pagehead .sa-clinic-btn:hover{ background:none; }
 .sa-pagehead .sa-clinic-name{ font-size:1.5rem; }
 .sa-pagehead .sa-clinic-ico{ width:24px; height:24px; }
 .sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
@@ -1145,9 +1145,22 @@ body.flow-locked{ overflow:hidden; }
 .sa-tab.active .sa-count{ background:var(--primary); color:#fff; }
 .sa-panel{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; overflow:hidden; }
 .sa-panel-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.25rem .9rem; gap:1rem; flex-wrap:wrap; }
-.sa-tabhead{ display:flex; align-items:center; gap:.5rem 1rem; border-bottom:1px solid var(--gray-200); padding:0 1.25rem; flex-wrap:wrap; }
-.sa-tabhead .sa-tabs{ border-bottom:none; padding:0; flex:0 1 auto; min-width:0; }
-.sa-tabhead .sa-tools{ margin-left:auto; padding:.5rem 0; flex:0 0 auto; }
+.sa-tabhead{ display:flex; align-items:center; gap:.5rem; border-bottom:1px solid var(--gray-200); padding:0 1.25rem; }
+.sa-tabhead .sa-tabs{ border-bottom:none; padding:0; flex:1 1 auto; min-width:0; overflow-x:auto; white-space:nowrap; flex-wrap:nowrap; scrollbar-width:thin; }
+.sa-tabhead .sa-tabs::-webkit-scrollbar{ height:4px; }
+.sa-tabhead .sa-tabs::-webkit-scrollbar-thumb{ background:var(--gray-300); border-radius:4px; }
+.sa-tabhead .sa-tab{ flex:0 0 auto; }
+.sa-actions{ display:flex; align-items:center; gap:.4rem; flex:0 0 auto; padding:.5rem 0 .5rem .6rem; }
+.sa-actions.sep{ border-left:1px solid var(--gray-200); margin-left:.4rem; }
+.sa-actions .hbtn{ position:relative; }
+.sa-search-wrap{ display:flex; align-items:center; }
+.sa-search-exp{ display:none; align-items:center; gap:.3rem; }
+.sa-search-wrap.open .sa-sbtn{ display:none; }
+.sa-search-wrap.open .sa-search-exp{ display:flex; }
+.sa-search-exp input{ height:34px; border:1px solid var(--gray-300); border-radius:.375rem; padding:0 .6rem; font-family:inherit; font-size:.85rem; width:200px; max-width:46vw; }
+.sa-search-exp input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.sa-actions.searching #sa-filters-btn, .sa-actions.searching #sa-csv{ display:none; }
+#sa-filters-btn .sa-fcount{ position:absolute; top:-5px; right:-5px; min-width:15px; height:15px; padding:0 3px; border-radius:8px; font-size:.62rem; line-height:15px; text-align:center; margin:0; }
 /* custom dropdown (filter drawer) */
 .sa-dd{ position:relative; }
 .sa-dd-btn{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; width:100%; height:40px; padding:0 .7rem; border:1px solid var(--gray-300); border-radius:.45rem; background:#fff; font-family:inherit; font-size:.88rem; color:var(--gray-800); cursor:pointer; }
@@ -1293,7 +1306,9 @@ body.flow-locked{ overflow:hidden; }
 @media(max-width:900px){ .sa-detail{ grid-template-columns:1fr; } }
 
 /* ---- back button + toolbar buttons ---- */
-.syn-backbar{ max-width:1440px; width:100%; margin:0 auto; padding:.85rem 1.25rem .1rem; box-sizing:border-box; }
+.syn-back-ico{ background:none; border:none; cursor:pointer; color:var(--gray-600); padding:.2rem .3rem; display:inline-flex; align-items:center; flex:none; }
+.syn-back-ico .svg-ico{ width:22px; height:22px; }
+.syn-back-ico:hover{ color:var(--gray-900); }
 .sa-back{ display:inline-flex; align-items:center; gap:.4rem; flex:none; }
 .sa-back .svg-ico{ width:12px; height:12px; }
 .sa-tbtn{ display:inline-flex; align-items:center; gap:.4rem; }
@@ -1312,11 +1327,11 @@ body.flow-locked{ overflow:hidden; }
 .sa-cnum{ font-weight:700; }
 
 /* ---- sticky right Patient column + avatar cell ---- */
-.sa-table th.sa-sticky-l, .sa-table td.sa-sticky-l{ position:sticky; left:0; z-index:2; background:#fff; }
+.sa-table th.sa-sticky-l, .sa-table td.sa-sticky-l{ position:sticky; left:0; z-index:2; background:#fff; padding-right:.5rem !important; }
 .sa-table td.sa-sticky-l{ box-shadow:5px 0 8px -7px rgba(43,48,58,.1); }
 .sa-table thead th.sa-sticky-l{ z-index:3; background:var(--gray-100); box-shadow:5px 0 8px -7px rgba(43,48,58,.08); }
 .sa-table tbody tr:hover td.sa-sticky-l{ background:var(--gray-100); }
-.sa-table th.sa-sticky-r, .sa-table td.sa-sticky-r{ position:sticky; right:0; z-index:2; border-left:1px solid var(--gray-200); background:#f5f8fc; }
+.sa-table th.sa-sticky-r, .sa-table td.sa-sticky-r{ position:sticky; right:0; z-index:2; border-left:1px solid var(--gray-200); background:#f5f8fc; padding-left:1.25rem !important; }
 .sa-table td.sa-sticky-r{ box-shadow:-5px 0 8px -7px rgba(43,48,58,.1); }
 .sa-table thead th.sa-sticky-r{ z-index:3; background:var(--gray-100); box-shadow:-5px 0 8px -7px rgba(43,48,58,.08); }
 .sa-table tbody tr:hover td.sa-sticky-r{ background:#eef3fb; }
@@ -1382,10 +1397,13 @@ body.flow-locked{ overflow:hidden; }
     <div class="sa-panel">
       <div class="sa-tabhead">
         <div class="sa-tabs" id="sa-tabs"></div>
-        <div class="sa-tools">
-          <div class="sa-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" placeholder="Search" id="sa-search-input"></div>
-          <button class="btn-ghost sa-tbtn" id="sa-filters-btn" type="button"><svg class="svg-ico"><use href="#i-filter"/></svg> Filters<span class="sa-fcount" id="sa-fcount" hidden>0</span></button>
-          <button class="btn-ghost sa-tbtn" id="sa-csv" type="button"><svg class="svg-ico"><use href="#i-download"/></svg> Export CSV</button>
+        <div class="sa-actions" id="sa-actions">
+          <div class="sa-search-wrap" id="sa-search-wrap">
+            <button class="hbtn sa-sbtn" id="sa-search-open" type="button" title="Search"><svg class="svg-ico"><use href="#i-search"/></svg></button>
+            <div class="sa-search-exp"><input type="text" placeholder="Search" id="sa-search-input"><button class="hbtn" id="sa-search-close" type="button" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>
+          </div>
+          <button class="hbtn" id="sa-filters-btn" type="button" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="sa-fcount" id="sa-fcount" hidden>0</span></button>
+          <button class="hbtn" id="sa-csv" type="button" title="Export CSV"><svg class="svg-ico"><use href="#i-download"/></svg></button>
         </div>
       </div>
       <div class="table-scroll">
@@ -3417,9 +3435,10 @@ body.flow-locked{ overflow:hidden; }
       b.addEventListener('click',()=>{ activeTab=t.key; curPage=1; const tt=document.getElementById('sa-tabtitle'); if(tt) tt.textContent=t.name;
         host.querySelectorAll('.sa-tab').forEach(x=>x.classList.remove('active')); b.classList.add('active'); renderTable(); });
       host.appendChild(b); });
-    renderTable();
+    renderTable(); setTimeout(updateTabSep,0);
   }
   document.getElementById('sa-search-input').addEventListener('input', ()=>{ curPage=1; renderTable(); });
+  function updateTabSep(){ const t=document.querySelector('.sa-tabhead .sa-tabs'), a=document.getElementById('sa-actions'); if(!t||!a) return; a.classList.toggle('sep', t.scrollWidth>t.clientWidth+1); }
 
   /* ---- filter drawer, visit-type chips, sort, CSV (wired once) ---- */
   function buildVtChips(){ const host=document.getElementById('sa-vt-chips'); if(!host) return; host.innerHTML='';
@@ -3465,6 +3484,11 @@ body.flow-locked{ overflow:hidden; }
     const bd=document.getElementById('sa-drawer-backdrop'); if(bd) bd.addEventListener('click',()=>openDrawer(false));
     document.addEventListener('keydown',e=>{ if(e.key==='Escape') openDrawer(false); });
     const csv=document.getElementById('sa-csv'); if(csv) csv.addEventListener('click',exportCSV);
+    const sWrap=document.getElementById('sa-search-wrap'), sActions=document.getElementById('sa-actions'), sInput=document.getElementById('sa-search-input');
+    const sOpen=document.getElementById('sa-search-open'), sClose=document.getElementById('sa-search-close');
+    if(sOpen) sOpen.addEventListener('click',()=>{ sWrap.classList.add('open'); sActions.classList.add('searching'); setTimeout(()=>sInput.focus(),20); setTimeout(updateTabSep,30); });
+    if(sClose) sClose.addEventListener('click',()=>{ sWrap.classList.remove('open'); sActions.classList.remove('searching'); sInput.value=''; curPage=1; renderTable(); setTimeout(updateTabSep,30); });
+    window.addEventListener('resize', updateTabSep); setTimeout(updateTabSep,100);
     document.querySelectorAll('.sa-table thead th.sortable').forEach(th=>th.addEventListener('click',()=>{
       const col=th.dataset.sort; if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
       document.querySelectorAll('.sa-table thead th').forEach(x=>{ x.classList.remove('sorted'); const a=x.querySelector('.sort-ar'); if(a) a.innerHTML='&#8597;'; });
@@ -3479,11 +3503,9 @@ body.flow-locked{ overflow:hidden; }
       renderTable(); });
     // back buttons
     const backSel=document.getElementById('sa-back-select'); if(backSel) backSel.addEventListener('click',()=>show('select'));
-    const phh=document.querySelector('body > .patient-header');
-    if(phh && !document.querySelector('.syn-backbar')){ const bar=document.createElement('div'); bar.className='syn-backbar';
-      const b=document.createElement('button'); b.type='button'; b.className='btn-ghost sa-back sa-syn-back';
-      b.innerHTML='<svg class="svg-ico"><use href="#i-cl"/></svg> Back'; b.addEventListener('click',()=>show('alerts'));
-      bar.appendChild(b); phh.parentNode.insertBefore(bar, phh); }
+    const ph=document.querySelector('body > .patient-header .ph-row');
+    if(ph && !ph.querySelector('.syn-back-ico')){ const b=document.createElement('button'); b.type='button'; b.className='syn-back-ico'; b.title='Back';
+      b.innerHTML='<svg class="svg-ico"><use href="#i-cl"/></svg>'; b.addEventListener('click',()=>show('alerts')); ph.insertBefore(b, ph.firstChild); }
   })();
 
   /* ---- charts (ECharts via LC helper) ---- */
