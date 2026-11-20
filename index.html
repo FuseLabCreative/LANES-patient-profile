@@ -1136,12 +1136,12 @@ body.flow-locked{ overflow:hidden; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
 .sa-chart{ height:260px; width:100%; }
 @media(max-width:900px){ .sa-charts{ grid-template-columns:1fr; } }
-.sa-tabs{ display:flex; gap:.3rem; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); }
+.sa-tabs{ display:flex; gap:.3rem; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); padding:0 1.25rem; }
 .sa-tab{ display:inline-flex; align-items:center; gap:.5rem; padding:.7rem 1rem; background:none; border:none; border-bottom:2px solid transparent; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); cursor:pointer; }
 .sa-tab.active{ color:var(--primary); border-bottom-color:var(--primary); }
 .sa-tab .sa-count{ background:var(--gray-200); color:var(--gray-700); font-size:.72rem; font-weight:600; border-radius:10px; padding:.05rem .5rem; }
 .sa-tab.active .sa-count{ background:var(--primary); color:#fff; }
-.sa-panel{ background:#fff; border:1px solid var(--gray-200); border-top:none; border-radius:0 0 .6rem .6rem; }
+.sa-panel{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; overflow:hidden; }
 .sa-panel-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.25rem .9rem; gap:1rem; flex-wrap:wrap; }
 .sa-panel-head h2{ font-size:1.05rem; font-weight:600; color:var(--gray-900); margin:0; }
 .sa-search{ position:relative; }
@@ -1266,6 +1266,50 @@ body.flow-locked{ overflow:hidden; }
 .sa-detail-stats li:last-child{ border-bottom:none; }
 .sa-detail-stats li b{ color:var(--gray-900); }
 @media(max-width:900px){ .sa-detail{ grid-template-columns:1fr; } }
+
+/* ---- back button + toolbar buttons ---- */
+.sa-back{ display:inline-flex; align-items:center; gap:.4rem; flex:none; }
+.sa-back .svg-ico{ width:12px; height:12px; }
+.sa-tbtn{ display:inline-flex; align-items:center; gap:.4rem; }
+.sa-tbtn .svg-ico{ width:14px; height:14px; }
+.sa-fcount{ background:var(--primary); color:#fff; font-size:.7rem; font-weight:700; border-radius:9px; padding:.02rem .4rem; margin-left:.1rem; }
+
+/* ---- visit / event badges ---- */
+.sa-vbadge{ display:inline-flex; align-items:center; gap:.3rem; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; }
+.sa-vbadge .svg-ico{ width:12px; height:12px; }
+.vb-emg{ background:rgba(230,55,87,.12); color:#c42a46; } .vb-inp{ background:rgba(92,124,250,.15); color:#3f5bb5; }
+.vb-out{ background:rgba(44,155,143,.15); color:#1a7d72; } .vb-spec{ background:rgba(44,123,229,.12); color:#1e62c0; }
+.sa-ebadge{ display:inline-block; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; }
+.eb-admit{ background:rgba(230,55,87,.12); color:#c42a46; } .eb-disch{ background:rgba(44,155,143,.15); color:#1a7d72; }
+.eb-trans{ background:rgba(245,128,62,.16); color:#c25a1b; } .eb-reg{ background:rgba(44,123,229,.12); color:#1e62c0; }
+.sa-note-btn2{ padding:.28rem .6rem !important; font-size:.78rem !important; display:inline-flex; align-items:center; gap:.3rem; }
+.sa-cnum{ font-weight:700; }
+
+/* ---- sticky right Patient column + avatar cell ---- */
+.sa-table th.sa-sticky-r, .sa-table td.sa-sticky-r{ position:sticky; right:0; z-index:2; background:#fff; }
+.sa-table td.sa-sticky-r{ box-shadow:-7px 0 9px -7px rgba(43,48,58,.18); }
+.sa-table thead th.sa-sticky-r{ z-index:3; background:var(--gray-100); box-shadow:-7px 0 9px -7px rgba(43,48,58,.14); }
+.sa-table tbody tr:hover td.sa-sticky-r{ background:var(--gray-100); }
+.sa-pt-inner{ display:flex; align-items:center; gap:.65rem; }
+.sa-av{ width:38px; height:38px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:700; color:#3d3a66; background:linear-gradient(135deg,#c6c0f6,#9b91ee); }
+.sa-pt-txt{ display:flex; flex-direction:column; min-width:0; }
+.sa-pt-name{ display:flex; align-items:center; gap:.3rem; }
+.sa-pt-sub{ font-size:.76rem; color:var(--gray-500); margin-top:.05rem; }
+
+/* ---- filter drawer ---- */
+.sa-drawer-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
+.sa-drawer-backdrop.open{ opacity:1; pointer-events:auto; }
+.sa-drawer{ position:fixed; top:0; right:0; bottom:0; width:420px; max-width:92vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
+.sa-drawer.open{ transform:translateX(0); }
+.sa-drawer-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.25rem; border-bottom:1px solid var(--gray-200); }
+.sa-drawer-head h3{ margin:0; font-size:1.1rem; font-weight:600; color:var(--gray-900); }
+.sa-drawer-body{ flex:1 1 auto; overflow-y:auto; padding:1.1rem 1.25rem; display:flex; flex-direction:column; gap:1rem; }
+.sa-dfield{ display:flex; flex-direction:column; gap:.4rem; }
+.sa-dfield > label{ font-size:.82rem; font-weight:600; color:var(--gray-700); }
+.sa-dfield input[type=date], .sa-dfield select{ height:40px; border:1px solid var(--gray-300); border-radius:.45rem; padding:0 .7rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); background:#fff; }
+.sa-dfield input:focus, .sa-dfield select:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.sa-drawer-foot{ display:flex; gap:.6rem; padding:1rem 1.25rem; border-top:1px solid var(--gray-200); }
+.sa-drawer-foot .btn-ghost, .sa-drawer-foot .btn-primary{ flex:1 1 0; text-align:center; }
 </style>
 
 <!-- ============ PORTAL FLOW: SELECT INSTITUTION ============ -->
@@ -1285,6 +1329,7 @@ body.flow-locked{ overflow:hidden; }
   <div class="nav-host"></div>
   <div class="sa-headband"><div class="sa-headband-inner">
     <div class="sa-pagehead">
+      <button class="btn-ghost sa-back" id="sa-back-select" type="button"><svg class="svg-ico"><use href="#i-cl"/></svg> Back</button>
       <div class="sa-clinic" id="sa-clinic">
         <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
           <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
@@ -1305,50 +1350,14 @@ body.flow-locked{ overflow:hidden; }
       <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
       <div class="sa-chart-card"><div class="sa-chart-title">Service Delivery Location &mdash; Last 30 Days</div><div id="sa-chart-sdl" class="sa-chart"></div></div>
     </div>
-    <div class="sa-filters" id="sa-filters">
-      <button class="sa-filters-toggle" id="sa-filters-toggle" type="button">More Filter Options <svg class="svg-ico"><use href="#i-cd"/></svg></button>
-      <div class="sa-filters-body">
-        <div class="sa-fgrid">
-          <div class="sa-fld"><label>From Date</label><input type="date" id="sa-f-from"></div>
-          <div class="sa-fld"><label>To Date</label><input type="date" id="sa-f-to"></div>
-          <div class="sa-fld">
-            <label class="sa-fld-check"><input type="checkbox" id="sa-f-exclude"> Exclude Selected Organizations</label>
-            <label>Organizations</label>
-            <select id="sa-f-org"><option>All organizations</option><option>Health Net &ndash; Enhanced Care Management</option><option>LA Care &ndash; Enhanced Care Management</option><option>Molina Healthcare &ndash; ECM</option><option>Cedars-Sinai Medical Center</option></select>
-          </div>
-          <div class="sa-fld"><label>Service Delivery Locations</label><select id="sa-f-sdl"><option>Select organization to populate locations</option><option>Harbor &ndash; UCLA Medical Center</option><option>Valley Community Healthcare</option><option>LAC + USC Medical Center</option></select></div>
-          <div class="sa-fld"><label>Encounters Visits Last 6 Months</label><select id="sa-f-enc"><option>Encounters Last 6 Months</option><option>1+ visits</option><option>3+ visits</option><option>5+ visits</option></select></div>
-          <div class="sa-fld"><label>Visit Type</label><div class="sa-vt-chips" id="sa-vt-chips"></div></div>
-          <div class="sa-fld"><label>Action</label><select id="sa-f-action"><option>Action Type</option><option>Admit</option><option>Discharge</option><option>Transfer</option><option>Registration</option></select></div>
-          <div class="sa-fld"><label>Specialty</label><select id="sa-f-spec"><option>Specialty</option><option>Hospital</option><option>Clinic</option><option>Specialty</option><option>Primary Care</option></select></div>
-          <div class="sa-fld">
-            <label>Programs</label>
-            <div class="sa-progs">
-              <span class="sa-prog"><span class="dot" style="background:#2c7be5"></span>Still on Location</span>
-              <span class="sa-prog"><span class="dot" style="background:#e63757"></span>Whole Person Care</span>
-              <span class="sa-prog"><span class="dot" style="background:#2c9b8f"></span>Behavioral Health</span>
-              <span class="sa-prog"><span class="dot" style="background:#00a37a"></span>Health Net &ndash; Enhanced Care Mgmt</span>
-              <span class="sa-prog"><span class="dot" style="background:#f5803e"></span>LA Care &ndash; Enhanced Care Mgmt</span>
-            </div>
-          </div>
-          <div class="sa-fld"><label>Results returned from the server</label><select id="sa-f-results"><option>250</option><option>500</option><option>1000</option><option>5000</option></select></div>
-        </div>
-        <div class="sa-factions">
-          <button class="sa-btn sa-btn-primary" id="sa-f-apply"><svg class="svg-ico"><use href="#i-filter"/></svg> Filter</button>
-          <button class="sa-btn sa-btn-clear" id="sa-f-clear"><svg class="svg-ico"><use href="#i-x"/></svg> Clear</button>
-        </div>
-      </div>
-    </div>
-    <div class="sa-tabs" id="sa-tabs"></div>
     <div class="sa-panel">
+      <div class="sa-tabs" id="sa-tabs"></div>
       <div class="sa-panel-head">
         <h2 id="sa-tabtitle">Adult Encounters</h2>
         <div class="sa-tools">
-          <button class="sa-qf sa-qf-bed" data-qf="Inpatient" title="Inpatient only" type="button"><svg class="svg-ico"><use href="#i-bed"/></svg></button>
-          <button class="sa-qf sa-qf-amb" data-qf="Emergency" title="Emergency only" type="button"><svg class="svg-ico"><use href="#i-ambulance"/></svg></button>
-          <button class="sa-qf sa-qf-clip" data-qf="Outpatient" title="Outpatient only" type="button"><svg class="svg-ico"><use href="#i-pulse"/></svg></button>
           <div class="sa-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" placeholder="Search" id="sa-search-input"></div>
-          <button class="sa-csv" id="sa-csv" title="Export CSV" type="button"><svg class="svg-ico"><use href="#i-download"/></svg></button>
+          <button class="btn-ghost sa-tbtn" id="sa-filters-btn" type="button"><svg class="svg-ico"><use href="#i-filter"/></svg> Filters<span class="sa-fcount" id="sa-fcount" hidden>0</span></button>
+          <button class="btn-ghost sa-tbtn" id="sa-csv" type="button"><svg class="svg-ico"><use href="#i-download"/></svg> Export CSV</button>
         </div>
       </div>
       <div class="table-scroll">
@@ -1359,13 +1368,12 @@ body.flow-locked{ overflow:hidden; }
             <th class="sortable" data-sort="loc">Service Delivery Location<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="spec">Specialty<span class="sort-ar">&#8597;</span></th>
             <th>Visit Type</th><th>Event Type</th>
-            <th class="sortable" data-sort="name">Patient Name<span class="sort-ar">&#8597;</span></th>
-            <th class="sortable" data-sort="dob">Birth Date<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="disch">Discharge Date<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="los">Length of Stay<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="emg">Last 6 Months Emergency<span class="sort-ar">&#8597;</span></th>
             <th class="sortable" data-sort="inp">Last 6 Months Inpatient<span class="sort-ar">&#8597;</span></th>
             <th>Smart Alerts Notes</th>
+            <th class="sortable sa-sticky-r" data-sort="name">Patient Name<span class="sort-ar">&#8597;</span></th>
           </tr></thead>
           <tbody id="sa-tbody"></tbody>
         </table>
@@ -1374,6 +1382,38 @@ body.flow-locked{ overflow:hidden; }
     </div>
     </div>
   </div>
+  <div class="sa-drawer-backdrop" id="sa-drawer-backdrop"></div>
+  <aside class="sa-drawer" id="sa-drawer" aria-hidden="true">
+    <div class="sa-drawer-head">
+      <h3>Filters</h3>
+      <button class="hbtn" id="sa-drawer-close" type="button" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="sa-drawer-body">
+      <div class="sa-dfield"><label>From Date</label><input type="date" id="sa-f-from"></div>
+      <div class="sa-dfield"><label>To Date</label><input type="date" id="sa-f-to"></div>
+      <div class="sa-dfield"><label class="sa-fld-check"><input type="checkbox" id="sa-f-exclude"> Exclude Selected Organizations</label></div>
+      <div class="sa-dfield"><label>Organizations</label><select id="sa-f-org"><option>All organizations</option><option>Health Net &ndash; Enhanced Care Management</option><option>LA Care &ndash; Enhanced Care Management</option><option>Molina Healthcare &ndash; ECM</option><option>Cedars-Sinai Medical Center</option></select></div>
+      <div class="sa-dfield"><label>Service Delivery Locations</label><select id="sa-f-sdl"><option>Select organization to populate locations</option><option>Harbor &ndash; UCLA Medical Center</option><option>Valley Community Healthcare</option><option>LAC + USC Medical Center</option></select></div>
+      <div class="sa-dfield"><label>Encounters Visits Last 6 Months</label><select id="sa-f-enc"><option>Encounters Last 6 Months</option><option>1+ visits</option><option>3+ visits</option><option>5+ visits</option></select></div>
+      <div class="sa-dfield"><label>Visit Type</label><div class="sa-vt-chips" id="sa-vt-chips"></div></div>
+      <div class="sa-dfield"><label>Action</label><select id="sa-f-action"><option>Action Type</option><option>Admit</option><option>Discharge</option><option>Transfer</option><option>Registration</option></select></div>
+      <div class="sa-dfield"><label>Specialty</label><select id="sa-f-spec"><option>Specialty</option><option>Hospital</option><option>Clinic</option><option>Specialty</option><option>Primary Care</option></select></div>
+      <div class="sa-dfield"><label>Results returned from the server</label><select id="sa-f-results"><option>250</option><option>500</option><option>1000</option><option>5000</option></select></div>
+      <div class="sa-dfield"><label>Programs</label>
+        <div class="sa-progs">
+          <span class="sa-prog"><span class="dot" style="background:#2c7be5"></span>Still on Location</span>
+          <span class="sa-prog"><span class="dot" style="background:#e63757"></span>Whole Person Care</span>
+          <span class="sa-prog"><span class="dot" style="background:#2c9b8f"></span>Behavioral Health</span>
+          <span class="sa-prog"><span class="dot" style="background:#00a37a"></span>Health Net &ndash; Enhanced Care Mgmt</span>
+          <span class="sa-prog"><span class="dot" style="background:#f5803e"></span>LA Care &ndash; Enhanced Care Mgmt</span>
+        </div>
+      </div>
+    </div>
+    <div class="sa-drawer-foot">
+      <button class="btn-ghost" id="sa-f-clear" type="button">Clear</button>
+      <button class="btn-primary" id="sa-f-apply" type="button">Apply filters</button>
+    </div>
+  </aside>
 </div>
 
 <!-- ============ NAVBAR ============ -->
@@ -3259,10 +3299,12 @@ body.flow-locked{ overflow:hidden; }
     } return rows; }
   let activeTab='adult', sortCol=null, sortDir=1, vtFilter=[], quickFilter=null, resultsLimit=250;
   const VT=['Emergency','Inpatient','Outpatient','Specialty'];
-  function visitColor(v){ return v==='Emergency'?'#e63757':v==='Inpatient'?'#748194':v==='Outpatient'?'#2c9b8f':'#2c7be5'; }
   function visitIcon(v){ return v==='Emergency'?'i-ambulance':v==='Inpatient'?'i-bed':'i-pulse'; }
-  function eventColor(e){ return e==='Admit'?'#e63757':e==='Discharge'?'#2c9b8f':e==='Transfer'?'#f5803e':'#2c7be5'; }
-  function chip(c,ic){ return '<span class="sa-chip-ico" style="background:'+c+'"><svg class="svg-ico"><use href="#'+ic+'"/></svg></span>'; }
+  function visitBadge(v){ const c=v==='Emergency'?'vb-emg':v==='Inpatient'?'vb-inp':v==='Outpatient'?'vb-out':'vb-spec';
+    return '<span class="sa-vbadge '+c+'"><svg class="svg-ico"><use href="#'+visitIcon(v)+'"/></svg>'+v+'</span>'; }
+  function eventBadge(e){ const c=e==='Admit'?'eb-admit':e==='Discharge'?'eb-disch':e==='Transfer'?'eb-trans':'eb-reg';
+    return '<span class="sa-ebadge '+c+'">'+e+'</span>'; }
+  function initials(name){ const p=String(name).split(/[,\s]+/).filter(Boolean); return ((p[0]||' ')[0]+((p[1]||' ')[0]||'')).toUpperCase(); }
 
   function visibleRows(){
     const rows=DATA[activeTab]||[];
@@ -3281,13 +3323,15 @@ body.flow-locked{ overflow:hidden; }
     shown.forEach(r=>{ const tr=document.createElement('tr');
       tr.innerHTML='<td class="sa-ico-cell"><button class="sa-xp-btn" type="button" title="Details"><svg class="svg-ico"><use href="#i-cr"/></svg></button></td>'+
         '<td>'+r.dt+'</td><td>'+r.loc+'</td><td>'+r.spec+'</td>'+
-        '<td class="sa-ico-cell">'+chip(visitColor(r.visit),visitIcon(r.visit))+'</td>'+
-        '<td class="sa-ico-cell">'+chip(eventColor(r.event),'i-calendar')+'</td>'+
-        '<td><a class="sa-pname">'+r.name+'</a>'+(r.prog?'<span class="sa-pheart" title="'+r.prog+'">&#9829;</span>':'')+'</td><td>'+r.dob+'</td>'+
+        '<td>'+visitBadge(r.visit)+'</td>'+
+        '<td>'+eventBadge(r.event)+'</td>'+
         '<td>'+(r.disch||'—')+'</td><td>'+(r.los||'—')+'</td>'+
-        '<td><span class="sa-count-badge" style="color:'+(r.emg>5?'#e63757':'var(--gray-700)')+'">'+r.emg+' <svg class="svg-ico" style="width:13px;height:13px;color:#e63757"><use href="#i-ambulance"/></svg></span></td>'+
-        '<td><span class="sa-count-badge" style="color:var(--gray-700)">'+r.inp+' <svg class="svg-ico" style="width:13px;height:13px;color:#748194"><use href="#i-bed"/></svg></span></td>'+
-        '<td class="sa-ico-cell"><button class="sa-note-btn" type="button" title="Smart Alerts Notes"><svg class="svg-ico"><use href="#i-file"/></svg></button></td>';
+        '<td><span class="sa-cnum" style="color:'+(r.emg>5?'#e63757':'var(--gray-700)')+'">'+r.emg+'</span></td>'+
+        '<td><span class="sa-cnum" style="color:var(--gray-700)">'+r.inp+'</span></td>'+
+        '<td><button class="btn-ghost sa-note-btn2" type="button"><svg class="svg-ico" style="width:12px;height:12px"><use href="#i-plus"/></svg> Note</button></td>'+
+        '<td class="sa-sticky-r sa-pt-cell"><div class="sa-pt-inner"><span class="sa-av">'+initials(r.name)+'</span>'+
+          '<span class="sa-pt-txt"><span class="sa-pt-name"><a class="sa-pname">'+r.name+'</a>'+(r.prog?'<span class="sa-pheart" title="'+r.prog+'">&#9829;</span>':'')+'</span>'+
+          '<span class="sa-pt-sub">DOB '+r.dob+'</span></span></div></td>';
       tr.querySelector('.sa-pname').addEventListener('click',()=>show('synopsis'));
       tr.querySelector('.sa-xp-btn').addEventListener('click',e=>toggleDetail(tr,r,e.currentTarget));
       tb.appendChild(tr); });
@@ -3298,7 +3342,7 @@ body.flow-locked{ overflow:hidden; }
     if(next && next.classList.contains('sa-detail-row')){ next.remove(); btn.classList.remove('open'); return; }
     btn.classList.add('open');
     const dr=document.createElement('tr'); dr.className='sa-detail-row';
-    const td=document.createElement('td'); td.className='sa-detail-td'; td.colSpan=13;
+    const td=document.createElement('td'); td.className='sa-detail-td'; td.colSpan=12;
     const cid='dc-'+Math.random().toString(36).slice(2,8);
     const am=Math.floor(rnd()*20), mid=Math.floor(rnd()*18), eve=Math.floor(rnd()*22);
     td.innerHTML='<div class="sa-detail"><div class="sa-detail-chart"><div class="sa-dc-title">6 Month Breakdown of Visits</div><div class="sa-dc" id="'+cid+'"></div></div>'+
@@ -3334,16 +3378,17 @@ body.flow-locked{ overflow:hidden; }
   }
   document.getElementById('sa-search-input').addEventListener('input', renderTable);
 
-  /* ---- filter panel, quick filters, sort, CSV (wired once) ---- */
+  /* ---- filter drawer, visit-type chips, sort, CSV (wired once) ---- */
   function buildVtChips(){ const host=document.getElementById('sa-vt-chips'); if(!host) return; host.innerHTML='';
     VT.forEach(v=>{ const c=document.createElement('button'); c.type='button'; c.className='sa-vt-chip'+(vtFilter.includes(v)?' on':'');
       c.innerHTML='<svg class="svg-ico"><use href="#'+visitIcon(v)+'"/></svg>'+v;
-      c.addEventListener('click',()=>{ const i=vtFilter.indexOf(v); if(i>=0) vtFilter.splice(i,1); else vtFilter.push(v);
-        quickFilter=null; syncQuick(); c.classList.toggle('on'); renderTable(); });
+      c.addEventListener('click',()=>{ const i=vtFilter.indexOf(v); if(i>=0) vtFilter.splice(i,1); else vtFilter.push(v); c.classList.toggle('on'); });
       host.appendChild(c); });
   }
-  function syncQuick(){ document.querySelectorAll('.sa-qf').forEach(q=>q.classList.toggle('on', q.dataset.qf===quickFilter)); }
   function syncChips(){ document.querySelectorAll('#sa-vt-chips .sa-vt-chip').forEach((c,i)=>c.classList.toggle('on', vtFilter.includes(VT[i]))); }
+  function updateFCount(){ const el=document.getElementById('sa-fcount'); if(!el) return;
+    const n=vtFilter.length + (document.getElementById('sa-f-exclude')&&document.getElementById('sa-f-exclude').checked?1:0);
+    if(n>0){ el.textContent=n; el.hidden=false; } else el.hidden=true; }
   function exportCSV(){ const rows=visibleRows();
     const cols=['Action Date/Time','Service Delivery Location','Specialty','Visit Type','Event Type','Patient Name','Birth Date','Discharge Date','Length of Stay','Last 6 Months Emergency','Last 6 Months Inpatient'];
     const esc=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
@@ -3352,24 +3397,32 @@ body.flow-locked{ overflow:hidden; }
     const blob=new Blob([lines.join('\n')],{type:'text/csv'}); const url=URL.createObjectURL(blob);
     const a=document.createElement('a'); a.href=url; a.download=((activeClinic&&activeClinic.n)||'smart-alerts').replace(/[^a-z0-9]+/gi,'_')+'_'+activeTab+'.csv'; a.click(); URL.revokeObjectURL(url);
   }
+  function openDrawer(o){ const d=document.getElementById('sa-drawer'), bd=document.getElementById('sa-drawer-backdrop');
+    d.classList.toggle('open', o); bd.classList.toggle('open', o); d.setAttribute('aria-hidden', o?'false':'true'); }
   (function wireAlertsUI(){
     buildVtChips();
-    const ft=document.getElementById('sa-filters-toggle'); if(ft) ft.addEventListener('click',()=>document.getElementById('sa-filters').classList.toggle('open'));
-    document.querySelectorAll('.sa-qf').forEach(q=>q.addEventListener('click',()=>{
-      quickFilter = quickFilter===q.dataset.qf ? null : q.dataset.qf; vtFilter=[]; syncChips(); syncQuick(); renderTable(); }));
+    const fb=document.getElementById('sa-filters-btn'); if(fb) fb.addEventListener('click',()=>openDrawer(true));
+    const dc=document.getElementById('sa-drawer-close'); if(dc) dc.addEventListener('click',()=>openDrawer(false));
+    const bd=document.getElementById('sa-drawer-backdrop'); if(bd) bd.addEventListener('click',()=>openDrawer(false));
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') openDrawer(false); });
     const csv=document.getElementById('sa-csv'); if(csv) csv.addEventListener('click',exportCSV);
     document.querySelectorAll('.sa-table thead th.sortable').forEach(th=>th.addEventListener('click',()=>{
       const col=th.dataset.sort; if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
       document.querySelectorAll('.sa-table thead th').forEach(x=>{ x.classList.remove('sorted'); const a=x.querySelector('.sort-ar'); if(a) a.innerHTML='&#8597;'; });
       th.classList.add('sorted'); const ar=th.querySelector('.sort-ar'); if(ar) ar.innerHTML=sortDir>0?'&#9650;':'&#9660;';
       renderTable(); }));
-    const apply=document.getElementById('sa-f-apply'); if(apply) apply.addEventListener('click',()=>{ const rs=document.getElementById('sa-f-results'); resultsLimit=parseInt(rs&&rs.value||'250',10)||250; renderTable(); });
+    const apply=document.getElementById('sa-f-apply'); if(apply) apply.addEventListener('click',()=>{ const rs=document.getElementById('sa-f-results'); resultsLimit=parseInt(rs&&rs.value||'250',10)||250; updateFCount(); renderTable(); openDrawer(false); });
     const clr=document.getElementById('sa-f-clear'); if(clr) clr.addEventListener('click',()=>{
       vtFilter=[]; quickFilter=null; sortCol=null; resultsLimit=250;
       ['sa-f-from','sa-f-to','sa-f-org','sa-f-sdl','sa-f-enc','sa-f-action','sa-f-spec','sa-f-results'].forEach(id=>{ const el=document.getElementById(id); if(el){ if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; } });
       const ex=document.getElementById('sa-f-exclude'); if(ex) ex.checked=false;
-      syncChips(); syncQuick(); document.querySelectorAll('.sa-table thead th').forEach(x=>{ x.classList.remove('sorted'); const a=x.querySelector('.sort-ar'); if(a) a.innerHTML='&#8597;'; });
+      syncChips(); updateFCount(); document.querySelectorAll('.sa-table thead th').forEach(x=>{ x.classList.remove('sorted'); const a=x.querySelector('.sort-ar'); if(a) a.innerHTML='&#8597;'; });
       renderTable(); });
+    // back buttons
+    const backSel=document.getElementById('sa-back-select'); if(backSel) backSel.addEventListener('click',()=>show('select'));
+    const ph=document.querySelector('body > .patient-header .ph-row');
+    if(ph && !ph.querySelector('.sa-syn-back')){ const b=document.createElement('button'); b.type='button'; b.className='btn-ghost sa-back sa-syn-back';
+      b.innerHTML='<svg class="svg-ico"><use href="#i-cl"/></svg> Back'; b.addEventListener('click',()=>show('alerts')); ph.insertBefore(b, ph.firstChild); }
   })();
 
   /* ---- charts (ECharts via LC helper) ---- */
