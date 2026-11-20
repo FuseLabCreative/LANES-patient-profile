@@ -1113,7 +1113,11 @@ body.flow-locked{ overflow:hidden; }
 .ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
 
 .portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
-.nav-inner .sa-clinic{ margin-left:.6rem; }
+.sa-pagehead{ display:flex; align-items:center; gap:1rem; margin-bottom:1.3rem; }
+.sa-pagehead .sa-clinic-btn{ padding:.45rem .55rem; margin-left:-.55rem; }
+.sa-pagehead .sa-clinic-btn:hover{ background:var(--gray-100); }
+.sa-pagehead .sa-clinic-name{ font-size:1.5rem; }
+.sa-pagehead .sa-clinic-ico{ width:24px; height:24px; }
 .sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
 .sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
 .sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
@@ -1165,10 +1169,10 @@ body.flow-locked{ overflow:hidden; }
 .cs-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1.1rem; }
 @media(max-width:1100px){ .cs-grid{ grid-template-columns:repeat(2,1fr); } }
 @media(max-width:640px){ .cs-grid{ grid-template-columns:1fr; } }
-.cs-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1.1rem 1.2rem 1.2rem; cursor:pointer; text-align:left; transition:box-shadow .15s,border-color .15s,transform .05s; font-family:inherit; }
+.cs-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1.75rem 1.75rem 1.85rem; cursor:pointer; text-align:left; transition:box-shadow .15s,border-color .15s,transform .05s; font-family:inherit; }
 .cs-card:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(43,48,58,.1); }
 .cs-card:active{ transform:translateY(1px); }
-.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-500); display:block; margin-bottom:1.3rem; }
+.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-500); display:block; margin-bottom:.7rem; }
 .cs-name{ font-size:1rem; font-weight:600; color:var(--gray-900); margin:0 0 .25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cs-count{ font-size:.85rem; color:var(--gray-500); }
 
@@ -1210,20 +1214,22 @@ body.flow-locked{ overflow:hidden; }
 <!-- ============ PORTAL FLOW: SMART ALERTS ============ -->
 <div id="scr-alerts" class="portal-screen">
   <div class="nav-host"></div>
-  <div class="sa-clinic" id="sa-clinic" hidden>
-    <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
-      <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
-      <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
-      <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
-      <svg class="svg-ico sa-clinic-chev"><use href="#i-cr"/></svg>
-    </button>
-    <div class="sa-clinic-menu" id="sa-clinic-menu">
-      <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
-      <div class="sa-clinic-eyebrow">CLINICS</div>
-      <div class="sa-clinic-list" id="sa-clinic-list"></div>
-    </div>
-  </div>
   <div class="sa-body">
+    <div class="sa-pagehead">
+      <div class="sa-clinic" id="sa-clinic">
+        <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
+          <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
+          <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+          <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
+          <svg class="svg-ico sa-clinic-chev"><use href="#i-cr"/></svg>
+        </button>
+        <div class="sa-clinic-menu" id="sa-clinic-menu">
+          <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
+          <div class="sa-clinic-eyebrow">CLINICS</div>
+          <div class="sa-clinic-list" id="sa-clinic-list"></div>
+        </div>
+      </div>
+    </div>
     <div class="sa-charts">
       <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
       <div class="sa-chart-card"><div class="sa-chart-title">Service Delivery Location &mdash; Last 30 Days</div><div id="sa-chart-sdl" class="sa-chart"></div></div>
@@ -3202,10 +3208,8 @@ body.flow-locked{ overflow:hidden; }
     // Select screen: same navbar, no Search (nothing to search yet)
     const selNav=cloneNav(); const ps=selNav.querySelector('.patient-search'); if(ps) ps.remove();
     const selHost=document.querySelector('#scr-select .nav-host'); if(selHost) selHost.appendChild(selNav);
-    // Smart Alerts screen: same navbar, Search replaced by the clinic switcher
-    const alNav=cloneNav(); const ap=alNav.querySelector('.patient-search'); if(ap) ap.remove();
-    const demo=alNav.querySelector('.demo-badge'), clinic=document.getElementById('sa-clinic');
-    if(demo && clinic){ clinic.hidden=false; demo.insertAdjacentElement('afterend', clinic); }
+    // Smart Alerts screen: same navbar, Search kept; institution selector lives in the page header
+    const alNav=cloneNav();
     const alHost=document.querySelector('#scr-alerts .nav-host'); if(alHost) alHost.appendChild(alNav);
     // keep the cloned date/time in step with the live navbar
     const syncDt=()=>{ const t=(realNav.querySelector('#user-datetime')||{}).textContent||''; document.querySelectorAll('.nav-host .user-datetime').forEach(d=>d.textContent=t); };
