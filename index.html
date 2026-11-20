@@ -319,11 +319,11 @@
   body.sec-full-open{ overflow:hidden; }
   .sec-fp{ position:fixed; inset:0; z-index:1600; background:var(--body-bg); display:none; flex-direction:column; }
   .sec-fp.open{ display:flex; }
-  .sec-fp-top{ display:flex; align-items:center; gap:1rem; padding:1rem 2rem; background:transparent; flex:0 0 auto; }
+  .sec-fp-top{ display:flex; align-items:center; gap:.75rem; padding:1rem 1.5rem; background:transparent; flex:0 0 auto; }
   .sec-fp-title{ font-size:1.15rem; font-weight:600; color:var(--gray-900); }
   .sec-back{ display:inline-flex; align-items:center; justify-content:center; border:none; background:none;
-    color:var(--gray-600); font:inherit; padding:.2rem .3rem; border-radius:.45rem; cursor:pointer; flex:none; }
-  .sec-back:hover{ background:none; color:var(--gray-900); }
+    color:var(--gray-600); font:inherit; padding:.45rem; border-radius:.45rem; cursor:pointer; flex:none; margin-left:-.45rem; }
+  .sec-back:hover{ background:var(--gray-200); color:var(--gray-900); }
   .sec-back .svg-ico{ width:22px; height:22px; }
   .sec-fp-body{ flex:1 1 auto; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 300px; gap:1.5rem;
     align-items:stretch; max-width:1600px; width:100%; margin:0 auto; padding:1.5rem 2rem; overflow:hidden; box-sizing:border-box; }
