@@ -1123,10 +1123,12 @@ body.flow-locked{ overflow:hidden; }
 /* share the 1440 column so the logo lines up with the page header + cards below */
 .portal-screen .nav-inner{ max-width:1440px; margin:0 auto; width:100%; box-sizing:border-box; }
 .sa-pagehead{ display:flex; align-items:center; gap:1rem; flex:none; }
-.sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; }
+.sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; align-items:stretch; }
 .sa-pagehead .sa-clinic-btn:hover{ background:none; }
-.sa-pagehead .sa-clinic-name{ font-size:1.5rem; }
-.sa-pagehead .sa-clinic-ico{ width:24px; height:24px; padding:9px; background:var(--gray-200); border-radius:10px; box-sizing:content-box; color:var(--gray-600); }
+.sa-pagehead .sa-clinic-name{ font-size:1.5rem; line-height:1.15; }
+.sa-pagehead .sa-clinic-ico{ width:26px; height:26px; color:var(--gray-600); }
+.sa-clinic-ico-wrap{ display:inline-flex; align-items:center; justify-content:center; align-self:stretch; width:46px; flex:none;
+  background:#fff; border:1px solid var(--gray-200); border-radius:8px; box-sizing:border-box; }
 .sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
 .sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
 .sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
@@ -1218,10 +1220,10 @@ body.flow-locked{ overflow:hidden; }
 .cs-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.1rem; }
 @media(max-width:1100px){ .cs-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:640px){ .cs-grid{ grid-template-columns:minmax(0,1fr); } }
-.cs-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1.75rem 1.75rem 1.85rem; cursor:pointer; text-align:left; transition:box-shadow .15s,border-color .15s,transform .05s; font-family:inherit; }
+.cs-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.4rem; padding:1.75rem 1.75rem 1.85rem; cursor:pointer; text-align:left; transition:box-shadow .15s,border-color .15s,transform .05s; font-family:inherit; }
 .cs-card:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(43,48,58,.1); }
 .cs-card:active{ transform:translateY(1px); }
-.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-600); display:block; margin-bottom:.9rem; padding:9px; background:var(--gray-200); border-radius:10px; box-sizing:content-box; }
+.cs-card .svg-ico{ width:24px; height:24px; color:var(--gray-600); display:block; margin-bottom:.9rem; padding:9px; background:var(--gray-200); border-radius:8px; box-sizing:content-box; }
 .cs-name{ font-size:1rem; font-weight:600; color:var(--gray-900); margin:0 0 .25rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .cs-count{ font-size:.85rem; color:var(--gray-500); }
 
@@ -1229,7 +1231,7 @@ body.flow-locked{ overflow:hidden; }
 .sa-clinic{ position:relative; }
 .sa-clinic-btn{ display:inline-flex; align-items:center; gap:.65rem; background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .45rem; border-radius:.45rem; text-align:left; }
 .sa-clinic-btn:hover .sa-clinic-name{ text-decoration:underline; }
-.sa-clinic-text{ display:flex; flex-direction:column; align-items:flex-start; gap:.1rem; }
+.sa-clinic-text{ display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:0; }
 .sa-clinic-line{ display:inline-flex; align-items:center; gap:.5rem; }
 .sa-clinic-ico{ width:20px; height:20px; color:var(--gray-600); flex:none; }
 .sa-clinic-name{ font-size:1.05rem; font-weight:600; color:var(--gray-900); }
@@ -1382,7 +1384,7 @@ body.flow-locked{ overflow:hidden; }
     <div class="sa-pagehead">
       <div class="sa-clinic" id="sa-clinic">
         <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
-          <svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg>
+          <span class="sa-clinic-ico-wrap"><svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg></span>
           <span class="sa-clinic-text">
             <span class="sa-clinic-line">
               <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
@@ -1540,9 +1542,9 @@ body.flow-locked{ overflow:hidden; }
       <button class="ph-clear v2-only" id="ph-clear">Clear filters</button>
       <button class="notes-btn v2-only active" id="ph-overview-btn" title="Patient overview"><svg class="svg-ico"><use href="#i-person"/></svg></button>
       <button class="notes-btn v2-only" id="ph-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="fb-dot"></span></button>
-      <button class="notes-btn has-label v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
       <a href="#" class="btn-ghost v1-only"><svg class="svg-ico"><use href="#i-note"/></svg> Notes (0)</a>
       <button class="notes-btn v2-only" title="Notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge">3</span></button>
+      <button class="notes-btn has-label v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
       <button class="btn-primary">Add note</button>
     </div>
   </div>
