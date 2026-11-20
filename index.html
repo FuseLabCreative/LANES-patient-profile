@@ -1084,6 +1084,9 @@
   <symbol id="i-filter" viewBox="0 0 16 16"><path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/></symbol>
   <symbol id="i-check" viewBox="0 0 16 16"><path d="M13.485 1.929a.75.75 0 0 1 .086 1.057l-7 8.25a.75.75 0 0 1-1.102.043l-3.5-3.5a.75.75 0 1 1 1.06-1.06l2.93 2.929 6.47-7.62a.75.75 0 0 1 1.056-.099z"/></symbol>
   <symbol id="i-hospital" viewBox="0 0 16 16"><path d="M4 0a1 1 0 0 0-1 1v14H1.75a.75.75 0 0 0 0 1.5h12.5a.75.75 0 0 0 0-1.5H13V1a1 1 0 0 0-1-1H4zm3.5 2.75h1v1.5H10v1H8.5v1.5h-1v-1.5H6v-1h1.5v-1.5zM6 8.5h4V10H6V8.5zm0 2.75h1.5V15H6v-3.75zm2.5 0H10V15H8.5v-3.75z"/></symbol>
+  <symbol id="i-ambulance" viewBox="0 0 16 16"><path d="M1 4.5A1.5 1.5 0 0 1 2.5 3h6A1.5 1.5 0 0 1 10 4.5V5h1.9a1 1 0 0 1 .8.4l1.6 2.13a1 1 0 0 1 .2.6V10a1 1 0 0 1-1 1h-.6a1.9 1.9 0 0 1-3.8 0H6.4a1.9 1.9 0 0 1-3.8 0H2a1 1 0 0 1-1-1V4.5zM5 5V4H4v1H3v1h1v1h1V6h1V5H5zm6.5 1 .9 1.2H11V6h.5zM4.5 10a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8zm6 0a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z"/></symbol>
+  <symbol id="i-bed" viewBox="0 0 16 16"><path d="M1.75 4a.75.75 0 0 1 .75.75V8h10.5V7a1.5 1.5 0 0 0-1.5-1.5H7.5a.5.5 0 0 0-.5.5V8H3V4.75A.75.75 0 0 1 1.75 4zM2.5 9.5h11V11a.75.75 0 0 1-1.5 0v-.5H4V11a.75.75 0 0 1-1.5 0V9.5zM5 5.5A1.25 1.25 0 1 1 5 8a1.25 1.25 0 0 1 0-2.5z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 16 16"><path d="M8 1.5a.75.75 0 0 1 .75.75v5.69l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 1.06-1.06l1.72 1.72V2.25A.75.75 0 0 1 8 1.5zM3 11.5a.75.75 0 0 1 .75.75v1h8.5v-1a.75.75 0 0 1 1.5 0v1.75a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V12.25A.75.75 0 0 1 3 11.5z"/></symbol>
 </svg>
 
 <style>
@@ -1202,6 +1205,67 @@ body.flow-locked{ overflow:hidden; }
 .sa-clinic-opt.sel{ background:var(--gray-100); }
 .sa-clinic-opt .n{ font-size:.95rem; font-weight:600; color:var(--gray-900); }
 .sa-clinic-opt .c{ font-size:.82rem; color:var(--gray-500); margin-top:.1rem; }
+
+/* ---- More Filter Options panel ---- */
+.sa-filters{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; margin-bottom:1.5rem; }
+.sa-filters-toggle{ display:flex; align-items:center; justify-content:space-between; width:100%; padding:.95rem 1.25rem; background:none; border:none; cursor:pointer; font-family:inherit; font-size:.95rem; font-weight:600; color:var(--primary); }
+.sa-filters-toggle .svg-ico{ width:14px; height:14px; transition:transform .15s; }
+.sa-filters.open .sa-filters-toggle .svg-ico{ transform:rotate(180deg); }
+.sa-filters-body{ display:none; padding:0 1.25rem 1.25rem; }
+.sa-filters.open .sa-filters-body{ display:block; }
+.sa-fgrid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1rem 1.25rem; padding-top:.4rem; border-top:1px solid var(--gray-100); }
+.sa-fld{ display:flex; flex-direction:column; gap:.35rem; min-width:0; }
+.sa-fld > label{ font-size:.8rem; font-weight:600; color:var(--gray-700); }
+.sa-fld input, .sa-fld select{ height:40px; border:1px solid var(--gray-300); border-radius:.45rem; padding:0 .7rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); background:#fff; }
+.sa-fld input:focus, .sa-fld select:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.sa-fld-check{ display:flex; align-items:center; gap:.5rem; font-size:.85rem; color:var(--gray-700); font-weight:500; margin-bottom:.1rem; cursor:pointer; }
+.sa-fld-check input{ width:16px; height:16px; height:auto; accent-color:var(--primary); }
+.sa-vt-chips{ display:flex; flex-wrap:wrap; gap:.4rem; align-items:center; min-height:40px; border:1px solid var(--gray-300); border-radius:.45rem; padding:.3rem .4rem; }
+.sa-vt-chip{ display:inline-flex; align-items:center; gap:.3rem; font-size:.8rem; font-weight:600; padding:.25rem .55rem; border-radius:.35rem; border:1px solid var(--gray-300); background:#fff; color:var(--gray-700); cursor:pointer; }
+.sa-vt-chip .svg-ico{ width:12px; height:12px; }
+.sa-vt-chip.on{ background:var(--primary); border-color:var(--primary); color:#fff; }
+.sa-progs{ display:flex; flex-direction:column; gap:.3rem; }
+.sa-prog{ display:inline-flex; align-items:center; gap:.45rem; font-size:.78rem; font-style:italic; color:var(--gray-600); }
+.sa-prog .dot{ width:10px; height:10px; border-radius:50%; flex:none; }
+.sa-factions{ display:flex; justify-content:flex-end; gap:.6rem; margin-top:1.1rem; }
+.sa-btn{ display:inline-flex; align-items:center; gap:.4rem; padding:.55rem 1.15rem; border:none; border-radius:.45rem; font-family:inherit; font-size:.88rem; font-weight:600; cursor:pointer; }
+.sa-btn .svg-ico{ width:13px; height:13px; }
+.sa-btn-primary{ background:var(--primary); color:#fff; }
+.sa-btn-primary:hover{ background:#1a68d1; }
+.sa-btn-clear{ background:#fd7e14; color:#fff; }
+.sa-btn-clear:hover{ background:#e8710f; }
+@media(max-width:1100px){ .sa-fgrid{ grid-template-columns:repeat(2,1fr); } }
+
+/* ---- table toolbar / tools ---- */
+.sa-tools{ display:flex; align-items:center; gap:.6rem; }
+.sa-qf{ width:34px; height:34px; border-radius:50%; border:none; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color:#fff; opacity:.55; transition:opacity .15s, box-shadow .15s; }
+.sa-qf .svg-ico{ width:16px; height:16px; }
+.sa-qf.on{ opacity:1; box-shadow:0 0 0 .18rem rgba(44,123,229,.18); }
+.sa-qf-amb{ background:#f06595; } .sa-qf-bed{ background:#5c7cfa; } .sa-qf-clip{ background:#20c997; }
+.sa-csv{ width:36px; height:34px; border:1px solid var(--gray-300); border-radius:.4rem; background:#fff; color:var(--success,#00a37a); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+.sa-csv .svg-ico{ width:16px; height:16px; }
+.sa-csv:hover{ background:var(--gray-100); }
+/* sortable headers */
+.sa-table th.sortable{ cursor:pointer; user-select:none; white-space:nowrap; }
+.sa-table th .sort-ar{ color:var(--gray-400); margin-left:.25rem; font-size:.7rem; }
+.sa-table th.sorted .sort-ar{ color:var(--primary); }
+.sa-xp-btn{ width:22px; height:22px; border:none; background:none; color:var(--gray-500); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; border-radius:.25rem; }
+.sa-xp-btn .svg-ico{ width:12px; height:12px; transition:transform .15s; }
+.sa-xp-btn.open .svg-ico{ transform:rotate(90deg); }
+.sa-xp-btn:hover{ background:var(--gray-100); color:var(--gray-700); }
+.sa-pheart{ color:#2ea36f; margin-left:.35rem; font-size:.8rem; }
+.sa-detail-td{ background:var(--gray-100); padding:0 !important; }
+.sa-detail{ display:grid; grid-template-columns:1fr 300px; gap:1.25rem; padding:1.25rem 1.4rem; position:sticky; left:0; width:min(100%, calc(100vw - 3rem)); max-width:1400px; box-sizing:border-box; }
+.sa-detail-chart{ background:#fff; border:1px solid var(--gray-200); border-radius:.5rem; padding:.9rem 1rem; }
+.sa-detail-chart .sa-dc-title{ font-size:.82rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.3rem; }
+.sa-detail-chart .sa-dc{ height:200px; width:100%; }
+.sa-detail-stats{ background:#fff; border:1px solid var(--gray-200); border-radius:.5rem; padding:1rem 1.1rem; }
+.sa-detail-stats h4{ font-size:.82rem; font-weight:600; color:var(--gray-800); margin:0 0 .6rem; }
+.sa-detail-stats ul{ list-style:none; margin:0; padding:0; }
+.sa-detail-stats li{ display:flex; justify-content:space-between; gap:.75rem; font-size:.82rem; color:var(--gray-600); padding:.3rem 0; border-bottom:1px solid var(--gray-100); }
+.sa-detail-stats li:last-child{ border-bottom:none; }
+.sa-detail-stats li b{ color:var(--gray-900); }
+@media(max-width:900px){ .sa-detail{ grid-template-columns:1fr; } }
 </style>
 
 <!-- ============ PORTAL FLOW: SELECT INSTITUTION ============ -->
@@ -1241,19 +1305,67 @@ body.flow-locked{ overflow:hidden; }
       <div class="sa-chart-card"><div class="sa-chart-title">Activities in the Last 8 Weeks</div><div id="sa-chart-activities" class="sa-chart"></div></div>
       <div class="sa-chart-card"><div class="sa-chart-title">Service Delivery Location &mdash; Last 30 Days</div><div id="sa-chart-sdl" class="sa-chart"></div></div>
     </div>
+    <div class="sa-filters" id="sa-filters">
+      <button class="sa-filters-toggle" id="sa-filters-toggle" type="button">More Filter Options <svg class="svg-ico"><use href="#i-cd"/></svg></button>
+      <div class="sa-filters-body">
+        <div class="sa-fgrid">
+          <div class="sa-fld"><label>From Date</label><input type="date" id="sa-f-from"></div>
+          <div class="sa-fld"><label>To Date</label><input type="date" id="sa-f-to"></div>
+          <div class="sa-fld">
+            <label class="sa-fld-check"><input type="checkbox" id="sa-f-exclude"> Exclude Selected Organizations</label>
+            <label>Organizations</label>
+            <select id="sa-f-org"><option>All organizations</option><option>Health Net &ndash; Enhanced Care Management</option><option>LA Care &ndash; Enhanced Care Management</option><option>Molina Healthcare &ndash; ECM</option><option>Cedars-Sinai Medical Center</option></select>
+          </div>
+          <div class="sa-fld"><label>Service Delivery Locations</label><select id="sa-f-sdl"><option>Select organization to populate locations</option><option>Harbor &ndash; UCLA Medical Center</option><option>Valley Community Healthcare</option><option>LAC + USC Medical Center</option></select></div>
+          <div class="sa-fld"><label>Encounters Visits Last 6 Months</label><select id="sa-f-enc"><option>Encounters Last 6 Months</option><option>1+ visits</option><option>3+ visits</option><option>5+ visits</option></select></div>
+          <div class="sa-fld"><label>Visit Type</label><div class="sa-vt-chips" id="sa-vt-chips"></div></div>
+          <div class="sa-fld"><label>Action</label><select id="sa-f-action"><option>Action Type</option><option>Admit</option><option>Discharge</option><option>Transfer</option><option>Registration</option></select></div>
+          <div class="sa-fld"><label>Specialty</label><select id="sa-f-spec"><option>Specialty</option><option>Hospital</option><option>Clinic</option><option>Specialty</option><option>Primary Care</option></select></div>
+          <div class="sa-fld">
+            <label>Programs</label>
+            <div class="sa-progs">
+              <span class="sa-prog"><span class="dot" style="background:#2c7be5"></span>Still on Location</span>
+              <span class="sa-prog"><span class="dot" style="background:#e63757"></span>Whole Person Care</span>
+              <span class="sa-prog"><span class="dot" style="background:#2c9b8f"></span>Behavioral Health</span>
+              <span class="sa-prog"><span class="dot" style="background:#00a37a"></span>Health Net &ndash; Enhanced Care Mgmt</span>
+              <span class="sa-prog"><span class="dot" style="background:#f5803e"></span>LA Care &ndash; Enhanced Care Mgmt</span>
+            </div>
+          </div>
+          <div class="sa-fld"><label>Results returned from the server</label><select id="sa-f-results"><option>250</option><option>500</option><option>1000</option><option>5000</option></select></div>
+        </div>
+        <div class="sa-factions">
+          <button class="sa-btn sa-btn-primary" id="sa-f-apply"><svg class="svg-ico"><use href="#i-filter"/></svg> Filter</button>
+          <button class="sa-btn sa-btn-clear" id="sa-f-clear"><svg class="svg-ico"><use href="#i-x"/></svg> Clear</button>
+        </div>
+      </div>
+    </div>
     <div class="sa-tabs" id="sa-tabs"></div>
     <div class="sa-panel">
       <div class="sa-panel-head">
         <h2 id="sa-tabtitle">Adult Encounters</h2>
-        <div class="sa-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" placeholder="Search" id="sa-search-input"></div>
+        <div class="sa-tools">
+          <button class="sa-qf sa-qf-bed" data-qf="Inpatient" title="Inpatient only" type="button"><svg class="svg-ico"><use href="#i-bed"/></svg></button>
+          <button class="sa-qf sa-qf-amb" data-qf="Emergency" title="Emergency only" type="button"><svg class="svg-ico"><use href="#i-ambulance"/></svg></button>
+          <button class="sa-qf sa-qf-clip" data-qf="Outpatient" title="Outpatient only" type="button"><svg class="svg-ico"><use href="#i-pulse"/></svg></button>
+          <div class="sa-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" placeholder="Search" id="sa-search-input"></div>
+          <button class="sa-csv" id="sa-csv" title="Export CSV" type="button"><svg class="svg-ico"><use href="#i-download"/></svg></button>
+        </div>
       </div>
       <div class="table-scroll">
         <table class="lanes-table sa-table">
           <thead><tr>
-            <th>Action Date / Time</th><th>Service Delivery Location</th><th>Specialty</th>
-            <th>Visit Type</th><th>Event Type</th><th>Patient Name</th><th>Birth Date</th>
-            <th>Discharge Date</th><th>Length of Stay</th><th>Last 6 Months Emergency</th>
-            <th>Last 6 Months Inpatient</th><th>Smart Alerts Notes</th>
+            <th class="sa-xp-col"></th>
+            <th class="sortable" data-sort="dt">Action Date / Time<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="loc">Service Delivery Location<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="spec">Specialty<span class="sort-ar">&#8597;</span></th>
+            <th>Visit Type</th><th>Event Type</th>
+            <th class="sortable" data-sort="name">Patient Name<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="dob">Birth Date<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="disch">Discharge Date<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="los">Length of Stay<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="emg">Last 6 Months Emergency<span class="sort-ar">&#8597;</span></th>
+            <th class="sortable" data-sort="inp">Last 6 Months Inpatient<span class="sort-ar">&#8597;</span></th>
+            <th>Smart Alerts Notes</th>
           </tr></thead>
           <tbody id="sa-tbody"></tbody>
         </table>
@@ -3142,28 +3254,75 @@ body.flow-locked{ overflow:hidden; }
       rows.push({ dt:'10/'+pad(1+Math.floor(rnd()*18))+'/2026 '+hh+':'+mm+' '+ap, loc:pick(LOC), spec:pick(SPEC),
         visit:pick(VISIT), event:pick(EVENT), name:pick(LAST)+', '+pick(FIRST),
         dob:pad(1+Math.floor(rnd()*12))+'/'+pad(1+Math.floor(rnd()*28))+'/'+by+' ('+(2026-by)+')',
-        disch, los: hasD?(1+Math.floor(rnd()*9))+' days':'', emg:Math.floor(rnd()*12), inp:Math.floor(rnd()*6), note:pick(NOTES) });
+        disch, los: hasD?(1+Math.floor(rnd()*9))+' days':'', emg:Math.floor(rnd()*12), inp:Math.floor(rnd()*6), note:pick(NOTES),
+        prog: rnd()>.6 ? pick(['Whole Person Care','Behavioral Health','Health Net ECM','LA Care ECM']) : '' });
     } return rows; }
-  let activeTab='adult';
+  let activeTab='adult', sortCol=null, sortDir=1, vtFilter=[], quickFilter=null, resultsLimit=250;
+  const VT=['Emergency','Inpatient','Outpatient','Specialty'];
   function visitColor(v){ return v==='Emergency'?'#e63757':v==='Inpatient'?'#748194':v==='Outpatient'?'#2c9b8f':'#2c7be5'; }
+  function visitIcon(v){ return v==='Emergency'?'i-ambulance':v==='Inpatient'?'i-bed':'i-pulse'; }
+  function eventColor(e){ return e==='Admit'?'#e63757':e==='Discharge'?'#2c9b8f':e==='Transfer'?'#f5803e':'#2c7be5'; }
   function chip(c,ic){ return '<span class="sa-chip-ico" style="background:'+c+'"><svg class="svg-ico"><use href="#'+ic+'"/></svg></span>'; }
-  function renderTable(){
-    const rows=DATA[activeTab], tb=document.getElementById('sa-tbody');
+
+  function visibleRows(){
+    const rows=DATA[activeTab]||[];
     const q=(document.getElementById('sa-search-input').value||'').toLowerCase();
-    const shown=rows.filter(r=>!q||r.name.toLowerCase().includes(q)||r.loc.toLowerCase().includes(q));
+    let out=rows.filter(r=>!q||r.name.toLowerCase().includes(q)||r.loc.toLowerCase().includes(q));
+    const vt = quickFilter ? [quickFilter] : vtFilter;
+    if(vt.length) out=out.filter(r=>vt.includes(r.visit));
+    if(sortCol){ out=out.slice().sort((a,b)=>{ let x=a[sortCol], y=b[sortCol];
+      if(sortCol==='emg'||sortCol==='inp'){ return ((+x)-(+y))*sortDir; }
+      return String(x).localeCompare(String(y))*sortDir; }); }
+    return out;
+  }
+  function renderTable(){
+    const tb=document.getElementById('sa-tbody'); const shown=visibleRows();
     tb.innerHTML='';
     shown.forEach(r=>{ const tr=document.createElement('tr');
-      tr.innerHTML='<td>'+r.dt+'</td><td>'+r.loc+'</td><td>'+r.spec+'</td>'+
-        '<td class="sa-ico-cell">'+chip(visitColor(r.visit),'i-pulse')+'</td>'+
-        '<td class="sa-ico-cell">'+chip('#2c9b8f','i-calendar')+'</td>'+
-        '<td><a class="sa-pname">'+r.name+'</a></td><td>'+r.dob+'</td>'+
+      tr.innerHTML='<td class="sa-ico-cell"><button class="sa-xp-btn" type="button" title="Details"><svg class="svg-ico"><use href="#i-cr"/></svg></button></td>'+
+        '<td>'+r.dt+'</td><td>'+r.loc+'</td><td>'+r.spec+'</td>'+
+        '<td class="sa-ico-cell">'+chip(visitColor(r.visit),visitIcon(r.visit))+'</td>'+
+        '<td class="sa-ico-cell">'+chip(eventColor(r.event),'i-calendar')+'</td>'+
+        '<td><a class="sa-pname">'+r.name+'</a>'+(r.prog?'<span class="sa-pheart" title="'+r.prog+'">&#9829;</span>':'')+'</td><td>'+r.dob+'</td>'+
         '<td>'+(r.disch||'—')+'</td><td>'+(r.los||'—')+'</td>'+
-        '<td><span class="sa-count-badge" style="color:'+(r.emg>5?'#e63757':'var(--gray-700)')+'">'+r.emg+' <svg class="svg-ico" style="width:13px;height:13px;color:#e63757"><use href="#i-warn"/></svg></span></td>'+
-        '<td><span class="sa-count-badge" style="color:var(--gray-700)">'+r.inp+' <svg class="svg-ico" style="width:13px;height:13px;color:#748194"><use href="#i-shield"/></svg></span></td>'+
-        '<td class="sa-ico-cell"><button class="sa-note-btn" title="Smart Alerts Notes"><svg class="svg-ico"><use href="#i-file"/></svg></button></td>';
+        '<td><span class="sa-count-badge" style="color:'+(r.emg>5?'#e63757':'var(--gray-700)')+'">'+r.emg+' <svg class="svg-ico" style="width:13px;height:13px;color:#e63757"><use href="#i-ambulance"/></svg></span></td>'+
+        '<td><span class="sa-count-badge" style="color:var(--gray-700)">'+r.inp+' <svg class="svg-ico" style="width:13px;height:13px;color:#748194"><use href="#i-bed"/></svg></span></td>'+
+        '<td class="sa-ico-cell"><button class="sa-note-btn" type="button" title="Smart Alerts Notes"><svg class="svg-ico"><use href="#i-file"/></svg></button></td>';
       tr.querySelector('.sa-pname').addEventListener('click',()=>show('synopsis'));
+      tr.querySelector('.sa-xp-btn').addEventListener('click',e=>toggleDetail(tr,r,e.currentTarget));
       tb.appendChild(tr); });
-    document.getElementById('sa-pager-info').textContent='Showing 1 to '+shown.length+' of '+COUNTS[activeTab].toLocaleString()+' encounters';
+    document.getElementById('sa-pager-info').textContent='Showing 1 to '+shown.length+' of '+Math.min(resultsLimit,COUNTS[activeTab]).toLocaleString()+' encounters';
+  }
+  function toggleDetail(tr,r,btn){
+    const next=tr.nextElementSibling;
+    if(next && next.classList.contains('sa-detail-row')){ next.remove(); btn.classList.remove('open'); return; }
+    btn.classList.add('open');
+    const dr=document.createElement('tr'); dr.className='sa-detail-row';
+    const td=document.createElement('td'); td.className='sa-detail-td'; td.colSpan=13;
+    const cid='dc-'+Math.random().toString(36).slice(2,8);
+    const am=Math.floor(rnd()*20), mid=Math.floor(rnd()*18), eve=Math.floor(rnd()*22);
+    td.innerHTML='<div class="sa-detail"><div class="sa-detail-chart"><div class="sa-dc-title">6 Month Breakdown of Visits</div><div class="sa-dc" id="'+cid+'"></div></div>'+
+      '<div class="sa-detail-stats"><h4>'+r.name+'</h4><ul>'+
+      '<li>Last date of specialty visit<b>'+r.dt.split(' ')[0]+'</b></li>'+
+      '<li>ED visits 12:00am&ndash;6:59am<b>'+am+'</b></li>'+
+      '<li>ED visits 7:00am&ndash;5:00pm<b>'+mid+'</b></li>'+
+      '<li>ED visits 5:01pm&ndash;11:59pm<b>'+eve+'</b></li>'+
+      '<li>Last 6 mo emergency<b>'+r.emg+'</b></li>'+
+      '<li>Last 6 mo inpatient<b>'+r.inp+'</b></li></ul></div></div>';
+    dr.appendChild(td); tr.insertAdjacentElement('afterend', dr);
+    renderDetailChart(cid);
+  }
+  function renderDetailChart(cid){
+    if(!(window.LC&&window.LC.ready())){ setTimeout(()=>renderDetailChart(cid),200); return; }
+    const el=document.getElementById(cid); if(!el) return;
+    const weeks=[]; { const d=new Date('2026-10-18'); for(let i=25;i>=0;i--){ const x=new Date(d); x.setDate(d.getDate()-i*7); weeks.push(pad(x.getMonth()+1)+'/'+pad(x.getDate())); } }
+    function ser(name,color,amp){ const dd=[]; for(let i=0;i<26;i++){ dd.push(Math.max(0,Math.round(amp*Math.abs(Math.sin(i/2.2))+(rnd()-0.5)*amp*0.5))); } return {name:name,type:'line',smooth:true,symbol:'none',lineStyle:{width:2,color:color},itemStyle:{color:color},data:dd}; }
+    const ax={color:'#8a97ab',fontSize:9}, split={lineStyle:{color:'rgba(116,129,148,.1)'}};
+    window.LC.init(el,{ tooltip:{trigger:'axis'}, legend:{bottom:0,icon:'roundRect',itemWidth:10,itemHeight:7,textStyle:{color:'#5e6e82',fontSize:10}},
+      grid:{left:30,right:12,top:10,bottom:34},
+      xAxis:{type:'category',data:weeks,axisLabel:{color:'#8a97ab',fontSize:9,interval:4},axisLine:{lineStyle:{color:'rgba(116,129,148,.3)'}},axisTick:{show:false}},
+      yAxis:{type:'value',axisLabel:ax,splitLine:split,minInterval:1},
+      series:[ser('ED','#e63757',6),ser('Outpatient','#2c9b8f',5),ser('Inpatient','#5c7cfa',3)] });
   }
   function buildTabs(){ const host=document.getElementById('sa-tabs'); host.innerHTML='';
     TABS.forEach(t=>{ const b=document.createElement('button'); b.className='sa-tab'+(t.key===activeTab?' active':'');
@@ -3174,6 +3333,44 @@ body.flow-locked{ overflow:hidden; }
     renderTable();
   }
   document.getElementById('sa-search-input').addEventListener('input', renderTable);
+
+  /* ---- filter panel, quick filters, sort, CSV (wired once) ---- */
+  function buildVtChips(){ const host=document.getElementById('sa-vt-chips'); if(!host) return; host.innerHTML='';
+    VT.forEach(v=>{ const c=document.createElement('button'); c.type='button'; c.className='sa-vt-chip'+(vtFilter.includes(v)?' on':'');
+      c.innerHTML='<svg class="svg-ico"><use href="#'+visitIcon(v)+'"/></svg>'+v;
+      c.addEventListener('click',()=>{ const i=vtFilter.indexOf(v); if(i>=0) vtFilter.splice(i,1); else vtFilter.push(v);
+        quickFilter=null; syncQuick(); c.classList.toggle('on'); renderTable(); });
+      host.appendChild(c); });
+  }
+  function syncQuick(){ document.querySelectorAll('.sa-qf').forEach(q=>q.classList.toggle('on', q.dataset.qf===quickFilter)); }
+  function syncChips(){ document.querySelectorAll('#sa-vt-chips .sa-vt-chip').forEach((c,i)=>c.classList.toggle('on', vtFilter.includes(VT[i]))); }
+  function exportCSV(){ const rows=visibleRows();
+    const cols=['Action Date/Time','Service Delivery Location','Specialty','Visit Type','Event Type','Patient Name','Birth Date','Discharge Date','Length of Stay','Last 6 Months Emergency','Last 6 Months Inpatient'];
+    const esc=s=>'"'+String(s==null?'':s).replace(/"/g,'""')+'"';
+    const lines=[cols.map(esc).join(',')];
+    rows.forEach(r=>lines.push([r.dt,r.loc,r.spec,r.visit,r.event,r.name,r.dob,r.disch||'',r.los||'',r.emg,r.inp].map(esc).join(',')));
+    const blob=new Blob([lines.join('\n')],{type:'text/csv'}); const url=URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download=((activeClinic&&activeClinic.n)||'smart-alerts').replace(/[^a-z0-9]+/gi,'_')+'_'+activeTab+'.csv'; a.click(); URL.revokeObjectURL(url);
+  }
+  (function wireAlertsUI(){
+    buildVtChips();
+    const ft=document.getElementById('sa-filters-toggle'); if(ft) ft.addEventListener('click',()=>document.getElementById('sa-filters').classList.toggle('open'));
+    document.querySelectorAll('.sa-qf').forEach(q=>q.addEventListener('click',()=>{
+      quickFilter = quickFilter===q.dataset.qf ? null : q.dataset.qf; vtFilter=[]; syncChips(); syncQuick(); renderTable(); }));
+    const csv=document.getElementById('sa-csv'); if(csv) csv.addEventListener('click',exportCSV);
+    document.querySelectorAll('.sa-table thead th.sortable').forEach(th=>th.addEventListener('click',()=>{
+      const col=th.dataset.sort; if(sortCol===col){ sortDir*=-1; } else { sortCol=col; sortDir=1; }
+      document.querySelectorAll('.sa-table thead th').forEach(x=>{ x.classList.remove('sorted'); const a=x.querySelector('.sort-ar'); if(a) a.innerHTML='&#8597;'; });
+      th.classList.add('sorted'); const ar=th.querySelector('.sort-ar'); if(ar) ar.innerHTML=sortDir>0?'&#9650;':'&#9660;';
+      renderTable(); }));
+    const apply=document.getElementById('sa-f-apply'); if(apply) apply.addEventListener('click',()=>{ const rs=document.getElementById('sa-f-results'); resultsLimit=parseInt(rs&&rs.value||'250',10)||250; renderTable(); });
+    const clr=document.getElementById('sa-f-clear'); if(clr) clr.addEventListener('click',()=>{
+      vtFilter=[]; quickFilter=null; sortCol=null; resultsLimit=250;
+      ['sa-f-from','sa-f-to','sa-f-org','sa-f-sdl','sa-f-enc','sa-f-action','sa-f-spec','sa-f-results'].forEach(id=>{ const el=document.getElementById(id); if(el){ if(el.tagName==='SELECT') el.selectedIndex=0; else el.value=''; } });
+      const ex=document.getElementById('sa-f-exclude'); if(ex) ex.checked=false;
+      syncChips(); syncQuick(); document.querySelectorAll('.sa-table thead th').forEach(x=>{ x.classList.remove('sorted'); const a=x.querySelector('.sort-ar'); if(a) a.innerHTML='&#8597;'; });
+      renderTable(); });
+  })();
 
   /* ---- charts (ECharts via LC helper) ---- */
   let charted=false, tries=0;
