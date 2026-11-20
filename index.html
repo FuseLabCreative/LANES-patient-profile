@@ -1150,9 +1150,18 @@ body.flow-locked{ overflow:hidden; }
 .sa-syn-back .svg-ico{ width:12px; height:12px; }
 .sa-syn-back:hover{ background:var(--gray-100); }
 
-/* ---- clinical site grid (select screen) ---- */
-.cs-wrap{ max-width:1440px; margin:0 auto; padding:2rem 2rem 3rem; }
-.cs-title{ font-size:1.6rem; font-weight:600; color:var(--gray-900); margin:0 0 1.5rem; }
+/* ---- clinical institution grid (select screen) ---- */
+#scr-select.portal-screen{ overflow:hidden; }
+#scr-select.portal-screen.active{ display:flex; flex-direction:column; }
+.cs-wrap{ max-width:1440px; width:100%; margin:0 auto; padding:2rem 2rem 0; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; box-sizing:border-box; }
+.cs-head{ display:flex; align-items:center; justify-content:space-between; gap:1rem 1.5rem; margin-bottom:1.35rem; flex-wrap:wrap; }
+.cs-title{ font-size:1.6rem; font-weight:600; color:var(--gray-900); margin:0; }
+.cs-search{ position:relative; }
+.cs-search .svg-ico{ position:absolute; left:.85rem; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--gray-500); }
+.cs-search input{ width:320px; max-width:70vw; padding:.6rem .85rem .6rem 2.4rem; border:1px solid var(--gray-300); border-radius:.5rem; font-family:inherit; font-size:.9rem; background:#fff; }
+.cs-search input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; padding-bottom:2rem; }
+.cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
 .cs-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1.1rem; }
 @media(max-width:1100px){ .cs-grid{ grid-template-columns:repeat(2,1fr); } }
 @media(max-width:640px){ .cs-grid{ grid-template-columns:1fr; } }
@@ -1190,8 +1199,11 @@ body.flow-locked{ overflow:hidden; }
 <div id="scr-select" class="portal-screen active">
   <div class="nav-host"></div>
   <div class="cs-wrap">
-    <h1 class="cs-title">Please select a clinical institution</h1>
-    <div class="cs-grid" id="cs-grid"></div>
+    <div class="cs-head">
+      <h1 class="cs-title">Please select a clinical institution</h1>
+      <div class="cs-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="cs-search-input" placeholder="Search institutions"></div>
+    </div>
+    <div class="cs-scroll"><div class="cs-grid" id="cs-grid"></div></div>
   </div>
 </div>
 
@@ -3062,13 +3074,16 @@ body.flow-locked{ overflow:hidden; }
   let activeClinic=CLINICS[0];
 
   /* ---- clinic card grid (select screen) ---- */
-  function buildClinicGrid(){ const g=document.getElementById('cs-grid'); g.innerHTML='';
-    CLINICS.forEach(c=>{ const d=document.createElement('button'); d.type='button'; d.className='cs-card';
+  function buildClinicGrid(filter){ const g=document.getElementById('cs-grid'); g.innerHTML=''; const q=(filter||'').toLowerCase();
+    const shown=CLINICS.filter(c=>!q||c.n.toLowerCase().includes(q));
+    if(!shown.length){ g.innerHTML='<div class="cs-empty">No institutions match your search.</div>'; return; }
+    shown.forEach(c=>{ const d=document.createElement('button'); d.type='button'; d.className='cs-card';
       d.innerHTML='<svg class="svg-ico"><use href="#i-hospital"/></svg><div class="cs-name" title="'+c.n+'">'+c.n+'</div><div class="cs-count">'+c.p+' patients</div>';
       d.addEventListener('click',()=>selectClinic(c)); g.appendChild(d); });
   }
   function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
   buildClinicGrid();
+  { const csi=document.getElementById('cs-search-input'); if(csi) csi.addEventListener('input', e=>buildClinicGrid(e.target.value)); }
 
   /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
   const clinicWrap=document.getElementById('sa-clinic'), clinicBtn=document.getElementById('sa-clinic-btn'), clinicSearch=document.getElementById('sa-clinic-search-input');
