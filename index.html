@@ -397,6 +397,14 @@
   .ph-menu-item.has-set .svg-ico{ color:var(--primary); }
   .ph-menu-count{ flex:none; min-width:18px; height:18px; padding:0 .3rem; box-sizing:border-box; display:none; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:#fff; background:var(--primary); border-radius:1rem; }
 
+  /* ---- collapse / expand ---- */
+  .wgt-collapse{ flex:none; width:30px; height:30px; margin-left:.3rem; border:none; background:none; color:var(--gray-500); cursor:pointer; border-radius:.4rem; display:inline-flex; align-items:center; justify-content:center; }
+  .wgt-collapse:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .wgt-collapse .svg-ico{ width:14px; height:14px; }
+  body.v2 section.wgt-collapsed{ height:auto !important; }
+  section.wgt-collapsed > :not(.panel-header){ display:none !important; }
+  .lp-badge.col{ color:var(--primary); background:rgba(44,123,229,.12); }
+
   /* ---- per-card edit action bar (edit mode only) ---- */
   .le-cardbar{ display:none; align-items:center; gap:.35rem; }
   body.layout-edit .le-cardbar{ display:inline-flex; }
@@ -3821,7 +3829,7 @@ body.flow-locked{ overflow:hidden; }
     const KEY='lanes_layout_v2';
     const LS={ get(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return window.__layout||{}; } },
                set(v){ window.__layout=v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} } };
-    const state=Object.assign({hidden:[],pinned:[],order:[]}, LS.get());
+    const state=Object.assign({hidden:[],pinned:[],order:[],collapsed:[]}, LS.get());
     const secs=[...grid.querySelectorAll(':scope > section')].filter(s=>s.id);
     const byId=id=>secs.find(s=>s.id===id);
     const DEFAULT_ORDER=secs.map(s=>s.id);
@@ -3836,12 +3844,16 @@ body.flow-locked{ overflow:hidden; }
       [...pinned,...rest].forEach((s,i)=>s.style.order=String(i)); }
     function save(){ state.hidden=secs.filter(s=>s.classList.contains('wgt-hidden')).map(s=>s.id);
       state.pinned=secs.filter(s=>s.classList.contains('wgt-pinned')).map(s=>s.id);
+      state.collapsed=secs.filter(s=>s.classList.contains('wgt-collapsed')).map(s=>s.id);
       state.order=orderedSecs().map(s=>s.id); LS.set(state); }
 
     function move(sec,dir){ const ord=orderedSecs().map(s=>s.id); const i=ord.indexOf(sec.id), j=i+dir;
       if(j<0||j>=ord.length) return; ord.splice(j,0,ord.splice(i,1)[0]); state.order=ord; applyOrder(); save(); renderPanel(); }
     function toggleHide(sec){ sec.classList.toggle('wgt-hidden'); updateCardBar(sec); save(); renderPanel(); }
     function togglePin(sec){ sec.classList.toggle('wgt-pinned'); updateCardBar(sec); applyOrder(); save(); renderPanel(); }
+    function toggleCollapse(sec){ sec.classList.toggle('wgt-collapsed'); updateCollapse(sec); save(); renderPanel(); }
+    function updateCollapse(sec){ const b=sec._colBtn; if(!b) return; const c=sec.classList.contains('wgt-collapsed');
+      b.title=c?'Expand':'Collapse'; b.querySelector('use').setAttribute('href', c?'#i-cd':'#i-cu'); }
 
     /* ---- per-card action bar (visible only in edit mode) ---- */
     function makeCardBar(sec){
@@ -3860,6 +3872,12 @@ body.flow-locked{ overflow:hidden; }
       bar.querySelector('.le-hide').addEventListener('click',()=>toggleHide(sec));
       bar.querySelectorAll('.le-mv').forEach(b=>b.addEventListener('click',()=>move(sec,+b.dataset.dir)));
       tools.insertBefore(bar, tools.firstChild); sec._leBar=bar;
+      // always-visible collapse/expand chevron (far right of header)
+      const hdr2=sec.querySelector('.panel-header');
+      const col=document.createElement('button'); col.type='button'; col.className='wgt-collapse'; col.title='Collapse';
+      col.innerHTML='<svg class="svg-ico"><use href="#i-cu"/></svg>';
+      col.addEventListener('click',()=>toggleCollapse(sec));
+      hdr2.appendChild(col); sec._colBtn=col;
     }
     function updateCardBar(sec){ const bar=sec._leBar; if(!bar) return;
       const pinned=sec.classList.contains('wgt-pinned'), hidden=sec.classList.contains('wgt-hidden');
@@ -3881,16 +3899,18 @@ body.flow-locked{ overflow:hidden; }
 
     function renderPanel(){ lpList.innerHTML='';
       orderedSecs().forEach(sec=>{
-        const hidden=sec.classList.contains('wgt-hidden'), pinned=sec.classList.contains('wgt-pinned');
+        const hidden=sec.classList.contains('wgt-hidden'), pinned=sec.classList.contains('wgt-pinned'), collapsed=sec.classList.contains('wgt-collapsed');
         const row=document.createElement('div'); row.className='lp-row'+(hidden?' off':'');
         row.innerHTML='<span class="lp-name">'+titleOf(sec)+'</span>'+
-          (hidden?'<span class="lp-badge hid">Hidden</span>':'')+
+          (hidden?'<span class="lp-badge hid">Hidden</span>':(collapsed?'<span class="lp-badge col">Collapsed</span>':''))+
           '<span class="lp-row-acts">'+
+            '<button class="lp-act lp-collapse'+(collapsed?' on':'')+'" type="button" title="'+(collapsed?'Expand':'Collapse')+'"><svg class="svg-ico"><use href="#i-'+(collapsed?'cd':'cu')+'"/></svg></button>'+
             '<button class="lp-act lp-pin'+(pinned?' on':'')+'" type="button" title="'+(pinned?'Unpin':'Pin')+'"><svg class="svg-ico"><use href="#i-pin"/></svg></button>'+
             '<button class="lp-act lp-hide'+(hidden?' on':'')+'" type="button" title="'+(hidden?'Show':'Hide')+'"><svg class="svg-ico"><use href="#i-'+(hidden?'eye':'eye-off')+'"/></svg></button>'+
             '<button class="lp-act lp-up" type="button" title="Move up"><svg class="svg-ico"><use href="#i-cu"/></svg></button>'+
             '<button class="lp-act lp-down" type="button" title="Move down"><svg class="svg-ico"><use href="#i-cd"/></svg></button>'+
           '</span>';
+        row.querySelector('.lp-collapse').addEventListener('click',()=>toggleCollapse(sec));
         row.querySelector('.lp-pin').addEventListener('click',()=>togglePin(sec));
         row.querySelector('.lp-hide').addEventListener('click',()=>toggleHide(sec));
         row.querySelector('.lp-up').addEventListener('click',()=>move(sec,-1));
@@ -3903,13 +3923,14 @@ body.flow-locked{ overflow:hidden; }
     window.__layoutEditToggle=()=>setEdit(!editing);
     panel.querySelector('#lp-close').addEventListener('click',()=>setEdit(false));
     panel.querySelector('#lp-done').addEventListener('click',()=>setEdit(false));
-    panel.querySelector('#lp-reset').addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned'); updateCardBar(s); });
+    panel.querySelector('#lp-reset').addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned','wgt-collapsed'); updateCardBar(s); updateCollapse(s); });
       state.order=DEFAULT_ORDER.slice(); applyOrder(); save(); renderPanel(); });
 
     // apply saved layout
     (state.hidden||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-hidden'); });
     (state.pinned||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-pinned'); });
-    secs.forEach(updateCardBar); applyOrder();
+    (state.collapsed||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-collapsed'); });
+    secs.forEach(s=>{ updateCardBar(s); updateCollapse(s); }); applyOrder();
   })();
 
   /* ===== Combined page-options menu (Filters / History / Edit layout) ===== */
