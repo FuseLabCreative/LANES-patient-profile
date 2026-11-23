@@ -279,10 +279,14 @@
   .pts-sec > p{ margin:0; color:var(--gray-700); }
   /* chips */
   .pts-chips{ display:flex; flex-wrap:wrap; gap:.4rem; }
-  .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.08); border:1px solid rgba(44,123,229,.22); border-radius:1rem; padding:.2rem .7rem; }
+  .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.1); border-radius:1rem; padding:.22rem .75rem; }
   /* pills */
-  .pts-pill{ display:inline-flex; align-items:center; font-size:.74rem; font-weight:700; color:var(--gray-600); background:var(--gray-100); border:1px solid var(--gray-200); border-radius:1rem; padding:.1rem .6rem; }
-  .pts-pill.ok{ color:#1a7f5a; background:rgba(26,127,90,.1); border-color:rgba(26,127,90,.25); }
+  .pts-pill{ display:inline-flex; align-items:center; font-size:.74rem; font-weight:700; color:var(--gray-600); background:var(--gray-100); border-radius:1rem; padding:.12rem .65rem; }
+  .pts-pill.ok{ color:#1a7f5a; background:rgba(26,127,90,.12); }
+  /* two-column summary layout */
+  .pts-cols{ display:grid; grid-template-columns:1fr 1fr; gap:1.2rem 2.2rem; align-items:start; }
+  .pts-col > *:last-child{ margin-bottom:0; }
+  @media (max-width:860px){ .pts-cols{ grid-template-columns:1fr; } }
   /* allergy callout */
   .pts-callout{ display:flex; gap:.7rem; padding:.8rem .9rem; border-radius:.55rem; margin:0 0 1.2rem; max-width:600px; }
   .pts-callout.warn{ background:#fff6f0; border:1px solid #f6d3bd; }
@@ -2039,6 +2043,8 @@ body.flow-locked{ overflow:hidden; }
       <span class="pts-updated"><svg class="svg-ico"><use href="#i-history"/></svg>Updated 2 days ago</span>
     </div>
     <div class="pts-body">
+      <div class="pts-cols">
+      <div class="pts-col">
       <dl class="pts-facts">
         <dt>Patient</dt><dd>Maria Sanchez · 23 yrs · Female · Hispanic or Latino</dd>
         <dt>Coverage</dt><dd>Medi-Cal <span class="pts-pill ok">Active</span></dd>
@@ -2061,11 +2067,11 @@ body.flow-locked{ overflow:hidden; }
           <p>Codeine (itching). Sources disagree on Haldol — confirm before prescribing.</p>
         </div>
       </div>
-
-      <div class="pts-grid2">
-        <div class="pts-sec"><div class="pts-label">Social</div><p>Over the past 2 years reports a steady place to live and no issues with food security, finances, or access to care. Engaged in ongoing behavioral-health follow-up; no transportation barriers reported.</p></div>
-        <div class="pts-sec"><div class="pts-label">History</div><p>Regular primary-care contacts with several ED visits across LA County, Cedars-Sinai, and Alta Hospitals over the past 2 years.</p></div>
       </div>
+
+      <div class="pts-col">
+      <div class="pts-sec"><div class="pts-label">Social</div><p>Over the past 2 years reports a steady place to live and no issues with food security, finances, or access to care. Engaged in ongoing behavioral-health follow-up; no transportation barriers reported.</p></div>
+      <div class="pts-sec"><div class="pts-label">History</div><p>Regular primary-care contacts with several ED visits across LA County, Cedars-Sinai, and Alta Hospitals over the past 2 years.</p></div>
 
       <div class="pts-sec">
         <div class="pts-label">Recent appointments</div>
@@ -2096,6 +2102,8 @@ body.flow-locked{ overflow:hidden; }
             </details>
           </div>
         </div>
+      </div>
+      </div>
       </div>
     </div>
   </section>
