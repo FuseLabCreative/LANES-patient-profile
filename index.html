@@ -380,6 +380,66 @@
   .wgt-chip:hover{ background:#f3f8ff; }
   .wgt-chip .svg-ico{ width:13px; height:13px; }
 
+  /* ---- combined page-options menu ---- */
+  .notes-btn[hidden]{ display:none !important; }
+  .ph-menu{ position:relative; display:inline-flex; }
+  #ph-menu-btn{ display:inline-flex; align-items:center; gap:.4rem; }
+  #ph-menu-btn > span{ font-size:.875rem; font-weight:600; }
+  .ph-menu-chev{ width:12px !important; height:12px !important; transition:transform .15s; }
+  .ph-menu.open .ph-menu-chev{ transform:rotate(180deg); }
+  #ph-menu-btn.has-set{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.08); }
+  .ph-menu-pop{ position:absolute; top:calc(100% + 6px); right:0; min-width:210px; background:#fff; border:1px solid var(--gray-200); border-radius:.55rem; box-shadow:0 14px 36px rgba(16,24,40,.18); padding:.35rem; z-index:1200; display:none; }
+  .ph-menu.open .ph-menu-pop{ display:block; }
+  .ph-menu-item{ display:flex; align-items:center; gap:.6rem; width:100%; text-align:left; font-family:inherit; font-size:.9rem; font-weight:500; color:var(--gray-800); background:none; border:none; border-radius:.4rem; padding:.55rem .6rem; cursor:pointer; }
+  .ph-menu-item:hover{ background:var(--gray-100); }
+  .ph-menu-item .svg-ico{ width:16px; height:16px; color:var(--gray-500); flex:none; }
+  .ph-menu-item > span:first-of-type{ flex:1 1 auto; }
+  .ph-menu-item.has-set .svg-ico{ color:var(--primary); }
+  .ph-menu-count{ flex:none; min-width:18px; height:18px; padding:0 .3rem; box-sizing:border-box; display:none; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:#fff; background:var(--primary); border-radius:1rem; }
+
+  /* ---- per-card edit action bar (edit mode only) ---- */
+  .le-cardbar{ display:none; align-items:center; gap:.35rem; }
+  body.layout-edit .le-cardbar{ display:inline-flex; }
+  .le-act{ display:inline-flex; align-items:center; gap:.3rem; font-family:inherit; font-size:.76rem; font-weight:600; color:var(--gray-600); background:var(--gray-100); border:1px solid var(--gray-200); border-radius:.4rem; padding:.26rem .5rem; cursor:pointer; }
+  .le-act:hover{ background:var(--gray-200); color:var(--gray-900); }
+  .le-act .svg-ico{ width:13px; height:13px; }
+  .le-act.le-pin.on, .le-act.le-hide.on{ color:var(--primary); background:rgba(44,123,229,.12); border-color:rgba(44,123,229,.3); }
+  .le-move{ cursor:default; padding-right:.3rem; }
+  .le-mv{ display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; padding:0; margin-left:.1rem; border:none; background:none; color:var(--gray-500); cursor:pointer; border-radius:.3rem; }
+  .le-mv:hover{ background:var(--gray-300); color:var(--gray-900); }
+  .le-mv .svg-ico{ width:12px; height:12px; }
+  body.layout-edit section > .panel{ outline:1.5px dashed var(--gray-300); outline-offset:3px; }
+  body.layout-edit section.wgt-hidden{ display:block !important; opacity:.5; }
+  body.layout-edit section.wgt-hidden > .panel{ outline-style:solid; outline-color:#f0b7bf; }
+
+  /* ---- left edit-layout panel ---- */
+  .layout-panel{ position:fixed; left:1.25rem; bottom:1.25rem; width:330px; max-width:calc(100vw - 2.5rem); max-height:62vh; background:#fff; border:1px solid var(--gray-200); border-radius:.7rem; box-shadow:0 20px 48px rgba(16,24,40,.24); z-index:4200; display:flex; flex-direction:column; overflow:hidden; }
+  .layout-panel[hidden]{ display:none; }
+  .lp-head{ display:flex; align-items:center; justify-content:space-between; padding:.85rem 1rem; border-bottom:1px solid var(--gray-200); }
+  .lp-title{ display:inline-flex; align-items:center; gap:.45rem; font-size:1rem; font-weight:700; color:var(--gray-900); }
+  .lp-title .svg-ico{ width:16px; height:16px; color:var(--primary); }
+  .lp-x{ border:none; background:none; cursor:pointer; color:var(--gray-500); width:28px; height:28px; border-radius:.35rem; display:inline-flex; align-items:center; justify-content:center; }
+  .lp-x:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .lp-x .svg-ico{ width:13px; height:13px; }
+  .lp-sub{ font-size:.78rem; color:var(--gray-500); padding:.65rem 1rem .1rem; line-height:1.4; }
+  .lp-list{ padding:.5rem .6rem; overflow-y:auto; display:flex; flex-direction:column; gap:.2rem; }
+  .lp-row{ display:flex; align-items:center; gap:.4rem; padding:.35rem .4rem; border-radius:.45rem; }
+  .lp-row:hover{ background:#f8fafc; }
+  .lp-row.off .lp-name{ color:var(--gray-400); }
+  .lp-name{ flex:1 1 auto; min-width:0; font-size:.82rem; font-weight:600; color:var(--gray-800); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .lp-badge{ flex:none; font-size:.64rem; font-weight:700; border-radius:1rem; padding:.08rem .45rem; }
+  .lp-badge.hid{ color:var(--gray-600); background:var(--gray-200); }
+  .lp-row-acts{ display:inline-flex; gap:.05rem; flex:none; }
+  .lp-act{ width:26px; height:26px; border:none; background:none; cursor:pointer; color:var(--gray-500); border-radius:.35rem; display:inline-flex; align-items:center; justify-content:center; }
+  .lp-act:hover{ background:var(--gray-200); color:var(--gray-900); }
+  .lp-act .svg-ico{ width:13px; height:13px; }
+  .lp-act.on{ color:var(--primary); background:rgba(44,123,229,.12); }
+  .lp-foot{ padding:.7rem 1rem; border-top:1px solid var(--gray-200); display:flex; justify-content:space-between; align-items:center; gap:.5rem; }
+  .lp-reset{ display:inline-flex; align-items:center; gap:.35rem; background:none; border:none; font-family:inherit; font-size:.82rem; font-weight:600; color:var(--gray-600); cursor:pointer; padding:.35rem .45rem; border-radius:.4rem; }
+  .lp-reset:hover{ color:var(--gray-900); background:var(--gray-100); }
+  .lp-reset .svg-ico{ width:13px; height:13px; }
+  .lp-done{ padding:.45rem 1.1rem; }
+
   /* header tools */
   .header-tools{ display:flex; align-items:center; gap:.5rem; margin-left:auto; flex-wrap:wrap; justify-content:flex-end; }
   /* section list/visualization segmented control — hidden for now */
@@ -1177,6 +1237,9 @@
   <symbol id="i-ambulance" viewBox="0 0 16 16"><path d="M1 4.5A1.5 1.5 0 0 1 2.5 3h6A1.5 1.5 0 0 1 10 4.5V5h1.9a1 1 0 0 1 .8.4l1.6 2.13a1 1 0 0 1 .2.6V10a1 1 0 0 1-1 1h-.6a1.9 1.9 0 0 1-3.8 0H6.4a1.9 1.9 0 0 1-3.8 0H2a1 1 0 0 1-1-1V4.5zM5 5V4H4v1H3v1h1v1h1V6h1V5H5zm6.5 1 .9 1.2H11V6h.5zM4.5 10a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8zm6 0a.9.9 0 1 0 0 1.8.9.9 0 0 0 0-1.8z"/></symbol>
   <symbol id="i-bed" viewBox="0 0 16 16"><path d="M1.75 4a.75.75 0 0 1 .75.75V8h10.5V7a1.5 1.5 0 0 0-1.5-1.5H7.5a.5.5 0 0 0-.5.5V8H3V4.75A.75.75 0 0 1 1.75 4zM2.5 9.5h11V11a.75.75 0 0 1-1.5 0v-.5H4V11a.75.75 0 0 1-1.5 0V9.5zM5 5.5A1.25 1.25 0 1 1 5 8a1.25 1.25 0 0 1 0-2.5z"/></symbol>
   <symbol id="i-download" viewBox="0 0 16 16"><path d="M8 1.5a.75.75 0 0 1 .75.75v5.69l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 0 1 1.06-1.06l1.72 1.72V2.25A.75.75 0 0 1 8 1.5zM3 11.5a.75.75 0 0 1 .75.75v1h8.5v-1a.75.75 0 0 1 1.5 0v1.75a.75.75 0 0 1-.75.75H3a.75.75 0 0 1-.75-.75V12.25A.75.75 0 0 1 3 11.5z"/></symbol>
+  <symbol id="i-cu" viewBox="0 0 16 16"><path d="M1.646 11.354a.5.5 0 0 0 .708 0L8 5.707l5.646 5.647a.5.5 0 0 0 .708-.708l-6-6a.5.5 0 0 0-.708 0l-6 6a.5.5 0 0 0 0 .708z"/></symbol>
+  <symbol id="i-move" viewBox="0 0 16 16"><path d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V7.5h5.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H8.5v5.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V8.5H1.707l1.147 1.146a.5.5 0 0 1-.708.708l-2-2a.5.5 0 0 1 0-.708l2-2a.5.5 0 0 1 .708.708L1.707 7.5H7.5V1.707L6.354 2.854a.5.5 0 1 1-.708-.708z"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 16 16"><path d="M11.5 2a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M9.05 3a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0V3zM4.5 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M2.05 8a2.5 2.5 0 0 1 4.9 0H16v1H6.95a2.5 2.5 0 0 1-4.9 0H0V8zm9.45 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m-2.45 1a2.5 2.5 0 0 1 4.9 0H16v1h-2.05a2.5 2.5 0 0 1-4.9 0H0v-1z"/></symbol>
 </svg>
 
 <style>
@@ -1872,9 +1935,17 @@ body.flow-locked{ overflow:hidden; }
       <select class="mini-select v1-only"><option>Layout: care coordinator</option></select>
       <button class="ph-clear v2-only" id="ph-clear">Clear filters</button>
       <button class="notes-btn v2-only active" id="ph-overview-btn" title="Patient overview"><svg class="svg-ico"><use href="#i-person"/></svg></button>
-      <button class="notes-btn v2-only" id="ph-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="fb-dot"></span></button>
+      <button class="notes-btn" id="ph-filter-btn" title="Filters" hidden><svg class="svg-ico"><use href="#i-filter"/></svg><span class="fb-dot"></span></button>
+      <button class="notes-btn" id="ph-history-btn" title="Patient history" data-hx-hub hidden><svg class="svg-ico"><use href="#i-history"/></svg></button>
       <a href="#" class="btn-ghost v1-only"><svg class="svg-ico"><use href="#i-note"/></svg> Notes (0)</a>
-      <button class="notes-btn has-label v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
+      <div class="ph-menu v2-only" id="ph-menu">
+        <button class="notes-btn has-label" id="ph-menu-btn" type="button" title="Page options" aria-haspopup="true" aria-expanded="false"><svg class="svg-ico"><use href="#i-sliders"/></svg><span>Options</span><svg class="svg-ico ph-menu-chev"><use href="#i-cd"/></svg></button>
+        <div class="ph-menu-pop" id="ph-menu-pop" role="menu">
+          <button type="button" class="ph-menu-item" data-act="filters" role="menuitem"><svg class="svg-ico"><use href="#i-filter"/></svg><span>Filters</span><span class="ph-menu-count" id="ph-menu-count"></span></button>
+          <button type="button" class="ph-menu-item" data-act="history" role="menuitem"><svg class="svg-ico"><use href="#i-history"/></svg><span>History</span></button>
+          <button type="button" class="ph-menu-item" data-act="edit" role="menuitem"><svg class="svg-ico"><use href="#i-move"/></svg><span>Edit layout</span></button>
+        </div>
+      </div>
       <button class="btn-primary" id="ph-addnote-btn"><svg class="svg-ico"><use href="#i-note"/></svg>Notes<span class="notes-count" id="ph-notes-badge">3</span></button>
     </div>
   </div>
@@ -2994,6 +3065,9 @@ body.flow-locked{ overflow:hidden; }
         });
         const any=count>0;
         filterBtns.forEach(b=>{ b.classList.toggle('has-set', any); const badge=b.querySelector('.filter-count'); if(badge) badge.textContent=count; });
+        const mc=document.getElementById('ph-menu-count'); if(mc){ mc.textContent=any?count:''; mc.style.display=any?'':'none'; }
+        const mi=document.querySelector('.ph-menu-item[data-act="filters"]'); if(mi) mi.classList.toggle('has-set', any);
+        const mb=document.getElementById('ph-menu-btn'); if(mb) mb.classList.toggle('has-set', any);
         if(fclear) fclear.classList.toggle('show', any);
         const fpopClear=document.getElementById('filter-pop-clear'); if(fpopClear) fpopClear.classList.toggle('show', any);
       }
@@ -3744,58 +3818,115 @@ body.flow-locked{ overflow:hidden; }
   /* ===== Widget customization: pin-to-top, hide, and restore tray ===== */
   (function widgetCustomize(){
     const grid=document.querySelector('.main-grid'); if(!grid) return;
-    const KEY='lanes_layout_v1';
+    const KEY='lanes_layout_v2';
     const LS={ get(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return window.__layout||{}; } },
                set(v){ window.__layout=v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} } };
-    const state=Object.assign({hidden:[],pinned:[]}, LS.get());
+    const state=Object.assign({hidden:[],pinned:[],order:[]}, LS.get());
     const secs=[...grid.querySelectorAll(':scope > section')].filter(s=>s.id);
     const byId=id=>secs.find(s=>s.id===id);
-    const titleOf=sec=>{ const t=sec.querySelector('.panel-title'); if(!t) return 'Widget'; const n=t.childNodes[0]; return (n&&n.textContent||'Widget').trim(); };
+    const DEFAULT_ORDER=secs.map(s=>s.id);
+    const titleOf=sec=>{ const t=sec.querySelector('.panel-title'); if(!t) return 'Section'; const n=t.childNodes[0]; return (n&&n.textContent||'Section').trim(); };
 
-    const tray=document.createElement('div'); tray.className='wgt-tray'; tray.id='wgt-tray'; tray.hidden=true;
-    tray.innerHTML='<span class="wgt-tray-label">Hidden widgets</span><div class="wgt-tray-items" id="wgt-tray-items"></div><button type="button" class="wgt-reset" id="wgt-reset" hidden>Reset layout</button>';
-    grid.parentNode.insertBefore(tray, grid);
-    const items=tray.querySelector('#wgt-tray-items');
-    const resetBtn=tray.querySelector('#wgt-reset');
-    const label=tray.querySelector('.wgt-tray-label');
-
+    function orderedSecs(){ const ord=(state.order&&state.order.length?state.order:DEFAULT_ORDER);
+      const idx=id=>{ const i=ord.indexOf(id); return i<0?999:i; };
+      return [...secs].sort((a,b)=>idx(a.id)-idx(b.id)); }
+    function applyOrder(){ const base=orderedSecs();
+      const pinned=base.filter(s=>s.classList.contains('wgt-pinned'));
+      const rest=base.filter(s=>!s.classList.contains('wgt-pinned'));
+      [...pinned,...rest].forEach((s,i)=>s.style.order=String(i)); }
     function save(){ state.hidden=secs.filter(s=>s.classList.contains('wgt-hidden')).map(s=>s.id);
-      state.pinned=secs.filter(s=>s.classList.contains('wgt-pinned')).map(s=>s.id); LS.set(state); }
-    function applyOrder(){ secs.forEach(s=>s.style.order='');
-      secs.filter(s=>s.classList.contains('wgt-pinned')).forEach((s,i)=>s.style.order=String(i-100)); }
-    function render(){
-      items.innerHTML='';
-      const hidden=secs.filter(s=>s.classList.contains('wgt-hidden'));
-      hidden.forEach(sec=>{ const chip=document.createElement('button'); chip.type='button'; chip.className='wgt-chip';
-        chip.innerHTML='<svg class="svg-ico"><use href="#i-eye"/></svg>'+titleOf(sec);
-        chip.addEventListener('click',()=>{ sec.classList.remove('wgt-hidden'); save(); render(); });
-        items.appendChild(chip); });
-      const anyPinned=secs.some(s=>s.classList.contains('wgt-pinned'));
-      const any=hidden.length||anyPinned;
-      label.style.display=hidden.length?'':'none';
-      resetBtn.hidden=!any; tray.hidden=!any;
-    }
-    resetBtn.addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned'); s.style.order='';
-      const p=s.querySelector('.wgt-pin'); if(p){ p.classList.remove('on'); p.title='Pin to top'; } });
-      save(); render(); });
+      state.pinned=secs.filter(s=>s.classList.contains('wgt-pinned')).map(s=>s.id);
+      state.order=orderedSecs().map(s=>s.id); LS.set(state); }
 
-    secs.forEach(sec=>{
+    function move(sec,dir){ const ord=orderedSecs().map(s=>s.id); const i=ord.indexOf(sec.id), j=i+dir;
+      if(j<0||j>=ord.length) return; ord.splice(j,0,ord.splice(i,1)[0]); state.order=ord; applyOrder(); save(); renderPanel(); }
+    function toggleHide(sec){ sec.classList.toggle('wgt-hidden'); updateCardBar(sec); save(); renderPanel(); }
+    function togglePin(sec){ sec.classList.toggle('wgt-pinned'); updateCardBar(sec); applyOrder(); save(); renderPanel(); }
+
+    /* ---- per-card action bar (visible only in edit mode) ---- */
+    function makeCardBar(sec){
       const hdr=sec.querySelector('.panel-header'); if(!hdr) return;
       let tools=hdr.querySelector('.header-tools');
       if(!tools){ tools=document.createElement('div'); tools.className='header-tools'; hdr.appendChild(tools); }
-      const grp=document.createElement('div'); grp.className='wgt-ctrls';
-      const pin=document.createElement('button'); pin.type='button'; pin.className='wgt-btn wgt-pin'; pin.title='Pin to top'; pin.innerHTML='<svg class="svg-ico"><use href="#i-pin"/></svg>';
-      const hide=document.createElement('button'); hide.type='button'; hide.className='wgt-btn'; hide.title='Hide widget'; hide.innerHTML='<svg class="svg-ico"><use href="#i-eye-off"/></svg>';
-      pin.addEventListener('click',()=>{ const on=sec.classList.toggle('wgt-pinned'); pin.classList.toggle('on',on); pin.title=on?'Unpin from top':'Pin to top'; applyOrder(); save(); render(); });
-      hide.addEventListener('click',()=>{ sec.classList.add('wgt-hidden'); save(); render(); });
-      grp.appendChild(pin); grp.appendChild(hide);
-      tools.insertBefore(grp, tools.firstChild);
-    });
+      const bar=document.createElement('div'); bar.className='le-cardbar';
+      bar.innerHTML=
+        '<button type="button" class="le-act le-pin"><svg class="svg-ico"><use href="#i-pin"/></svg><span>Pin</span></button>'+
+        '<button type="button" class="le-act le-hide"><svg class="svg-ico"><use href="#i-eye-off"/></svg><span>Hide</span></button>'+
+        '<span class="le-act le-move"><svg class="svg-ico"><use href="#i-move"/></svg><span>Move</span>'+
+          '<button type="button" class="le-mv" data-dir="-1" title="Move up"><svg class="svg-ico"><use href="#i-cu"/></svg></button>'+
+          '<button type="button" class="le-mv" data-dir="1" title="Move down"><svg class="svg-ico"><use href="#i-cd"/></svg></button>'+
+        '</span>';
+      bar.querySelector('.le-pin').addEventListener('click',()=>togglePin(sec));
+      bar.querySelector('.le-hide').addEventListener('click',()=>toggleHide(sec));
+      bar.querySelectorAll('.le-mv').forEach(b=>b.addEventListener('click',()=>move(sec,+b.dataset.dir)));
+      tools.insertBefore(bar, tools.firstChild); sec._leBar=bar;
+    }
+    function updateCardBar(sec){ const bar=sec._leBar; if(!bar) return;
+      const pinned=sec.classList.contains('wgt-pinned'), hidden=sec.classList.contains('wgt-hidden');
+      const pb=bar.querySelector('.le-pin'); pb.classList.toggle('on',pinned); pb.querySelector('span').textContent=pinned?'Pinned':'Pin';
+      const hb=bar.querySelector('.le-hide'); hb.classList.toggle('on',hidden); hb.querySelector('span').textContent=hidden?'Show':'Hide';
+      hb.querySelector('use').setAttribute('href', hidden?'#i-eye':'#i-eye-off'); }
+    secs.forEach(makeCardBar);
 
-    // apply any saved layout
+    /* ---- left edit panel (bottom-left) ---- */
+    const panel=document.createElement('div'); panel.className='layout-panel'; panel.id='layout-panel'; panel.hidden=true;
+    panel.innerHTML='<div class="lp-head"><span class="lp-title"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit layout</span>'+
+      '<button class="lp-x" id="lp-close" title="Done"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>'+
+      '<div class="lp-sub">Pin, hide or reorder the cards on this page. Changes save automatically.</div>'+
+      '<div class="lp-list" id="lp-list"></div>'+
+      '<div class="lp-foot"><button class="lp-reset" id="lp-reset" type="button"><svg class="svg-ico"><use href="#i-move"/></svg>Reset layout</button>'+
+      '<button class="btn-primary lp-done" id="lp-done" type="button">Done</button></div>';
+    document.body.appendChild(panel);
+    const lpList=panel.querySelector('#lp-list');
+
+    function renderPanel(){ lpList.innerHTML='';
+      orderedSecs().forEach(sec=>{
+        const hidden=sec.classList.contains('wgt-hidden'), pinned=sec.classList.contains('wgt-pinned');
+        const row=document.createElement('div'); row.className='lp-row'+(hidden?' off':'');
+        row.innerHTML='<span class="lp-name">'+titleOf(sec)+'</span>'+
+          (hidden?'<span class="lp-badge hid">Hidden</span>':'')+
+          '<span class="lp-row-acts">'+
+            '<button class="lp-act lp-pin'+(pinned?' on':'')+'" type="button" title="'+(pinned?'Unpin':'Pin')+'"><svg class="svg-ico"><use href="#i-pin"/></svg></button>'+
+            '<button class="lp-act lp-hide'+(hidden?' on':'')+'" type="button" title="'+(hidden?'Show':'Hide')+'"><svg class="svg-ico"><use href="#i-'+(hidden?'eye':'eye-off')+'"/></svg></button>'+
+            '<button class="lp-act lp-up" type="button" title="Move up"><svg class="svg-ico"><use href="#i-cu"/></svg></button>'+
+            '<button class="lp-act lp-down" type="button" title="Move down"><svg class="svg-ico"><use href="#i-cd"/></svg></button>'+
+          '</span>';
+        row.querySelector('.lp-pin').addEventListener('click',()=>togglePin(sec));
+        row.querySelector('.lp-hide').addEventListener('click',()=>toggleHide(sec));
+        row.querySelector('.lp-up').addEventListener('click',()=>move(sec,-1));
+        row.querySelector('.lp-down').addEventListener('click',()=>move(sec,1));
+        lpList.appendChild(row);
+      }); }
+
+    let editing=false;
+    function setEdit(on){ editing=on; document.body.classList.toggle('layout-edit',on); panel.hidden=!on; if(on) renderPanel(); }
+    window.__layoutEditToggle=()=>setEdit(!editing);
+    panel.querySelector('#lp-close').addEventListener('click',()=>setEdit(false));
+    panel.querySelector('#lp-done').addEventListener('click',()=>setEdit(false));
+    panel.querySelector('#lp-reset').addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned'); updateCardBar(s); });
+      state.order=DEFAULT_ORDER.slice(); applyOrder(); save(); renderPanel(); });
+
+    // apply saved layout
     (state.hidden||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-hidden'); });
-    (state.pinned||[]).forEach(id=>{ const s=byId(id); if(s){ s.classList.add('wgt-pinned'); const p=s.querySelector('.wgt-pin'); if(p){ p.classList.add('on'); p.title='Unpin from top'; } } });
-    applyOrder(); render();
+    (state.pinned||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-pinned'); });
+    secs.forEach(updateCardBar); applyOrder();
+  })();
+
+  /* ===== Combined page-options menu (Filters / History / Edit layout) ===== */
+  (function pageOptionsMenu(){
+    const wrap=document.getElementById('ph-menu'); if(!wrap) return;
+    const btn=document.getElementById('ph-menu-btn'), pop=document.getElementById('ph-menu-pop');
+    function openM(){ wrap.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+    function closeM(){ wrap.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+    btn.addEventListener('click',e=>{ e.stopPropagation(); wrap.classList.contains('open')?closeM():openM(); });
+    pop.addEventListener('click',e=>{ const it=e.target.closest('.ph-menu-item'); if(!it) return;
+      const act=it.dataset.act; closeM();
+      if(act==='filters'){ const b=document.getElementById('ph-filter-btn'); if(b) b.click(); }
+      else if(act==='history'){ const b=document.getElementById('ph-history-btn'); if(b) b.click(); }
+      else if(act==='edit'){ if(window.__layoutEditToggle) window.__layoutEditToggle(); }
+    });
+    document.addEventListener('click',e=>{ if(!e.target.closest('#ph-menu')) closeM(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeM(); });
   })();
 
   /* ===== Patient Notes: one shared source per patient ===== */
