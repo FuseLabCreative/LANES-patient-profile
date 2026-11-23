@@ -1289,10 +1289,9 @@ body.flow-locked{ overflow:hidden; }
 .cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding-bottom:2rem; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
 /* ---- first-page patient form ---- */
-.pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.9rem 2rem 1.75rem; box-shadow:0 1px 3px rgba(18,38,63,.05); }
-.pf-sec{ padding-bottom:1.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--gray-200); }
-.pf-sec:nth-of-type(2){ border-bottom:none; margin-bottom:1.25rem; }
-.pf-sec-title{ font-size:1.35rem; font-weight:500; color:var(--gray-800); margin:0 -2rem 1.4rem; padding:.8rem 2rem; background:var(--gray-100); border-radius:.5rem; }
+.pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:0 2rem 1.75rem; box-shadow:0 1px 3px rgba(18,38,63,.05); overflow:hidden; }
+.pf-sec{ margin-bottom:1.6rem; }
+.pf-sec-title{ font-size:1.35rem; font-weight:500; color:var(--gray-800); margin:0 -2rem 1.4rem; padding:1rem 2rem; background:#e4eaf2; border-radius:0; }
 .pf-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
 .pf-grid2:last-child{ margin-bottom:0; }
 @media(max-width:620px){ .pf-grid2{ grid-template-columns:1fr; } }
@@ -1307,6 +1306,10 @@ body.flow-locked{ overflow:hidden; }
 .pf-datefield .cal .svg-ico{ width:16px; height:16px; }
 .cal-pop.pf-cal-pop{ position:absolute; top:calc(100% + 6px); left:0; z-index:2000; }
 .cal-pop.pf-cal-pop .cp-foot{ border-top:1px solid var(--gray-200); padding-top:.55rem; }
+.cal-pop.pf-cal-pop .cp-nav{ font-size:1.6rem; line-height:.8; padding:.1rem .5rem; color:var(--gray-700); }
+.cal-pop.pf-cal-pop .cp-selects{ display:flex; gap:.35rem; align-items:center; }
+.cal-pop.pf-cal-pop .cp-msel, .cal-pop.pf-cal-pop .cp-ysel{ border:1px solid var(--gray-300); border-radius:.35rem; padding:.22rem 1.3rem .22rem .45rem; font-family:inherit; font-size:.85rem; font-weight:600; color:var(--gray-900); background:#fff; cursor:pointer; }
+.cal-pop.pf-cal-pop .cp-ysel{ padding-right:1.1rem; }
 /* departments multiselect */
 .ms{ position:relative; }
 .ms-btn{ display:flex; align-items:center; gap:.5rem; width:100%; height:42px; padding:0 .75rem; border:1px solid var(--gray-300); border-radius:.45rem; background:#fff; font-family:inherit; font-size:.92rem; color:var(--gray-800); cursor:pointer; text-align:left; }
@@ -1570,7 +1573,7 @@ body.flow-locked{ overflow:hidden; }
           </div>
         </section>
         <div class="pf-actions">
-          <button type="submit" class="btn-primary" id="pf-submit">Continue to Smart Alerts</button>
+          <button type="button" class="btn-primary" id="pf-submit">Continue to Smart Alerts</button>
           <button type="button" class="pf-clear" id="pf-clear">Clear all</button>
         </div>
       </form>
@@ -3782,9 +3785,13 @@ body.flow-locked{ overflow:hidden; }
     let viewY=1990, viewM=0, selDate=null;
     const pad=n=>String(n).padStart(2,'0');
     const fmt=d=>d?pad(d.getMonth()+1)+'/'+pad(d.getDate())+'/'+d.getFullYear():'';
+    const nowY2=new Date().getFullYear();
     function renderPop(){
       let h='<div class="cp-head"><button type="button" class="cp-nav" data-nav="-1">‹</button>'+
-        '<span class="cp-title">'+MONTHS[viewM]+' '+viewY+'</span>'+
+        '<span class="cp-selects">'+
+          '<select class="cp-msel" aria-label="Month">'+MONTHS.map((m,i)=>'<option value="'+i+'"'+(i===viewM?' selected':'')+'>'+m+'</option>').join('')+'</select>'+
+          '<select class="cp-ysel" aria-label="Year">'+Array.from({length:nowY2-1915+1},(_,i)=>nowY2-i).map(y=>'<option'+(y===viewY?' selected':'')+'>'+y+'</option>').join('')+'</select>'+
+        '</span>'+
         '<button type="button" class="cp-nav" data-nav="1">›</button></div><div class="cp-grid">';
       ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>h+='<span class="cp-dow-c">'+d+'</span>');
       const first=new Date(viewY,viewM,1).getDay(), days=new Date(viewY,viewM+1,0).getDate();
@@ -3796,7 +3803,8 @@ body.flow-locked{ overflow:hidden; }
     }
     function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop(); pop.style.display='block'; }
     function closePop(){ pop.style.display='none'; }
-    dobWrap.addEventListener('click',e=>{ e.stopPropagation(); if(pop.style.display==='none') openPop(); else closePop(); });
+    dobWrap.addEventListener('click',e=>{ if(e.target.closest('.cp-msel,.cp-ysel')) return; e.stopPropagation(); if(pop.style.display==='none') openPop(); else closePop(); });
+    pop.addEventListener('change',e=>{ if(e.target.classList.contains('cp-msel')){ viewM=+e.target.value; renderPop(); } else if(e.target.classList.contains('cp-ysel')){ viewY=+e.target.value; renderPop(); } });
     pop.addEventListener('click',e=>{ e.stopPropagation();
       const nav=e.target.closest('.cp-nav'); if(nav){ viewM+=+nav.dataset.nav; if(viewM<0){viewM=11;viewY--;} if(viewM>11){viewM=0;viewY++;} renderPop(); return; }
       const day=e.target.closest('.cp-day:not(.cp-empty)'); if(day){ selDate=new Date(viewY,viewM,+day.dataset.d); dobInput.value=fmt(selDate); renderPop(); return; }
@@ -3804,10 +3812,12 @@ body.flow-locked{ overflow:hidden; }
       if(e.target.closest('[data-done]')){ closePop(); return; } });
     document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob') && !e.target.closest('.pf-cal-pop')) closePop(); });
 
-    form.addEventListener('submit',e=>{ e.preventDefault();
+    function doContinue(){
       if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); } return; }
       selectClinic(CLINICS[+clinicSel.value]);
-    });
+    }
+    form.addEventListener('submit',e=>{ e.preventDefault(); doContinue(); });
+    document.getElementById('pf-submit').addEventListener('click', doContinue);
     document.getElementById('pf-clear').addEventListener('click',()=>{
       document.getElementById('pf-first').value=''; document.getElementById('pf-last').value='';
       selDate=null; dobInput.value=''; closePop();
