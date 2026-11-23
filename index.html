@@ -16,7 +16,7 @@
     --success:#00d27a; --info:#27bcfd; --warning:#f5803e; --danger:#e63757;
     --gray-100:#f9fafd; --gray-200:#edf2f9; --gray-300:#d8e2ef; --gray-400:#b6c1d2;
     --gray-500:#636e83; --gray-600:#586475; --gray-700:#5e6e82; --gray-800:#4d5969; --gray-900:#344050;
-    --body-bg:#edf2f9; --card-shadow:0 2px 5px 0 rgba(65,69,88,.07), 0 1px 2px 0 rgba(0,0,0,.04);
+    --body-bg:#edf2f9; --card-shadow:0 6px 20px rgba(18,38,63,.11);
     --radius:0.5rem;
     /* chart palette */
     --chart-emergency:#f07ea0; --chart-inpatient:#8fa3e8; --chart-outpatient:#19b5c4;
@@ -801,8 +801,8 @@
   .fl-opt.selected{ color:var(--primary); font-weight:600; background:#eaf2fd; }
 
   /* 9 — Card sections: bold outline + per-section accent so tiles are easy to tell apart; 10 — tighter gap */
-  body.v2 .panel{ box-shadow:0 1px 3px rgba(18,38,63,.06); border:1px solid var(--gray-300); border-radius:.6rem; }
-  body.v2 .info-card{ box-shadow:0 1px 3px rgba(18,38,63,.06); border:1px solid var(--gray-300); }
+  body.v2 .panel{ box-shadow:var(--card-shadow); border:1px solid var(--gray-300); border-radius:.6rem; }
+  body.v2 .info-card{ box-shadow:var(--card-shadow); border:1px solid var(--gray-300); }
   body.v2 .info-cards{ gap:.85rem; }
   body.v2 .main-grid{ gap:1.15rem; flex:1 1 auto; min-width:0; max-width:1440px; margin:0 auto; }
   body.v2 .cat-heading{ font-weight:500; }
@@ -1209,7 +1209,7 @@ body.flow-locked{ overflow:hidden; }
 .sa-tab.active{ color:var(--primary); border-bottom-color:var(--primary); }
 .sa-tab .sa-count{ background:var(--gray-200); color:var(--gray-700); font-size:.72rem; font-weight:600; border-radius:10px; padding:.05rem .5rem; }
 .sa-tab.active .sa-count{ background:var(--primary); color:#fff; }
-.sa-panel{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; overflow:hidden; }
+.sa-panel{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; overflow:hidden; box-shadow:var(--card-shadow); }
 .sa-table tbody tr{ background:#fff; }
 .sa-legend{ display:none; align-items:center; flex-wrap:wrap; gap:.5rem .75rem; padding:.7rem 1.25rem; background:#f8fafc; border-bottom:1px solid var(--gray-200); }
 .sa-legend-group{ display:flex; align-items:center; flex-wrap:wrap; gap:.4rem; }
@@ -1289,7 +1289,7 @@ body.flow-locked{ overflow:hidden; }
 .cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding-bottom:2rem; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
 /* ---- first-page patient form ---- */
-.pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:0 2rem 1.75rem; box-shadow:0 10px 30px rgba(18,38,63,.13); overflow:hidden; }
+.pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:0 2rem 1.75rem; box-shadow:var(--card-shadow); overflow:hidden; }
 .pf-sec{ margin-bottom:1.6rem; }
 .pf-sec-title{ font-size:1.35rem; font-weight:500; color:var(--gray-800); margin:0 -2rem 1.4rem; padding:1rem 2rem; background:var(--gray-100); border-radius:0; }
 .pf-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
