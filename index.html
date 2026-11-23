@@ -348,6 +348,9 @@
   .wgt-tray{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding:.6rem .9rem; margin-bottom:.9rem; background:#eef5ff; border:1px solid #cfe1fb; border-radius:.5rem; }
   .wgt-tray[hidden]{ display:none !important; }
   .wgt-tray-label{ font-size:.82rem; font-weight:700; color:var(--gray-700); }
+  .wgt-reset{ margin-left:auto; flex:none; background:none; border:none; font-family:inherit; font-size:.82rem; font-weight:600; color:var(--primary); cursor:pointer; }
+  .wgt-reset:hover{ text-decoration:underline; }
+  .wgt-reset[hidden]{ display:none; }
   .wgt-tray-items{ display:flex; gap:.4rem; flex-wrap:wrap; }
   .wgt-chip{ display:inline-flex; align-items:center; gap:.35rem; font-size:.8rem; font-weight:600; color:var(--primary); background:#fff; border:1px solid #cfe1fb; border-radius:1rem; padding:.28rem .7rem; cursor:pointer; }
   .wgt-chip:hover{ background:#f3f8ff; }
@@ -1408,6 +1411,36 @@ body.flow-locked{ overflow:hidden; }
 .sa-pt-sub{ font-size:.76rem; color:var(--gray-500); margin-top:.05rem; }
 
 /* ---- filter drawer ---- */
+/* Patient notes drawer */
+.notes-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
+.notes-backdrop.open{ opacity:1; pointer-events:auto; }
+.notes-drawer{ position:fixed; top:0; right:0; bottom:0; width:440px; max-width:94vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
+.notes-drawer.open{ transform:translateX(0); }
+.notes-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.1rem 1.25rem; border-bottom:1px solid var(--gray-200); }
+.notes-title{ font-size:1.1rem; font-weight:700; color:var(--gray-900); }
+.notes-sub{ font-size:.78rem; color:var(--gray-500); margin-top:.15rem; }
+.notes-x{ width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-500); border-radius:.4rem; cursor:pointer; flex:none; }
+.notes-x:hover{ background:var(--gray-100); color:var(--gray-800); }
+.notes-x .svg-ico{ width:16px; height:16px; }
+.notes-list{ flex:1 1 auto; overflow-y:auto; padding:1rem 1.25rem; display:flex; flex-direction:column; gap:.9rem; background:#f8fafc; }
+.notes-empty{ margin:auto; text-align:center; color:var(--gray-500); font-size:.9rem; }
+.note-item{ background:#fff; border:1px solid var(--gray-200); border-radius:.55rem; padding:.8rem .9rem; }
+.note-top{ display:flex; align-items:center; gap:.55rem; }
+.note-av{ width:30px; height:30px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:600; color:var(--gray-700); background:rgba(44,123,229,.14); }
+.note-who{ display:flex; flex-direction:column; min-width:0; }
+.note-author{ font-size:.86rem; font-weight:600; color:var(--gray-900); line-height:1.2; }
+.note-meta{ font-size:.74rem; color:var(--gray-500); }
+.note-ctx{ margin-left:auto; flex:none; font-size:.72rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.1); border-radius:1rem; padding:.15rem .6rem; }
+.note-body{ margin-top:.55rem; font-size:.88rem; color:var(--gray-800); line-height:1.5; white-space:pre-wrap; word-wrap:break-word; }
+.notes-compose{ border-top:1px solid var(--gray-200); padding:.9rem 1.25rem 1.1rem; background:#fff; }
+.notes-ctx-row{ display:flex; align-items:center; gap:.5rem; margin-bottom:.55rem; }
+.notes-ctx-row label{ font-size:.8rem; font-weight:600; color:var(--gray-700); }
+.notes-ctx-row select{ flex:1 1 auto; height:34px; border:1px solid var(--gray-300); border-radius:.4rem; padding:0 .55rem; font-family:inherit; font-size:.85rem; color:var(--gray-800); background:#fff; }
+.notes-compose textarea{ width:100%; border:1px solid var(--gray-300); border-radius:.45rem; padding:.6rem .7rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); resize:vertical; box-sizing:border-box; }
+.notes-compose textarea:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.notes-compose-foot{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.6rem; }
+.notes-asyou{ font-size:.76rem; color:var(--gray-500); }
+.notes-compose .btn-primary[disabled]{ opacity:.5; cursor:not-allowed; }
 .sa-drawer-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
 .sa-drawer-backdrop.open{ opacity:1; pointer-events:auto; }
 .sa-drawer{ position:fixed; top:0; right:0; bottom:0; width:420px; max-width:92vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
@@ -1655,9 +1688,9 @@ body.flow-locked{ overflow:hidden; }
       <button class="notes-btn v2-only active" id="ph-overview-btn" title="Patient overview"><svg class="svg-ico"><use href="#i-person"/></svg></button>
       <button class="notes-btn v2-only" id="ph-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="fb-dot"></span></button>
       <a href="#" class="btn-ghost v1-only"><svg class="svg-ico"><use href="#i-note"/></svg> Notes (0)</a>
-      <button class="notes-btn v2-only" title="Notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge">3</span></button>
+      <button class="notes-btn v2-only" id="ph-notes-btn" title="Patient notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge" id="ph-notes-badge">3</span></button>
       <button class="notes-btn has-label v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
-      <button class="btn-primary">Add note</button>
+      <button class="btn-primary" id="ph-addnote-btn">Add note</button>
     </div>
   </div>
   <div class="ph-filter-row v2-only" id="ph-filter-row">
@@ -2235,6 +2268,32 @@ body.flow-locked{ overflow:hidden; }
   </div><!-- /content -->
  </div><!-- /layout -->
 </div><!-- /page -->
+
+<!-- ============ PATIENT NOTES (shared source) ============ -->
+<div class="notes-backdrop" id="notes-backdrop"></div>
+<aside class="notes-drawer" id="notes-drawer" aria-hidden="true" aria-label="Patient notes">
+  <div class="notes-head">
+    <div>
+      <div class="notes-title">Patient notes</div>
+      <div class="notes-sub">Shared source · visible to everyone with access to this patient</div>
+    </div>
+    <button class="notes-x" id="notes-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="notes-list" id="notes-list"></div>
+  <form class="notes-compose" id="notes-compose">
+    <div class="notes-ctx-row">
+      <label for="notes-ctx">Context</label>
+      <select id="notes-ctx">
+        <option>General</option><option>Problems</option><option>Allergies</option><option>Medications</option><option>Labs</option><option>Vitals</option><option>Encounters</option><option>Demographics</option>
+      </select>
+    </div>
+    <textarea id="notes-text" rows="3" placeholder="Write a note about this patient…"></textarea>
+    <div class="notes-compose-foot">
+      <span class="notes-asyou" id="notes-asyou">Posting as Jane Doe · Care Coordinator</span>
+      <button type="submit" class="btn-primary" id="notes-add" disabled>Add note</button>
+    </div>
+  </form>
+</aside>
 
 <script>
   /* Live date-time in the header */
@@ -3453,30 +3512,102 @@ body.flow-locked{ overflow:hidden; }
   /* ===== Widget customization: pin-to-top, hide, and restore tray ===== */
   (function widgetCustomize(){
     const grid=document.querySelector('.main-grid'); if(!grid) return;
+    const KEY='lanes_layout_v1';
+    const LS={ get(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return window.__layout||{}; } },
+               set(v){ window.__layout=v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} } };
+    const state=Object.assign({hidden:[],pinned:[]}, LS.get());
+    const secs=[...grid.querySelectorAll(':scope > section')].filter(s=>s.id);
+    const byId=id=>secs.find(s=>s.id===id);
+    const titleOf=sec=>{ const t=sec.querySelector('.panel-title'); if(!t) return 'Widget'; const n=t.childNodes[0]; return (n&&n.textContent||'Widget').trim(); };
+
     const tray=document.createElement('div'); tray.className='wgt-tray'; tray.id='wgt-tray'; tray.hidden=true;
-    tray.innerHTML='<span class="wgt-tray-label">Hidden widgets</span><div class="wgt-tray-items" id="wgt-tray-items"></div>';
+    tray.innerHTML='<span class="wgt-tray-label">Hidden widgets</span><div class="wgt-tray-items" id="wgt-tray-items"></div><button type="button" class="wgt-reset" id="wgt-reset" hidden>Reset layout</button>';
     grid.parentNode.insertBefore(tray, grid);
     const items=tray.querySelector('#wgt-tray-items');
-    const titleOf=sec=>{ const t=sec.querySelector('.panel-title'); if(!t) return 'Widget'; const n=t.childNodes[0]; return (n&&n.textContent||'Widget').trim(); };
-    const refresh=()=>{ tray.hidden = grid.querySelectorAll('section.wgt-hidden').length===0; };
-    grid.querySelectorAll(':scope > section').forEach(sec=>{
+    const resetBtn=tray.querySelector('#wgt-reset');
+    const label=tray.querySelector('.wgt-tray-label');
+
+    function save(){ state.hidden=secs.filter(s=>s.classList.contains('wgt-hidden')).map(s=>s.id);
+      state.pinned=secs.filter(s=>s.classList.contains('wgt-pinned')).map(s=>s.id); LS.set(state); }
+    function applyOrder(){ secs.forEach(s=>s.style.order='');
+      secs.filter(s=>s.classList.contains('wgt-pinned')).forEach((s,i)=>s.style.order=String(i-100)); }
+    function render(){
+      items.innerHTML='';
+      const hidden=secs.filter(s=>s.classList.contains('wgt-hidden'));
+      hidden.forEach(sec=>{ const chip=document.createElement('button'); chip.type='button'; chip.className='wgt-chip';
+        chip.innerHTML='<svg class="svg-ico"><use href="#i-eye"/></svg>'+titleOf(sec);
+        chip.addEventListener('click',()=>{ sec.classList.remove('wgt-hidden'); save(); render(); });
+        items.appendChild(chip); });
+      const anyPinned=secs.some(s=>s.classList.contains('wgt-pinned'));
+      const any=hidden.length||anyPinned;
+      label.style.display=hidden.length?'':'none';
+      resetBtn.hidden=!any; tray.hidden=!any;
+    }
+    resetBtn.addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned'); s.style.order='';
+      const p=s.querySelector('.wgt-pin'); if(p){ p.classList.remove('on'); p.title='Pin to top'; } });
+      save(); render(); });
+
+    secs.forEach(sec=>{
       const hdr=sec.querySelector('.panel-header'); if(!hdr) return;
       let tools=hdr.querySelector('.header-tools');
       if(!tools){ tools=document.createElement('div'); tools.className='header-tools'; hdr.appendChild(tools); }
       const grp=document.createElement('div'); grp.className='wgt-ctrls';
-      const pin=document.createElement('button'); pin.type='button'; pin.className='wgt-btn'; pin.title='Pin to top'; pin.innerHTML='<svg class="svg-ico"><use href="#i-pin"/></svg>';
+      const pin=document.createElement('button'); pin.type='button'; pin.className='wgt-btn wgt-pin'; pin.title='Pin to top'; pin.innerHTML='<svg class="svg-ico"><use href="#i-pin"/></svg>';
       const hide=document.createElement('button'); hide.type='button'; hide.className='wgt-btn'; hide.title='Hide widget'; hide.innerHTML='<svg class="svg-ico"><use href="#i-eye-off"/></svg>';
-      pin.addEventListener('click',()=>{ const on=sec.classList.toggle('wgt-pinned'); pin.classList.toggle('on',on); pin.title=on?'Unpin from top':'Pin to top'; });
-      hide.addEventListener('click',()=>{
-        sec.classList.add('wgt-hidden');
-        const chip=document.createElement('button'); chip.type='button'; chip.className='wgt-chip';
-        chip.innerHTML='<svg class="svg-ico"><use href="#i-eye"/></svg>'+titleOf(sec);
-        chip.addEventListener('click',()=>{ sec.classList.remove('wgt-hidden'); chip.remove(); refresh(); });
-        items.appendChild(chip); refresh();
-      });
+      pin.addEventListener('click',()=>{ const on=sec.classList.toggle('wgt-pinned'); pin.classList.toggle('on',on); pin.title=on?'Unpin from top':'Pin to top'; applyOrder(); save(); render(); });
+      hide.addEventListener('click',()=>{ sec.classList.add('wgt-hidden'); save(); render(); });
       grp.appendChild(pin); grp.appendChild(hide);
       tools.insertBefore(grp, tools.firstChild);
     });
+
+    // apply any saved layout
+    (state.hidden||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-hidden'); });
+    (state.pinned||[]).forEach(id=>{ const s=byId(id); if(s){ s.classList.add('wgt-pinned'); const p=s.querySelector('.wgt-pin'); if(p){ p.classList.add('on'); p.title='Unpin from top'; } } });
+    applyOrder(); render();
+  })();
+
+  /* ===== Patient Notes: one shared source per patient ===== */
+  (function patientNotes(){
+    const drawer=document.getElementById('notes-drawer'); if(!drawer) return;
+    const backdrop=document.getElementById('notes-backdrop');
+    const listEl=document.getElementById('notes-list');
+    const form=document.getElementById('notes-compose');
+    const ta=document.getElementById('notes-text');
+    const ctx=document.getElementById('notes-ctx');
+    const addBtn=document.getElementById('notes-add');
+    const badge=document.getElementById('ph-notes-badge');
+    const PID='00482915', KEY='lanes_notes_'+PID;
+    const LS={ get(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return window.__notes; } },
+               set(v){ window.__notes=v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} } };
+    const SEED=[
+      {author:'Dr. Elena Ruiz', role:'PCP · Cedars-Sinai', ctx:'Problems', ts:'2024-02-12T15:20:00', text:'Patient reports new left leg pain, ongoing ~1 week. Ordered imaging; will follow up at next visit.'},
+      {author:'Marcus Lee', role:'Care Coordinator · LA Care', ctx:'Demographics', ts:'2024-02-02T10:05:00', text:'Reached patient at new number. Current address confirmed — the prior address on file is outdated.'},
+      {author:'Priya Nair', role:'Pharmacist · LA Care', ctx:'Medications', ts:'2024-01-16T09:40:00', text:'Confirmed quetiapine fill at Walgreens. Counseled on adherence; no adverse effects reported.'}
+    ];
+    let notes=LS.get(); if(!Array.isArray(notes)){ notes=SEED.slice(); LS.set(notes); }
+    const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const initials=n=>n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    function fmt(ts){ const d=new Date(ts); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+    function render(){
+      if(badge){ badge.textContent=notes.length; badge.style.display=notes.length?'':'none'; }
+      if(!notes.length){ listEl.innerHTML='<div class="notes-empty">No notes yet. Add the first note below.</div>'; return; }
+      listEl.innerHTML=notes.slice().sort((a,b)=>new Date(b.ts)-new Date(a.ts)).map(n=>
+        '<div class="note-item"><div class="note-top"><span class="note-av">'+initials(n.author)+'</span>'+
+        '<span class="note-who"><span class="note-author">'+esc(n.author)+'</span><span class="note-meta">'+esc(n.role)+' · '+fmt(n.ts)+'</span></span>'+
+        '<span class="note-ctx">'+esc(n.ctx)+'</span></div><div class="note-body">'+esc(n.text)+'</div></div>').join('');
+    }
+    function open(focus){ drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden','false'); if(focus) setTimeout(()=>ta.focus(),180); }
+    function close(){ drawer.classList.remove('open'); backdrop.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+    ta.addEventListener('input',()=>{ addBtn.disabled=ta.value.trim().length===0; });
+    form.addEventListener('submit',e=>{ e.preventDefault(); const t=ta.value.trim(); if(!t) return;
+      notes.push({author:'Jane Doe', role:'Care Coordinator', ctx:ctx.value, ts:new Date().toISOString(), text:t});
+      LS.set(notes); ta.value=''; addBtn.disabled=true; render(); listEl.scrollTop=0; });
+    document.getElementById('notes-close').addEventListener('click',close);
+    backdrop.addEventListener('click',close);
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape' && drawer.classList.contains('open')) close(); });
+    const addNote=document.getElementById('ph-addnote-btn'); if(addNote) addNote.addEventListener('click',()=>open(true));
+    const notesBtn=document.getElementById('ph-notes-btn'); if(notesBtn) notesBtn.addEventListener('click',()=>open(false));
+    render();
   })();
 </script>
 
