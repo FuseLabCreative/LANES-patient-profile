@@ -1333,6 +1333,9 @@ body.flow-locked{ overflow:hidden; }
 .sa-headband{ flex:none; border-bottom:1px solid var(--gray-300); }
 .sa-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .sa-head-actions{ display:flex; align-items:center; gap:.5rem; flex:none; }
+.sa-edit-btn{ display:inline-flex; align-items:center; gap:.4rem; flex:none; font-family:inherit; font-size:.875rem; font-weight:600; color:var(--gray-700); background:#fff; border:1px solid var(--gray-300); border-radius:.45rem; padding:.42rem .8rem; cursor:pointer; }
+.sa-edit-btn:hover{ background:var(--gray-100); color:var(--gray-900); border-color:var(--gray-400); }
+.sa-edit-btn .svg-ico{ width:15px; height:15px; }
 .sa-head-btn{ display:inline-flex; align-items:center; gap:.45rem; height:38px; padding:0 .9rem; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; font-family:inherit; font-size:.9rem; font-weight:500; color:var(--gray-700); cursor:pointer; white-space:nowrap; }
 .sa-head-btn:hover{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.06); }
 .sa-head-btn .svg-ico{ width:16px; height:16px; }
@@ -1352,6 +1355,7 @@ body.flow-locked{ overflow:hidden; }
 .sd-x:hover{ background:var(--gray-100); color:var(--gray-800); }
 .sd-x .svg-ico{ width:16px; height:16px; }
 .sd-body{ padding:1.25rem 1.35rem; overflow-y:auto; }
+.sd-body.sd-body-edit{ overflow:visible; }
 .sd-group{ margin-bottom:1.3rem; }
 .sd-group:last-child{ margin-bottom:0; }
 .sd-group-title{ font-size:.85rem; font-weight:700; color:var(--gray-600); margin-bottom:.6rem; }
@@ -1790,16 +1794,13 @@ body.flow-locked{ overflow:hidden; }
   <div class="nav-host"></div>
   <div class="sa-headband"><div class="sa-headband-inner">
     <div class="sa-pagehead">
-      <button class="syn-back-ico" id="sa-back" type="button" title="Back to patient search"><svg class="svg-ico"><use href="#i-cl"/></svg></button>
       <div class="sa-clinic" id="sa-clinic">
         <span class="sa-clinic-text">
           <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
           <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
         </span>
       </div>
-    </div>
-    <div class="sa-head-actions">
-      <button class="btn-primary" id="sa-search-details" type="button"><svg class="svg-ico"><use href="#i-file"/></svg>Search details</button>
+      <button class="sa-edit-btn" id="sa-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit search</button>
     </div>
   </div></div>
   <div class="sa-scroll"><div class="sa-scroll-inner">
@@ -2648,13 +2649,13 @@ body.flow-locked{ overflow:hidden; }
 <div class="sd-backdrop" id="sd-backdrop"></div>
 <div class="sd-modal" id="sd-modal" role="dialog" aria-modal="true" aria-label="Patient search details">
   <div class="sd-head">
-    <span class="sd-title">Search details</span>
+    <span class="sd-title">Edit search</span>
     <button class="sd-x" id="sd-close" type="button" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button>
   </div>
   <div class="sd-body" id="sd-body"></div>
   <div class="sd-foot">
-    <button class="pf-clear" id="sd-edit" type="button" style="width:auto;padding:.55rem .9rem;">Edit search</button>
-    <button class="btn-primary" id="sd-done" type="button">Done</button>
+    <button class="pf-clear" id="sd-cancel" type="button" style="width:auto;padding:.55rem .9rem;">Cancel</button>
+    <button class="btn-primary" id="sd-apply" type="button">Apply</button>
   </div>
 </div>
 
@@ -4269,45 +4270,61 @@ body.flow-locked{ overflow:hidden; }
   { const sb=document.getElementById('sa-back'); if(sb) sb.addEventListener('click',()=>show('select')); }
 
   /* ---- Search details modal ---- */
-  (function searchDetailsModal(){
-    const openBtn=document.getElementById('sa-search-details'), modal=document.getElementById('sd-modal'),
+  (function editSearchModal(){
+    const openBtn=document.getElementById('sa-edit-search'), modal=document.getElementById('sd-modal'),
           backdrop=document.getElementById('sd-backdrop'), body=document.getElementById('sd-body');
     if(!openBtn||!modal) return;
-    const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    function render(){
-      const mode = saCtx.mode || 'institution';
-      let inner;
-      if(mode==='patient'){
-        inner =
-          '<div class="pf-grid2">'+
-            '<div class="pf-field"><label>First name</label><div class="sd-read">'+esc(saCtx.first||'—')+'</div></div>'+
-            '<div class="pf-field"><label>Last name</label><div class="sd-read">'+esc(saCtx.last||'—')+'</div></div>'+
+    const DEPTS=['Primary Care','Cardiology','Emergency','Behavioral Health','Pediatrics','Radiology','Oncology','Orthopedics','OB-GYN','Neurology','Pharmacy','Laboratory'];
+    let clinicSel, deptBody, deptTags, deptCount, deptWrap;
+    const deptList=()=>deptBody?[...deptBody.querySelectorAll('input[type=checkbox]')]:[];
+    function syncDept(){ const sel=deptList().filter(x=>x.checked).map(x=>x.value), n=sel.length;
+      deptCount.textContent=n+' selected';
+      deptTags.innerHTML = n ? sel.map(v=>'<span class="ms-tag">'+v+'<button type="button" data-rm="'+v+'">×</button></span>').join('')
+                             : '<span class="ms-ph">Select departments…</span>'; }
+    function buildForm(){
+      body.classList.add('sd-body-edit');
+      body.innerHTML=
+        '<div class="sd-form"><div class="pf-col">'+
+          '<div class="pf-field"><label for="ed-clinic">Medical clinic</label><select id="ed-clinic"></select></div>'+
+          '<div class="pf-field"><label>Departments</label>'+
+            '<div class="ms" id="ed-dept">'+
+              '<button type="button" class="ms-btn" id="ed-dept-btn"><span class="ms-tags" id="ed-dept-tags"><span class="ms-ph">Select departments…</span></span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>'+
+              '<div class="ms-menu" id="ed-dept-menu">'+
+                '<div class="ms-head"><span id="ed-dept-count">0 selected</span><div class="ms-acts"><button type="button" data-all>Select all</button><span>·</span><button type="button" data-none>Clear</button></div></div>'+
+                '<div class="ms-body" id="ed-dept-body"></div>'+
+              '</div>'+
+            '</div>'+
           '</div>'+
-          '<div class="pf-field"><label>Date of birth</label><div class="sd-read">'+esc(saCtx.dob||'—')+'</div></div>';
-      } else {
-        const tags=(saCtx.depts&&saCtx.depts.length)
-          ? saCtx.depts.map(d=>'<span class="ms-tag">'+esc(d)+'</span>').join('')
-          : '<span class="sd-read-ph">All departments</span>';
-        inner =
-          '<div class="pf-col">'+
-            '<div class="pf-field"><label>Medical clinic</label><div class="sd-read">'+esc(activeClinic.n)+'</div></div>'+
-            '<div class="pf-field"><label>Departments</label><div class="sd-read sd-read-tags">'+tags+'</div></div>'+
-          '</div>';
-      }
-      body.innerHTML='<div class="sd-form">'+inner+'</div>';
+        '</div></div>';
+      clinicSel=body.querySelector('#ed-clinic');
+      clinicSel.innerHTML=CLINICS.map((c,i)=>'<option value="'+i+'">'+c.n+'</option>').join('');
+      const ci=CLINICS.indexOf(activeClinic); clinicSel.value=String(ci>=0?ci:0);
+      if(window.enhanceSelects) window.enhanceSelects(body);
+      deptWrap=body.querySelector('#ed-dept'); deptBody=body.querySelector('#ed-dept-body');
+      deptTags=body.querySelector('#ed-dept-tags'); deptCount=body.querySelector('#ed-dept-count');
+      deptBody.innerHTML=DEPTS.map(d=>'<label class="ms-opt"><input type="checkbox" value="'+d+'"> '+d+'</label>').join('');
+      (saCtx.depts||[]).forEach(v=>{ const cb=deptList().find(x=>x.value===v); if(cb) cb.checked=true; });
+      syncDept();
+      deptBody.addEventListener('change',syncDept);
+      body.querySelector('#ed-dept-btn').addEventListener('click',e=>{ e.stopPropagation(); deptWrap.classList.toggle('open'); });
+      deptWrap.querySelector('[data-all]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=true); syncDept(); });
+      deptWrap.querySelector('[data-none]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=false); syncDept(); });
+      deptTags.addEventListener('click',e=>{ const b=e.target.closest('[data-rm]'); if(!b) return; e.stopPropagation(); const cb=deptList().find(x=>x.value===b.getAttribute('data-rm')); if(cb){ cb.checked=false; syncDept(); } });
     }
-    body.addEventListener('click',e=>{ const b=e.target.closest('.pf-seg-btn'); if(!b) return;
-      const p=b.dataset.sdpane;
-      body.querySelectorAll('.pf-seg-btn').forEach(x=>x.classList.toggle('active', x===b));
-      body.querySelectorAll('.pf-pane').forEach(x=>x.classList.toggle('active', x.dataset.sdpane===p));
-    });
-    function open(){ render(); backdrop.classList.add('open'); modal.classList.add('open'); }
-    function close(){ backdrop.classList.remove('open'); modal.classList.remove('open'); }
+    function open(){ buildForm(); backdrop.classList.add('open'); modal.classList.add('open'); }
+    function close(){ backdrop.classList.remove('open'); modal.classList.remove('open'); body.classList.remove('sd-body-edit'); }
+    function apply(){
+      const idx=parseInt(clinicSel.value,10)||0;
+      saCtx={ mode:'institution', depts:deptList().filter(x=>x.checked).map(x=>x.value), first:'', last:'', dob:'' };
+      close();
+      selectClinic(CLINICS[idx]); // re-runs the clinic work-list (header + table) for the chosen clinic
+    }
     openBtn.addEventListener('click',open);
     document.getElementById('sd-close').addEventListener('click',close);
-    document.getElementById('sd-done').addEventListener('click',close);
+    document.getElementById('sd-cancel').addEventListener('click',close);
+    document.getElementById('sd-apply').addEventListener('click',apply);
     backdrop.addEventListener('click',close);
-    document.getElementById('sd-edit').addEventListener('click',()=>{ close(); show('select'); });
+    document.addEventListener('click',e=>{ if(deptWrap && !e.target.closest('#ed-dept')) deptWrap.classList.remove('open'); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape' && modal.classList.contains('open')) close(); });
   })();
 
