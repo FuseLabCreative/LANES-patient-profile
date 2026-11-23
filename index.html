@@ -1400,7 +1400,7 @@ body.flow-locked{ overflow:hidden; }
 .cs-count{ font-size:.85rem; color:var(--gray-500); }
 
 /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
-.sa-clinic{ position:relative; }
+.sa-clinic{ position:relative; display:flex; align-items:center; gap:.85rem; }
 .sa-clinic-btn{ display:inline-flex; align-items:center; gap:.65rem; background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .45rem; border-radius:.45rem; text-align:left; }
 .sa-clinic-btn:hover .sa-clinic-name{ text-decoration:underline; }
 .sa-clinic-text{ display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:0; }
@@ -1638,21 +1638,11 @@ body.flow-locked{ overflow:hidden; }
     <div class="sa-pagehead">
       <button class="sa-back" id="sa-back" type="button" title="Back to patient search"><svg class="svg-ico"><use href="#i-cl"/></svg></button>
       <div class="sa-clinic" id="sa-clinic">
-        <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
-          <span class="sa-clinic-ico-wrap"><svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg></span>
-          <span class="sa-clinic-text">
-            <span class="sa-clinic-line">
-              <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
-              <svg class="svg-ico sa-clinic-chev"><use href="#i-cd"/></svg>
-            </span>
-            <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
-          </span>
-        </button>
-        <div class="sa-clinic-menu" id="sa-clinic-menu">
-          <div class="sa-clinic-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="sa-clinic-search-input" placeholder="Search clinic"></div>
-          <div class="sa-clinic-eyebrow">CLINICS</div>
-          <div class="sa-clinic-list" id="sa-clinic-list"></div>
-        </div>
+        <span class="sa-clinic-ico-wrap"><svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg></span>
+        <span class="sa-clinic-text">
+          <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+          <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
+        </span>
       </div>
     </div>
     <div class="sa-head-actions">
@@ -3943,8 +3933,7 @@ body.flow-locked{ overflow:hidden; }
     ['Primary Care','Behavioral Health'].forEach(v=>{ const cb=deptList().find(x=>x.value===v); if(cb) cb.checked=true; }); syncDept();
   })();
 
-  /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
-  const clinicWrap=document.getElementById('sa-clinic'), clinicBtn=document.getElementById('sa-clinic-btn'), clinicSearch=document.getElementById('sa-clinic-search-input');
+  /* ---- Smart Alerts header (static, no switcher) ---- */
   function updateClinicHeader(){ document.getElementById('sa-clinic-name').textContent=activeClinic.n;
     const parts=[activeClinic.p+' patients']; if(saCtx.depts && saCtx.depts.length) parts.push(saCtx.depts.join(', '));
     document.getElementById('sa-clinic-badge').textContent=parts.join(' · '); }
@@ -3976,19 +3965,6 @@ body.flow-locked{ overflow:hidden; }
     document.getElementById('sd-edit').addEventListener('click',()=>{ close(); show('select'); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape' && modal.classList.contains('open')) close(); });
   })();
-  function buildClinicMenu(filter){ const list=document.getElementById('sa-clinic-list'); list.innerHTML=''; const q=(filter||'').toLowerCase();
-    const shown=CLINICS.filter(c=>!q||c.n.toLowerCase().includes(q));
-    if(!shown.length){ list.innerHTML='<div class="sa-clinic-opt"><div class="c">No clinics match your search.</div></div>'; return; }
-    shown.forEach(c=>{ const d=document.createElement('div'); d.className='sa-clinic-opt'+(c===activeClinic?' sel':'');
-      d.innerHTML='<div class="n">'+c.n+'</div><div class="c">'+c.p+' patients</div>';
-      d.addEventListener('click',()=>{ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); clinicWrap.classList.remove('open'); });
-      list.appendChild(d); });
-  }
-  clinicBtn.addEventListener('click',e=>{ e.stopPropagation(); const willOpen=!clinicWrap.classList.contains('open'); if(willOpen){ clinicSearch.value=''; buildClinicMenu(''); } clinicWrap.classList.toggle('open'); if(willOpen) setTimeout(()=>clinicSearch.focus(),30); });
-  clinicSearch.addEventListener('input',e=>buildClinicMenu(e.target.value));
-  clinicSearch.addEventListener('click',e=>e.stopPropagation());
-  document.getElementById('sa-clinic-menu').addEventListener('click',e=>e.stopPropagation());
-  document.addEventListener('click',()=>clinicWrap.classList.remove('open'));
 
   /* ---- dummy patient data (random, realistic-looking) ---- */
   let seed=20251120; function rnd(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }
