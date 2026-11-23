@@ -1369,7 +1369,8 @@ body.flow-locked{ overflow:hidden; }
 .pf-datefield input{ width:100%; height:42px; font-size:.92rem; padding:0 2.1rem 0 .75rem; cursor:pointer; }
 .pf-datefield .cal{ right:.75rem; }
 .pf-datefield .cal .svg-ico{ width:16px; height:16px; }
-.cal-pop.pf-cal-pop{ position:absolute; top:calc(100% + 6px); left:0; z-index:2000; }
+.cal-pop.pf-cal-pop{ position:absolute; top:calc(100% + 6px); left:0; right:0; width:auto; box-sizing:border-box; z-index:2000; }
+.cal-pop.pf-cal-pop .cp-day{ height:38px; }
 .cal-pop.pf-cal-pop .cp-foot{ border-top:1px solid var(--gray-200); padding-top:.55rem; }
 .cal-pop.pf-cal-pop .cp-nav{ font-size:1.6rem; line-height:.8; padding:.1rem .5rem; color:var(--gray-700); }
 .cal-pop.pf-cal-pop .cp-selects{ display:flex; gap:.35rem; align-items:center; }
