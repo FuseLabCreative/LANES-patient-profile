@@ -1292,7 +1292,7 @@ body.flow-locked{ overflow:hidden; }
 .pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.9rem 2rem 1.75rem; box-shadow:0 1px 3px rgba(18,38,63,.05); }
 .pf-sec{ padding-bottom:1.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--gray-200); }
 .pf-sec:nth-of-type(2){ border-bottom:none; margin-bottom:1.25rem; }
-.pf-sec-title{ font-size:1.02rem; font-weight:700; color:var(--gray-900); margin:0 0 1.1rem; }
+.pf-sec-title{ font-size:1.35rem; font-weight:500; color:var(--gray-800); margin:0 -2rem 1.4rem; padding:.8rem 2rem; background:var(--gray-100); border-radius:.5rem; }
 .pf-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
 .pf-grid2:last-child{ margin-bottom:0; }
 @media(max-width:620px){ .pf-grid2{ grid-template-columns:1fr; } }
@@ -1305,6 +1305,7 @@ body.flow-locked{ overflow:hidden; }
 .pf-datefield input{ width:100%; height:42px; font-size:.92rem; padding:0 2.1rem 0 .75rem; cursor:pointer; }
 .pf-datefield .cal{ right:.75rem; }
 .pf-datefield .cal .svg-ico{ width:16px; height:16px; }
+.cal-pop.pf-cal-pop{ position:absolute; top:calc(100% + 6px); left:0; z-index:2000; }
 .cal-pop.pf-cal-pop .cp-foot{ border-top:1px solid var(--gray-200); padding-top:.55rem; }
 /* departments multiselect */
 .ms{ position:relative; }
@@ -3777,7 +3778,7 @@ body.flow-locked{ overflow:hidden; }
 
     /* date-of-birth calendar — same .date-field + .cal-pop design as the section cards */
     const dobWrap=document.getElementById('pf-dob'), dobInput=document.getElementById('pf-dob-input');
-    const pop=document.createElement('div'); pop.className='cal-pop pf-cal-pop'; pop.style.display='none'; document.body.appendChild(pop);
+    const pop=document.createElement('div'); pop.className='cal-pop pf-cal-pop'; pop.style.display='none'; dobWrap.appendChild(pop);
     let viewY=1990, viewM=0, selDate=null;
     const pad=n=>String(n).padStart(2,'0');
     const fmt=d=>d?pad(d.getMonth()+1)+'/'+pad(d.getDate())+'/'+d.getFullYear():'';
@@ -3793,10 +3794,7 @@ body.flow-locked{ overflow:hidden; }
       h+='</div><div class="cp-foot"><button type="button" class="cp-clear">Clear</button><button type="button" class="cp-apply" data-done>Done</button></div>';
       pop.innerHTML=h;
     }
-    function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop();
-      pop.style.display='block'; const r=dobWrap.getBoundingClientRect(); const w=pop.offsetWidth;
-      let left=window.scrollX+r.left; if(left+w>window.scrollX+window.innerWidth-8) left=window.scrollX+window.innerWidth-w-8;
-      pop.style.left=left+'px'; pop.style.top=(window.scrollY+r.bottom+6)+'px'; }
+    function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop(); pop.style.display='block'; }
     function closePop(){ pop.style.display='none'; }
     dobWrap.addEventListener('click',e=>{ e.stopPropagation(); if(pop.style.display==='none') openPop(); else closePop(); });
     pop.addEventListener('click',e=>{ e.stopPropagation();
