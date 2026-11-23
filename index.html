@@ -260,23 +260,58 @@
   #ph-addnote-btn .svg-ico{ width:15px; height:15px; }
   .notes-count{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:rgba(255,255,255,.28); color:#fff; font-size:.72rem; font-weight:700; }
   /* Patient Summary card */
-  .pt-summary{ background:#fff; border:1px solid var(--gray-200); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.2rem 1.5rem 1.35rem; margin-bottom:.85rem; }
-  .pts-head{ display:flex; align-items:baseline; gap:.75rem; margin-bottom:.9rem; padding-bottom:.7rem; border-bottom:1px solid var(--gray-200); }
+  .pt-summary{ background:#fff; border:1px solid var(--gray-200); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.2rem 1.5rem 1.4rem; margin-bottom:.85rem; }
+  .pts-head{ display:flex; align-items:center; gap:.6rem; margin-bottom:1.05rem; padding-bottom:.8rem; border-bottom:1px solid var(--gray-200); }
+  .pts-head-ico{ flex:none; width:30px; height:30px; border-radius:.5rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(44,123,229,.1); color:var(--primary); }
+  .pts-head-ico .svg-ico{ width:17px; height:17px; }
   .pts-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
-  .pts-updated{ font-size:.8rem; color:var(--gray-500); }
-  .pts-body{ font-size:.92rem; color:var(--gray-800); line-height:1.6; max-width:940px; }
-  .pts-body > p{ margin:0 0 .55rem; }
-  .pts-body strong{ color:var(--gray-900); font-weight:600; }
-  .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:500; color:var(--gray-700); background:var(--gray-100); border:1px solid var(--gray-200); border-radius:.35rem; padding:.1rem .5rem; margin:0 .1rem; }
-  .pts-list{ margin:.3rem 0 0; padding-left:1.2rem; }
-  .pts-list > li{ margin-bottom:.3rem; }
-  .pts-det{ margin:.35rem 0; }
-  .pts-det > summary{ cursor:pointer; font-weight:600; color:var(--primary); list-style:none; display:inline-flex; align-items:center; gap:.35rem; padding:.15rem 0; }
+  .pts-updated{ margin-left:auto; font-size:.78rem; color:var(--gray-500); display:inline-flex; align-items:center; gap:.3rem; }
+  .pts-updated .svg-ico{ width:13px; height:13px; }
+  .pts-body{ font-size:.9rem; color:var(--gray-700); line-height:1.55; }
+  /* quick facts */
+  .pts-facts{ display:grid; grid-template-columns:max-content 1fr; gap:.55rem 1.3rem; margin:0 0 1.2rem; }
+  .pts-facts dt{ font-size:.82rem; font-weight:600; color:var(--gray-500); }
+  .pts-facts dd{ margin:0; font-size:.9rem; font-weight:500; color:var(--gray-900); display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+  /* section + label */
+  .pts-sec{ margin-bottom:1.2rem; }
+  .pts-sec:last-child{ margin-bottom:0; }
+  .pts-label{ font-size:.73rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); margin-bottom:.45rem; }
+  .pts-sec > p{ margin:0; color:var(--gray-700); }
+  /* chips */
+  .pts-chips{ display:flex; flex-wrap:wrap; gap:.4rem; }
+  .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.08); border:1px solid rgba(44,123,229,.22); border-radius:1rem; padding:.2rem .7rem; }
+  /* pills */
+  .pts-pill{ display:inline-flex; align-items:center; font-size:.74rem; font-weight:700; color:var(--gray-600); background:var(--gray-100); border:1px solid var(--gray-200); border-radius:1rem; padding:.1rem .6rem; }
+  .pts-pill.ok{ color:#1a7f5a; background:rgba(26,127,90,.1); border-color:rgba(26,127,90,.25); }
+  /* allergy callout */
+  .pts-callout{ display:flex; gap:.7rem; padding:.8rem .9rem; border-radius:.55rem; margin:0 0 1.2rem; }
+  .pts-callout.warn{ background:#fff6f0; border:1px solid #f6d3bd; }
+  .pts-callout-ico{ flex:none; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:#fbe0cf; color:#c2410c; }
+  .pts-callout-ico .svg-ico{ width:15px; height:15px; }
+  .pts-callout-title{ font-size:.82rem; font-weight:700; color:#9a3412; margin-bottom:.15rem; }
+  .pts-callout-body p{ margin:0; color:var(--gray-800); }
+  .pts-callout-body strong{ color:#9a3412; font-weight:700; }
+  /* two-column */
+  .pts-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; margin-bottom:1.2rem; }
+  /* recent appointment */
+  .pts-appt{ border:1px solid var(--gray-200); border-radius:.55rem; overflow:hidden; }
+  .pts-appt-head{ display:flex; align-items:center; gap:.55rem; padding:.6rem .8rem; background:#f8fafc; border-bottom:1px solid var(--gray-200); flex-wrap:wrap; }
+  .pts-appt-ico{ flex:none; color:var(--gray-500); display:inline-flex; }
+  .pts-appt-ico .svg-ico{ width:15px; height:15px; }
+  .pts-appt-date{ font-weight:700; color:var(--gray-900); font-size:.85rem; }
+  .pts-appt-site{ color:var(--gray-600); font-size:.85rem; }
+  .pts-appt-head .pts-pill{ margin-left:auto; }
+  .pts-dets{ padding:0 .8rem; }
+  .pts-det{ border-top:1px solid var(--gray-100); }
+  .pts-det:first-child{ border-top:none; }
+  .pts-det > summary{ cursor:pointer; font-weight:600; color:var(--gray-800); list-style:none; display:flex; align-items:center; gap:.45rem; padding:.6rem 0; font-size:.86rem; }
   .pts-det > summary::-webkit-details-marker{ display:none; }
-  .pts-det > summary::before{ content:'\25B8'; font-size:.7rem; }
-  .pts-det[open] > summary::before{ content:'\25BE'; }
-  .pts-det ul{ margin:.25rem 0 .5rem; padding-left:1.1rem; }
-  .pts-det li{ margin-bottom:.25rem; color:var(--gray-700); }
+  .pts-det > summary > .svg-ico{ width:14px; height:14px; color:var(--primary); flex:none; }
+  .pts-det-chev{ margin-left:auto; width:12px !important; height:12px !important; color:var(--gray-400) !important; transition:transform .15s; }
+  .pts-det[open] .pts-det-chev{ transform:rotate(180deg); }
+  .pts-det ul{ margin:0 0 .65rem; padding-left:1.15rem; }
+  .pts-det li{ margin-bottom:.3rem; color:var(--gray-700); font-size:.86rem; }
+  .pts-det li strong{ color:var(--gray-900); font-weight:600; }
   .btn-ghost{ background:#fff; border:1px solid var(--gray-300); color:var(--gray-700); font-size:0.875rem;
     font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap; }
   .btn-ghost:hover{ background:var(--gray-200); }
@@ -397,11 +432,6 @@
   .ph-menu-item.has-set .svg-ico{ color:var(--primary); }
   .ph-menu-count{ flex:none; min-width:18px; height:18px; padding:0 .3rem; box-sizing:border-box; display:none; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:#fff; background:var(--primary); border-radius:1rem; }
 
-  /* ---- collapse / expand (controlled from the Edit layout panel) ---- */
-  body.v2 section.wgt-collapsed{ height:auto !important; }
-  section.wgt-collapsed > :not(.panel-header){ display:none !important; }
-  .lp-badge.col{ color:var(--primary); background:rgba(44,123,229,.12); }
-
   /* ---- per-card edit action bar (edit mode only) ---- */
   .le-cardbar{ display:none; align-items:center; gap:.35rem; }
   body.layout-edit .le-cardbar{ display:inline-flex; }
@@ -420,9 +450,14 @@
   /* ---- left edit-layout panel ---- */
   .layout-panel{ position:fixed; left:1.25rem; bottom:1.25rem; width:330px; max-width:calc(100vw - 2.5rem); max-height:62vh; background:#fff; border:1px solid var(--gray-200); border-radius:.7rem; box-shadow:0 20px 48px rgba(16,24,40,.24); z-index:4200; display:flex; flex-direction:column; overflow:hidden; }
   .layout-panel[hidden]{ display:none; }
-  .lp-head{ display:flex; align-items:center; justify-content:space-between; padding:.85rem 1rem; border-bottom:1px solid var(--gray-200); }
-  .lp-title{ display:inline-flex; align-items:center; gap:.45rem; font-size:1rem; font-weight:700; color:var(--gray-900); }
-  .lp-title .svg-ico{ width:16px; height:16px; color:var(--primary); }
+  .lp-head{ display:flex; align-items:center; gap:.5rem; padding:.85rem 1rem; border-bottom:1px solid var(--gray-200); }
+  .lp-min-btn{ flex:none; width:28px; height:28px; border:none; background:none; cursor:pointer; color:var(--gray-500); border-radius:.35rem; display:inline-flex; align-items:center; justify-content:center; }
+  .lp-min-btn:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .lp-min-btn .svg-ico{ width:14px; height:14px; }
+  .lp-title{ flex:1 1 auto; display:inline-flex; align-items:center; gap:.45rem; font-size:1rem; font-weight:700; color:var(--gray-900); }
+  .layout-panel.lp-min{ max-height:none; }
+  .layout-panel.lp-min .lp-head{ border-bottom:none; }
+  .layout-panel.lp-min .lp-sub, .layout-panel.lp-min .lp-list, .layout-panel.lp-min .lp-foot{ display:none; }
   .lp-x{ border:none; background:none; cursor:pointer; color:var(--gray-500); width:28px; height:28px; border-radius:.35rem; display:inline-flex; align-items:center; justify-content:center; }
   .lp-x:hover{ background:var(--gray-100); color:var(--gray-900); }
   .lp-x .svg-ico{ width:13px; height:13px; }
@@ -2000,22 +2035,51 @@ body.flow-locked{ overflow:hidden; }
   <!-- ============ PATIENT SUMMARY ============ -->
   <section class="pt-summary" id="pt-summary">
     <div class="pts-head">
+      <span class="pts-head-ico"><svg class="svg-ico"><use href="#i-person"/></svg></span>
       <span class="pts-title">Patient Summary</span>
-      <span class="pts-updated">Last updated 2 days ago</span>
+      <span class="pts-updated"><svg class="svg-ico"><use href="#i-history"/></svg>Updated 2 days ago</span>
     </div>
     <div class="pts-body">
-      <p><strong>Patient:</strong> Maria Sanchez, 23 years old, Female, Hispanic or Latino. Medi-Cal coverage active.</p>
-      <p><strong>Summary period:</strong> ~ 02/28/2022 – 02/13/2024.</p>
-      <p><strong>Evidence of potential new conditions:</strong> <span class="pts-chip">Fibromyalgia</span> <span class="pts-chip">Chronic pain syndrome</span> <span class="pts-chip">Schizophrenia (unspecified)</span></p>
-      <p><strong>Social:</strong> Over the past 2 years reports a steady place to live and no issues with food security, finances, or access to care. Engaged in ongoing behavioral-health follow-up; no transportation barriers reported.</p>
-      <p><strong>Allergies:</strong> Codeine (itching). Sources disagree on Haldol — confirm before prescribing.</p>
-      <p><strong>History:</strong> Regular primary-care contacts with several ED visits across LA County, Cedars-Sinai, and Alta Hospitals over the past 2 years.</p>
-      <div class="pts-appts">
-        <strong>Recent appointments:</strong>
-        <ul class="pts-list">
-          <li>02/12/2024 — Cedars-Sinai Medical Center (Primary Care)
+      <dl class="pts-facts">
+        <dt>Patient</dt><dd>Maria Sanchez · 23 yrs · Female · Hispanic or Latino</dd>
+        <dt>Coverage</dt><dd>Medi-Cal <span class="pts-pill ok">Active</span></dd>
+        <dt>Summary period</dt><dd>Feb 28, 2022 – Feb 13, 2024</dd>
+      </dl>
+
+      <div class="pts-sec">
+        <div class="pts-label">Evidence of potential new conditions</div>
+        <div class="pts-chips">
+          <span class="pts-chip">Fibromyalgia</span>
+          <span class="pts-chip">Chronic pain syndrome</span>
+          <span class="pts-chip">Schizophrenia (unspecified)</span>
+        </div>
+      </div>
+
+      <div class="pts-callout warn">
+        <span class="pts-callout-ico"><svg class="svg-ico"><use href="#i-warn"/></svg></span>
+        <div class="pts-callout-body">
+          <div class="pts-callout-title">Allergies</div>
+          <p>Codeine (itching). <strong>Sources disagree on Haldol</strong> — confirm before prescribing.</p>
+        </div>
+      </div>
+
+      <div class="pts-grid2">
+        <div class="pts-sec"><div class="pts-label">Social</div><p>Over the past 2 years reports a steady place to live and no issues with food security, finances, or access to care. Engaged in ongoing behavioral-health follow-up; no transportation barriers reported.</p></div>
+        <div class="pts-sec"><div class="pts-label">History</div><p>Regular primary-care contacts with several ED visits across LA County, Cedars-Sinai, and Alta Hospitals over the past 2 years.</p></div>
+      </div>
+
+      <div class="pts-sec">
+        <div class="pts-label">Recent appointments</div>
+        <div class="pts-appt">
+          <div class="pts-appt-head">
+            <span class="pts-appt-ico"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
+            <span class="pts-appt-date">Feb 12, 2024</span>
+            <span class="pts-appt-site">Cedars-Sinai Medical Center</span>
+            <span class="pts-pill">Primary Care</span>
+          </div>
+          <div class="pts-dets">
             <details class="pts-det">
-              <summary>Medical history</summary>
+              <summary><svg class="svg-ico"><use href="#i-list"/></svg>Medical history<svg class="svg-ico pts-det-chev"><use href="#i-cd"/></svg></summary>
               <ul>
                 <li><strong>Fibromyalgia (M79.7)</strong> — chronic widespread pain; conservative management.</li>
                 <li><strong>Schizophrenia, unspecified (F20.9)</strong> — stable on quetiapine; behavioral-health follow-up.</li>
@@ -2023,7 +2087,7 @@ body.flow-locked{ overflow:hidden; }
               </ul>
             </details>
             <details class="pts-det">
-              <summary>Current medications</summary>
+              <summary><svg class="svg-ico"><use href="#i-pill"/></svg>Current medications<svg class="svg-ico pts-det-chev"><use href="#i-cd"/></svg></summary>
               <ul>
                 <li>amLODIPine 5 mg oral tablet — once daily</li>
                 <li>QUEtiapine 100 mg oral tablet — nightly</li>
@@ -2031,8 +2095,8 @@ body.flow-locked{ overflow:hidden; }
                 <li>LORazepam 1 mg oral tablet — as needed</li>
               </ul>
             </details>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -3826,7 +3890,7 @@ body.flow-locked{ overflow:hidden; }
     const KEY='lanes_layout_v2';
     const LS={ get(){ try{ return JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ return window.__layout||{}; } },
                set(v){ window.__layout=v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} } };
-    const state=Object.assign({hidden:[],pinned:[],order:[],collapsed:[]}, LS.get());
+    const state=Object.assign({hidden:[],pinned:[],order:[]}, LS.get());
     const secs=[...grid.querySelectorAll(':scope > section')].filter(s=>s.id);
     const byId=id=>secs.find(s=>s.id===id);
     const DEFAULT_ORDER=secs.map(s=>s.id);
@@ -3841,16 +3905,12 @@ body.flow-locked{ overflow:hidden; }
       [...pinned,...rest].forEach((s,i)=>s.style.order=String(i)); }
     function save(){ state.hidden=secs.filter(s=>s.classList.contains('wgt-hidden')).map(s=>s.id);
       state.pinned=secs.filter(s=>s.classList.contains('wgt-pinned')).map(s=>s.id);
-      state.collapsed=secs.filter(s=>s.classList.contains('wgt-collapsed')).map(s=>s.id);
       state.order=orderedSecs().map(s=>s.id); LS.set(state); }
 
     function move(sec,dir){ const ord=orderedSecs().map(s=>s.id); const i=ord.indexOf(sec.id), j=i+dir;
       if(j<0||j>=ord.length) return; ord.splice(j,0,ord.splice(i,1)[0]); state.order=ord; applyOrder(); save(); renderPanel(); }
     function toggleHide(sec){ sec.classList.toggle('wgt-hidden'); updateCardBar(sec); save(); renderPanel(); }
     function togglePin(sec){ sec.classList.toggle('wgt-pinned'); updateCardBar(sec); applyOrder(); save(); renderPanel(); }
-    function toggleCollapse(sec){ sec.classList.toggle('wgt-collapsed'); updateCollapse(sec); save(); renderPanel(); }
-    function updateCollapse(sec){ const b=sec._colBtn; if(!b) return; const c=sec.classList.contains('wgt-collapsed');
-      b.title=c?'Expand':'Collapse'; b.querySelector('use').setAttribute('href', c?'#i-cd':'#i-cu'); }
 
     /* ---- per-card action bar (visible only in edit mode) ---- */
     function makeCardBar(sec){
@@ -3879,7 +3939,7 @@ body.flow-locked{ overflow:hidden; }
 
     /* ---- left edit panel (bottom-left) ---- */
     const panel=document.createElement('div'); panel.className='layout-panel'; panel.id='layout-panel'; panel.hidden=true;
-    panel.innerHTML='<div class="lp-head"><span class="lp-title"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit layout</span>'+
+    panel.innerHTML='<div class="lp-head"><button class="lp-min-btn" id="lp-min" type="button" title="Collapse panel"><svg class="svg-ico"><use href="#i-cd"/></svg></button><span class="lp-title">Edit layout</span>'+
       '<button class="lp-x" id="lp-close" title="Done"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>'+
       '<div class="lp-sub">Pin, hide or reorder the cards on this page. Changes save automatically.</div>'+
       '<div class="lp-list" id="lp-list"></div>'+
@@ -3890,18 +3950,16 @@ body.flow-locked{ overflow:hidden; }
 
     function renderPanel(){ lpList.innerHTML='';
       orderedSecs().forEach(sec=>{
-        const hidden=sec.classList.contains('wgt-hidden'), pinned=sec.classList.contains('wgt-pinned'), collapsed=sec.classList.contains('wgt-collapsed');
+        const hidden=sec.classList.contains('wgt-hidden'), pinned=sec.classList.contains('wgt-pinned');
         const row=document.createElement('div'); row.className='lp-row'+(hidden?' off':'');
         row.innerHTML='<span class="lp-name">'+titleOf(sec)+'</span>'+
-          (hidden?'<span class="lp-badge hid">Hidden</span>':(collapsed?'<span class="lp-badge col">Collapsed</span>':''))+
+          (hidden?'<span class="lp-badge hid">Hidden</span>':'')+
           '<span class="lp-row-acts">'+
-            '<button class="lp-act lp-collapse'+(collapsed?' on':'')+'" type="button" title="'+(collapsed?'Expand':'Collapse')+'"><svg class="svg-ico"><use href="#i-'+(collapsed?'cd':'cu')+'"/></svg></button>'+
             '<button class="lp-act lp-pin'+(pinned?' on':'')+'" type="button" title="'+(pinned?'Unpin':'Pin')+'"><svg class="svg-ico"><use href="#i-pin"/></svg></button>'+
             '<button class="lp-act lp-hide'+(hidden?' on':'')+'" type="button" title="'+(hidden?'Show':'Hide')+'"><svg class="svg-ico"><use href="#i-'+(hidden?'eye':'eye-off')+'"/></svg></button>'+
             '<button class="lp-act lp-up" type="button" title="Move up"><svg class="svg-ico"><use href="#i-cu"/></svg></button>'+
             '<button class="lp-act lp-down" type="button" title="Move down"><svg class="svg-ico"><use href="#i-cd"/></svg></button>'+
           '</span>';
-        row.querySelector('.lp-collapse').addEventListener('click',()=>toggleCollapse(sec));
         row.querySelector('.lp-pin').addEventListener('click',()=>togglePin(sec));
         row.querySelector('.lp-hide').addEventListener('click',()=>toggleHide(sec));
         row.querySelector('.lp-up').addEventListener('click',()=>move(sec,-1));
@@ -3914,14 +3972,15 @@ body.flow-locked{ overflow:hidden; }
     window.__layoutEditToggle=()=>setEdit(!editing);
     panel.querySelector('#lp-close').addEventListener('click',()=>setEdit(false));
     panel.querySelector('#lp-done').addEventListener('click',()=>setEdit(false));
-    panel.querySelector('#lp-reset').addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned','wgt-collapsed'); updateCardBar(s); updateCollapse(s); });
+    { const mn=panel.querySelector('#lp-min'); mn.addEventListener('click',()=>{ const min=panel.classList.toggle('lp-min');
+      mn.title=min?'Expand panel':'Collapse panel'; mn.querySelector('use').setAttribute('href', min?'#i-cu':'#i-cd'); }); }
+    panel.querySelector('#lp-reset').addEventListener('click',()=>{ secs.forEach(s=>{ s.classList.remove('wgt-hidden','wgt-pinned'); updateCardBar(s); });
       state.order=DEFAULT_ORDER.slice(); applyOrder(); save(); renderPanel(); });
 
     // apply saved layout
     (state.hidden||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-hidden'); });
     (state.pinned||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-pinned'); });
-    (state.collapsed||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-collapsed'); });
-    secs.forEach(s=>{ updateCardBar(s); updateCollapse(s); }); applyOrder();
+    secs.forEach(updateCardBar); applyOrder();
   })();
 
   /* ===== Combined page-options menu (Filters / History / Edit layout) ===== */
