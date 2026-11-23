@@ -1276,6 +1276,8 @@ body.flow-locked{ overflow:hidden; }
 #scr-select.portal-screen.active{ display:flex; flex-direction:column; }
 .cs-wrap{ width:100%; margin:0; padding:2rem 1.5rem 0; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; box-sizing:border-box; }
 .cs-head{ display:flex; align-items:center; justify-content:space-between; gap:1rem 1.5rem; margin-bottom:1.35rem; flex-wrap:wrap; }
+#scr-select .cs-head{ display:block; max-width:600px; margin:0 auto 1.5rem; text-align:center; }
+#scr-select .cs-sub{ margin-left:auto; margin-right:auto; }
 .cs-title{ font-size:1.6rem; font-weight:600; color:var(--gray-900); margin:0; }
 .cs-head-text{ min-width:0; }
 .cs-sub{ margin:.35rem 0 0; font-size:.92rem; color:var(--gray-600); max-width:640px; }
@@ -1286,7 +1288,7 @@ body.flow-locked{ overflow:hidden; }
 .cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding-bottom:2rem; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
 /* ---- first-page patient form ---- */
-.pf-form{ max-width:740px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.9rem 2rem 1.75rem; box-shadow:0 1px 3px rgba(18,38,63,.05); }
+.pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.9rem 2rem 1.75rem; box-shadow:0 1px 3px rgba(18,38,63,.05); }
 .pf-sec{ padding-bottom:1.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--gray-200); }
 .pf-sec:nth-of-type(2){ border-bottom:none; margin-bottom:1.25rem; }
 .pf-sec-title{ font-size:1.02rem; font-weight:700; color:var(--gray-900); margin:0 0 1.1rem; }
@@ -1297,31 +1299,21 @@ body.flow-locked{ overflow:hidden; }
 .pf-field > label{ font-size:.82rem; font-weight:600; color:var(--gray-700); }
 .pf-input{ height:42px; border:1px solid var(--gray-300); border-radius:.45rem; padding:0 .75rem; font-family:inherit; font-size:.92rem; color:var(--gray-800); background:#fff; }
 .pf-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
-/* date of birth */
-.pf-dob{ position:relative; display:flex; gap:.5rem; align-items:stretch; }
-.pf-dob .sa-dd{ flex:1 1 auto; }
-.pf-dob .sa-dd:nth-child(3){ flex:0 0 108px; }
-.pf-cal-btn{ flex:0 0 42px; width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; color:var(--gray-600); cursor:pointer; }
-.pf-cal-btn:hover{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.06); }
-.pf-cal-btn .svg-ico{ width:18px; height:18px; }
-.pf-cal{ position:absolute; top:calc(100% + 6px); right:0; width:280px; background:#fff; border:1px solid var(--gray-200); border-radius:.55rem; box-shadow:0 12px 30px rgba(31,45,61,.18); padding:.8rem; z-index:30; }
-.pf-cal[hidden]{ display:none; }
-.pf-cal-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
-.pf-cal-title{ font-size:.9rem; font-weight:700; color:var(--gray-900); }
-.pf-cal-nav{ width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-600); border-radius:.4rem; cursor:pointer; }
-.pf-cal-nav:hover{ background:var(--gray-100); color:var(--gray-900); }
-.pf-cal-nav .svg-ico{ width:14px; height:14px; }
-.pf-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
-.pf-cal-dow{ font-size:.68rem; font-weight:700; color:var(--gray-400); text-align:center; padding:.2rem 0; }
-.pf-cal-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:.82rem; color:var(--gray-800); background:none; border:none; border-radius:.4rem; cursor:pointer; }
-.pf-cal-day:hover{ background:var(--gray-100); }
-.pf-cal-day.sel{ background:var(--primary); color:#fff; font-weight:600; }
-.pf-cal-day.empty{ visibility:hidden; cursor:default; }
+/* date of birth — same date-field + calendar design as the section cards */
+.pf-datefield{ display:flex; width:100%; position:relative; }
+.pf-datefield input{ width:100%; height:42px; font-size:.92rem; padding:0 2.1rem 0 .75rem; cursor:pointer; }
+.pf-datefield .cal{ right:.75rem; }
+.pf-datefield .cal .svg-ico{ width:16px; height:16px; }
+.cal-pop.pf-cal-pop .cp-foot{ border-top:1px solid var(--gray-200); padding-top:.55rem; }
 /* departments multiselect */
 .ms{ position:relative; }
 .ms-btn{ display:flex; align-items:center; gap:.5rem; width:100%; height:42px; padding:0 .75rem; border:1px solid var(--gray-300); border-radius:.45rem; background:#fff; font-family:inherit; font-size:.92rem; color:var(--gray-800); cursor:pointer; text-align:left; }
-.ms-val{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--gray-500); }
-.ms-val.has{ color:var(--gray-800); }
+.ms-tags{ display:flex; align-items:center; gap:.3rem; flex:1 1 auto; min-width:0; overflow:hidden; white-space:nowrap; }
+.ms-ph{ color:var(--gray-500); }
+.ms-tag{ display:inline-flex; align-items:center; gap:.3rem; flex:none; font-size:.8rem; font-weight:500; color:var(--gray-700); background:var(--gray-200); border:1px solid var(--gray-300); border-radius:.35rem; padding:.12rem .25rem .12rem .5rem; }
+.ms-tag button{ display:inline-flex; width:15px; height:15px; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-500); cursor:pointer; border-radius:50%; font-size:12px; line-height:1; }
+.ms-tag button:hover{ background:var(--gray-300); color:var(--gray-800); }
+.ms-more{ flex:none; font-size:.78rem; font-weight:600; color:var(--gray-600); padding-left:.1rem; }
 .ms-chev{ width:12px; height:12px; color:var(--gray-500); flex:none; transition:transform .15s; }
 .ms.open .ms-chev{ transform:rotate(180deg); }
 .ms.open .ms-btn{ border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
@@ -1336,14 +1328,12 @@ body.flow-locked{ overflow:hidden; }
 .ms-opt{ display:flex; align-items:center; gap:.55rem; padding:.45rem .55rem; border-radius:.4rem; font-size:.88rem; color:var(--gray-800); cursor:pointer; }
 .ms-opt:hover{ background:var(--gray-100); }
 .ms-opt input{ width:16px; height:16px; accent-color:var(--primary); flex:none; cursor:pointer; }
-.ms-chips{ display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.55rem; }
-.ms-chip{ display:inline-flex; align-items:center; gap:.35rem; font-size:.8rem; font-weight:500; color:var(--primary); background:rgba(44,123,229,.1); border:1px solid rgba(44,123,229,.25); border-radius:1rem; padding:.2rem .3rem .2rem .6rem; }
-.ms-chip button{ display:inline-flex; width:16px; height:16px; align-items:center; justify-content:center; border:none; background:none; color:var(--primary); cursor:pointer; border-radius:50%; }
-.ms-chip button:hover{ background:rgba(44,123,229,.2); }
-.ms-chip button .svg-ico{ width:9px; height:9px; }
-.pf-actions{ display:flex; justify-content:flex-end; padding-top:.5rem; }
-.pf-actions .btn-primary{ min-width:200px; justify-content:center; }
+.pf-col{ display:flex; flex-direction:column; gap:1.1rem; }
+.pf-actions{ display:flex; flex-direction:column; gap:.5rem; padding-top:.75rem; }
+.pf-actions .btn-primary{ width:100%; justify-content:center; }
 .pf-actions .btn-primary[disabled]{ opacity:.5; cursor:not-allowed; }
+.pf-clear{ width:100%; background:none; border:none; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); cursor:pointer; padding:.45rem; border-radius:.45rem; }
+.pf-clear:hover{ color:var(--gray-900); background:var(--gray-100); }
 .cs-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.1rem; max-width:1440px; margin:0 auto; }
 @media(max-width:1100px){ .cs-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:640px){ .cs-grid{ grid-template-columns:minmax(0,1fr); } }
@@ -1554,35 +1544,32 @@ body.flow-locked{ overflow:hidden; }
             <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
           </div>
           <div class="pf-field">
-            <label>Date of birth</label>
-            <div class="pf-dob" id="pf-dob">
-              <select id="pf-dob-d" aria-label="Day"></select>
-              <select id="pf-dob-m" aria-label="Month"></select>
-              <select id="pf-dob-y" aria-label="Year"></select>
-              <button type="button" class="pf-cal-btn" id="pf-cal-btn" title="Open calendar" aria-label="Open calendar"><svg class="svg-ico"><use href="#i-calendar"/></svg></button>
-              <div class="pf-cal" id="pf-cal" hidden></div>
-            </div>
+            <label for="pf-dob-input">Date of birth</label>
+            <span class="date-field pf-datefield" id="pf-dob">
+              <input type="text" id="pf-dob-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
+              <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
+            </span>
           </div>
         </section>
         <section class="pf-sec">
           <h2 class="pf-sec-title">Clinical institution</h2>
-          <div class="pf-grid2">
+          <div class="pf-col">
             <div class="pf-field"><label for="pf-clinic">Medical clinic</label><select id="pf-clinic"></select></div>
             <div class="pf-field" id="pf-dept-field" hidden>
               <label>Departments</label>
               <div class="ms" id="pf-dept">
-                <button type="button" class="ms-btn" id="pf-dept-btn"><span class="ms-val" id="pf-dept-val">Select departments…</span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>
+                <button type="button" class="ms-btn" id="pf-dept-btn"><span class="ms-tags" id="pf-dept-tags"><span class="ms-ph">Select departments…</span></span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>
                 <div class="ms-menu" id="pf-dept-menu">
                   <div class="ms-head"><span id="pf-dept-count">0 selected</span><div class="ms-acts"><button type="button" data-all>Select all</button><span>·</span><button type="button" data-none>Clear</button></div></div>
                   <div class="ms-body" id="pf-dept-body"></div>
                 </div>
               </div>
-              <div class="ms-chips" id="pf-dept-chips"></div>
             </div>
           </div>
         </section>
         <div class="pf-actions">
           <button type="submit" class="btn-primary" id="pf-submit">Continue to Smart Alerts</button>
+          <button type="button" class="pf-clear" id="pf-clear">Clear all</button>
         </div>
       </form>
     </div>
@@ -3755,62 +3742,77 @@ body.flow-locked{ overflow:hidden; }
     const form=document.getElementById('pf-form'); if(!form) return;
     const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
     const DEPTS=['Primary Care','Cardiology','Emergency','Behavioral Health','Pediatrics','Radiology','Oncology','Orthopedics','OB-GYN','Neurology','Pharmacy','Laboratory'];
-    const dSel=document.getElementById('pf-dob-d'), mSel=document.getElementById('pf-dob-m'), ySel=document.getElementById('pf-dob-y'), clinicSel=document.getElementById('pf-clinic');
-    dSel.innerHTML='<option value="">Day</option>'+Array.from({length:31},(_,i)=>'<option>'+(i+1)+'</option>').join('');
-    mSel.innerHTML='<option value="">Month</option>'+MONTHS.map((m,i)=>'<option value="'+(i+1)+'">'+m+'</option>').join('');
-    const nowY=new Date().getFullYear();
-    ySel.innerHTML='<option value="">Year</option>'+Array.from({length:nowY-1915+1},(_,i)=>'<option>'+(nowY-i)+'</option>').join('');
+    const clinicSel=document.getElementById('pf-clinic');
     clinicSel.innerHTML='<option value="">Select a clinic…</option>'+CLINICS.map((c,i)=>'<option value="'+i+'">'+c.n+'</option>').join('');
-    enhanceSelects(form); // day/month/year + clinic become custom dropdown components
+    enhanceSelects(form); // clinic becomes a custom dropdown component
 
     /* departments dependent multiselect */
     const deptField=document.getElementById('pf-dept-field'), deptBody=document.getElementById('pf-dept-body'),
-          deptVal=document.getElementById('pf-dept-val'), deptCount=document.getElementById('pf-dept-count'),
-          deptChips=document.getElementById('pf-dept-chips'), deptWrap=document.getElementById('pf-dept'), deptBtn=document.getElementById('pf-dept-btn');
+          deptTags=document.getElementById('pf-dept-tags'), deptCount=document.getElementById('pf-dept-count'),
+          deptWrap=document.getElementById('pf-dept'), deptBtn=document.getElementById('pf-dept-btn');
     const deptList=()=>[...deptBody.querySelectorAll('input[type=checkbox]')];
+    function collapseTags(total){ const more=deptTags.querySelector('.ms-more'); if(more) more.remove();
+      const tags=[...deptTags.querySelectorAll('.ms-tag')]; tags.forEach(t=>t.style.display='');
+      let hidden=0;
+      while(deptTags.scrollWidth>deptTags.clientWidth && tags.length-hidden>1){
+        hidden++; tags[tags.length-hidden].style.display='none';
+        let m=deptTags.querySelector('.ms-more'); if(!m){ m=document.createElement('span'); m.className='ms-more'; deptTags.appendChild(m); }
+        m.textContent='+'+hidden; }
+    }
     function syncDept(){ const sel=deptList().filter(x=>x.checked).map(x=>x.value), n=sel.length;
       deptCount.textContent=n+' selected';
-      deptVal.textContent = n ? (n===1 ? sel[0] : n+' departments selected') : 'Select departments…';
-      deptVal.classList.toggle('has', n>0);
-      deptChips.innerHTML=sel.map(d=>'<span class="ms-chip">'+d+'<button type="button" data-d="'+d+'" title="Remove"><svg class="svg-ico"><use href="#i-x"/></svg></button></span>').join('');
+      if(!n){ deptTags.innerHTML='<span class="ms-ph">Select departments…</span>'; return; }
+      deptTags.innerHTML=sel.map(d=>'<span class="ms-tag">'+d+'<button type="button" data-rm="'+d+'" title="Remove">&times;</button></span>').join('');
+      requestAnimationFrame(()=>collapseTags(n));
     }
     function populateDepts(){ deptBody.innerHTML=DEPTS.map(d=>'<label class="ms-opt"><input type="checkbox" value="'+d+'"> '+d+'</label>').join(''); syncDept(); }
     deptBody.addEventListener('change', syncDept);
     deptWrap.querySelector('[data-all]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=true); syncDept(); });
     deptWrap.querySelector('[data-none]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=false); syncDept(); });
-    deptChips.addEventListener('click',e=>{ const b=e.target.closest('[data-d]'); if(!b) return; const cb=deptList().find(x=>x.value===b.getAttribute('data-d')); if(cb){ cb.checked=false; syncDept(); } });
+    deptTags.addEventListener('click',e=>{ const b=e.target.closest('[data-rm]'); if(!b) return; e.stopPropagation(); const cb=deptList().find(x=>x.value===b.getAttribute('data-rm')); if(cb){ cb.checked=false; syncDept(); } });
     deptBtn.addEventListener('click',e=>{ e.stopPropagation(); deptWrap.classList.toggle('open'); });
     document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dept')) deptWrap.classList.remove('open'); });
     clinicSel.addEventListener('change',()=>{ if(clinicSel.value!==''){ populateDepts(); deptField.hidden=false; } else { deptField.hidden=true; } });
 
-    /* calendar popup for date of birth */
-    const calBtn=document.getElementById('pf-cal-btn'), cal=document.getElementById('pf-cal');
-    let viewY=1990, viewM=0;
-    function setDob(y,m,d){ ySel.value=String(y); ySel.dispatchEvent(new Event('change'));
-      mSel.value=String(m+1); mSel.dispatchEvent(new Event('change'));
-      dSel.value=String(d); dSel.dispatchEvent(new Event('change')); }
-    function renderCal(){
+    /* date-of-birth calendar — same .date-field + .cal-pop design as the section cards */
+    const dobWrap=document.getElementById('pf-dob'), dobInput=document.getElementById('pf-dob-input');
+    const pop=document.createElement('div'); pop.className='cal-pop pf-cal-pop'; pop.style.display='none'; document.body.appendChild(pop);
+    let viewY=1990, viewM=0, selDate=null;
+    const pad=n=>String(n).padStart(2,'0');
+    const fmt=d=>d?pad(d.getMonth()+1)+'/'+pad(d.getDate())+'/'+d.getFullYear():'';
+    function renderPop(){
+      let h='<div class="cp-head"><button type="button" class="cp-nav" data-nav="-1">‹</button>'+
+        '<span class="cp-title">'+MONTHS[viewM]+' '+viewY+'</span>'+
+        '<button type="button" class="cp-nav" data-nav="1">›</button></div><div class="cp-grid">';
+      ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>h+='<span class="cp-dow-c">'+d+'</span>');
       const first=new Date(viewY,viewM,1).getDay(), days=new Date(viewY,viewM+1,0).getDate();
-      const selY=ySel.value, selM=mSel.value, selD=dSel.value;
-      let h='<div class="pf-cal-top"><button type="button" class="pf-cal-nav" data-prev><svg class="svg-ico"><use href="#i-cl"/></svg></button>'+
-        '<span class="pf-cal-title">'+MONTHS[viewM]+' '+viewY+'</span>'+
-        '<button type="button" class="pf-cal-nav" data-next><svg class="svg-ico"><use href="#i-cr"/></svg></button></div><div class="pf-cal-grid">';
-      ['S','M','T','W','T','F','S'].forEach(d=>h+='<div class="pf-cal-dow">'+d+'</div>');
-      for(let i=0;i<first;i++) h+='<button type="button" class="pf-cal-day empty"></button>';
-      for(let d=1;d<=days;d++){ const sel=(selY==viewY && selM==(viewM+1) && selD==d); h+='<button type="button" class="pf-cal-day'+(sel?' sel':'')+'" data-day="'+d+'">'+d+'</button>'; }
-      cal.innerHTML=h+'</div>';
+      for(let i=0;i<first;i++) h+='<span class="cp-day cp-empty"></span>';
+      for(let d=1;d<=days;d++){ const on=selDate&&selDate.getFullYear()===viewY&&selDate.getMonth()===viewM&&selDate.getDate()===d;
+        h+='<button type="button" class="cp-day cp-only'+(on?' cp-start':'')+'" data-d="'+d+'">'+d+'</button>'; }
+      h+='</div><div class="cp-foot"><button type="button" class="cp-clear">Clear</button><button type="button" class="cp-apply" data-done>Done</button></div>';
+      pop.innerHTML=h;
     }
-    function openCal(){ if(ySel.value) viewY=+ySel.value; if(mSel.value) viewM=+mSel.value-1; renderCal(); cal.hidden=false; }
-    calBtn.addEventListener('click',e=>{ e.stopPropagation(); if(cal.hidden) openCal(); else cal.hidden=true; });
-    cal.addEventListener('click',e=>{ e.stopPropagation();
-      if(e.target.closest('[data-prev]')){ viewM--; if(viewM<0){viewM=11;viewY--;} renderCal(); return; }
-      if(e.target.closest('[data-next]')){ viewM++; if(viewM>11){viewM=0;viewY++;} renderCal(); return; }
-      const dd=e.target.closest('[data-day]'); if(dd){ setDob(viewY,viewM,+dd.getAttribute('data-day')); cal.hidden=true; } });
-    document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob')) cal.hidden=true; });
+    function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop();
+      pop.style.display='block'; const r=dobWrap.getBoundingClientRect(); const w=pop.offsetWidth;
+      let left=window.scrollX+r.left; if(left+w>window.scrollX+window.innerWidth-8) left=window.scrollX+window.innerWidth-w-8;
+      pop.style.left=left+'px'; pop.style.top=(window.scrollY+r.bottom+6)+'px'; }
+    function closePop(){ pop.style.display='none'; }
+    dobWrap.addEventListener('click',e=>{ e.stopPropagation(); if(pop.style.display==='none') openPop(); else closePop(); });
+    pop.addEventListener('click',e=>{ e.stopPropagation();
+      const nav=e.target.closest('.cp-nav'); if(nav){ viewM+=+nav.dataset.nav; if(viewM<0){viewM=11;viewY--;} if(viewM>11){viewM=0;viewY++;} renderPop(); return; }
+      const day=e.target.closest('.cp-day:not(.cp-empty)'); if(day){ selDate=new Date(viewY,viewM,+day.dataset.d); dobInput.value=fmt(selDate); renderPop(); return; }
+      if(e.target.closest('.cp-clear')){ selDate=null; dobInput.value=''; renderPop(); return; }
+      if(e.target.closest('[data-done]')){ closePop(); return; } });
+    document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob') && !e.target.closest('.pf-cal-pop')) closePop(); });
 
     form.addEventListener('submit',e=>{ e.preventDefault();
       if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); } return; }
       selectClinic(CLINICS[+clinicSel.value]);
+    });
+    document.getElementById('pf-clear').addEventListener('click',()=>{
+      document.getElementById('pf-first').value=''; document.getElementById('pf-last').value='';
+      selDate=null; dobInput.value=''; closePop();
+      clinicSel.value=''; clinicSel.dispatchEvent(new Event('change'));
     });
   })();
 
