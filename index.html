@@ -1382,8 +1382,8 @@ body.flow-locked{ overflow:hidden; }
 .sa-fcount{ background:var(--primary); color:#fff; font-size:.7rem; font-weight:700; border-radius:9px; padding:.02rem .4rem; margin-left:.1rem; }
 
 /* ---- visit / event badges ---- */
-.sa-vbadge{ display:inline-flex; align-items:center; gap:.3rem; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; background:none; border:1px solid currentColor; }
-.sa-vbadge .svg-ico{ width:12px; height:12px; }
+.sa-vbadge{ display:inline-flex; align-items:center; gap:.35rem; font-size:.78rem; font-weight:600; padding:.15rem 0; white-space:nowrap; background:none; border:none; }
+.sa-vbadge .svg-ico{ width:16px; height:16px; }
 .vb-emg{ color:#c42a46; } .vb-inp{ color:#3f5bb5; }
 .vb-out{ color:#1a7d72; } .vb-spec{ color:#1e62c0; }
 .sa-ebadge{ display:inline-block; font-size:.78rem; font-weight:600; padding:.2rem .55rem; border-radius:.35rem; white-space:nowrap; }
@@ -3070,8 +3070,8 @@ body.flow-locked{ overflow:hidden; }
 
   // Feedback / Help popover
   (function(){
-    const btn=document.getElementById('help-btn'), menu=document.getElementById('help-menu');
-    if(!btn||!menu) return;
+    const menu=document.getElementById('help-menu');
+    if(!menu) return;
     const form=document.getElementById('help-form'), ta=document.getElementById('help-ta'),
           send=document.getElementById('help-send'), back=document.getElementById('help-back'),
           chips=document.getElementById('help-chips');
@@ -3084,9 +3084,21 @@ body.flow-locked{ overflow:hidden; }
       requestAnimationFrame(()=>t.classList.add('show'));
       clearTimeout(t._tm); t._tm=setTimeout(()=>t.classList.remove('show'), 2600);
     }
-    function openMenu(o){ menu.classList.toggle('open', o); btn.classList.toggle('open', o); btn.setAttribute('aria-expanded', o?'true':'false'); if(!o){ menu.classList.remove('form-open'); } }
-    btn.addEventListener('click', e=>{ e.stopPropagation(); openMenu(!menu.classList.contains('open')); });
-    document.addEventListener('click', e=>{ if(!menu.contains(e.target) && e.target!==btn) openMenu(false); });
+    function openMenu(o){ menu.classList.toggle('open', o);
+      if(!o){ menu.classList.remove('form-open'); document.querySelectorAll('.nav-help.open').forEach(b=>{ b.classList.remove('open'); b.setAttribute('aria-expanded','false'); }); } }
+    // delegated so the help button works on the cloned navbars too; move the singleton menu into the clicked wrap
+    document.addEventListener('click', e=>{
+      const b=e.target.closest('.nav-help');
+      if(b){ e.stopPropagation();
+        const wrap=b.closest('.nav-help-wrap'); if(wrap && menu.parentElement!==wrap) wrap.appendChild(menu);
+        const o=!menu.classList.contains('open');
+        document.querySelectorAll('.nav-help.open').forEach(x=>{ x.classList.remove('open'); x.setAttribute('aria-expanded','false'); });
+        menu.classList.toggle('open', o); if(!o) menu.classList.remove('form-open');
+        b.classList.toggle('open', o); b.setAttribute('aria-expanded', o?'true':'false');
+        return;
+      }
+      if(!menu.contains(e.target)) openMenu(false);
+    });
     document.addEventListener('keydown', e=>{ if(e.key==='Escape') openMenu(false); });
     menu.querySelectorAll('.help-item').forEach(it=>it.addEventListener('click', ()=>{
       const act=it.dataset.act;
@@ -3765,7 +3777,7 @@ body.flow-locked{ overflow:hidden; }
   const realNav=document.querySelector('body > nav.lanes-navbar');
   function cloneNav(){ const n=realNav.cloneNode(true); n.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
     // drop any deep-cloned pop-up menus (the real ones are singletons moved in on demand)
-    n.querySelectorAll('.gear-menu').forEach(e=>e.remove()); return n; }
+    n.querySelectorAll('.gear-menu, .help-menu').forEach(e=>e.remove()); return n; }
   (function mountNavs(){
     if(!realNav) return;
     // Select screen: same navbar, no Search (nothing to search yet)
