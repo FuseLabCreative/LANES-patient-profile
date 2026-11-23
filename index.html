@@ -828,7 +828,7 @@
     background:var(--danger); color:#fff; font-size:0.875rem; font-weight:700; display:flex; align-items:center; justify-content:center; line-height:1; }
 
   /* 13 — Patient header: no background, smaller, light bottom border */
-  body.v2 .patient-header{ background:var(--body-bg); border-bottom:1px solid var(--gray-300); padding:.65rem 1.5rem; }
+  body.v2 .patient-header{ background:var(--body-bg); border-bottom:1px solid var(--gray-300); padding:.5rem 1.5rem; min-height:84px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; }
   /* tab rows blend into the page (no distinct white/gray background) */
   body.v2 .cat-tabs{ background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
   /* tabs live inside the page header, which already carries the divider — no second line */
@@ -1319,7 +1319,7 @@ body.flow-locked{ overflow:hidden; }
 .sa-back .svg-ico{ width:22px; height:22px; }
 .sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; align-items:center; gap:.85rem; }
 .sa-pagehead .sa-clinic-btn:hover{ background:none; }
-.sa-pagehead .sa-clinic-name{ font-size:1.6rem; font-weight:300; line-height:1.15; }
+.sa-pagehead .sa-clinic-name{ font-size:1.6rem; font-weight:400; line-height:1.15; }
 .sa-pagehead .sa-clinic-badge{ font-size:.875rem; font-weight:400; color:var(--gray-500); }
 .sa-pagehead .sa-clinic-ico{ width:24px; height:24px; color:#0b2a44; }
 .sa-clinic-ico-wrap{ display:flex; align-items:center; justify-content:center; width:46px; height:46px; flex:0 0 auto;
@@ -1331,7 +1331,7 @@ body.flow-locked{ overflow:hidden; }
 #scr-alerts.portal-screen{ overflow:hidden; }
 #scr-alerts.portal-screen.active{ display:flex; flex-direction:column; }
 .sa-headband{ flex:none; border-bottom:1px solid var(--gray-300); }
-.sa-headband-inner{ width:100%; padding:1.25rem 1.5rem; box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.sa-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .sa-head-actions{ display:flex; align-items:center; gap:.5rem; flex:none; }
 .sa-head-btn{ display:inline-flex; align-items:center; gap:.45rem; height:38px; padding:0 .9rem; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; font-family:inherit; font-size:.9rem; font-weight:500; color:var(--gray-700); cursor:pointer; white-space:nowrap; }
 .sa-head-btn:hover{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.06); }
@@ -1455,7 +1455,7 @@ body.flow-locked{ overflow:hidden; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
 /* ---- select-screen standard page header (matches Patient / Clinics pages) ---- */
 .pfh-headband{ flex:none; background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
-.pfh-headband-inner{ width:100%; padding:1.1rem 1.5rem; box-sizing:border-box; }
+.pfh-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; flex-direction:column; justify-content:center; }
 .pfh-title{ display:block; font-size:1.6rem; font-weight:400; color:var(--gray-900); line-height:1.15; margin:0; }
 .pfh-sub{ display:block; font-size:.875rem; color:var(--gray-500); line-height:1.4; margin:.2rem 0 0; max-width:600px; }
 
@@ -1736,7 +1736,7 @@ body.flow-locked{ overflow:hidden; }
   <div class="pfh-headband">
     <div class="pfh-headband-inner">
       <span class="pfh-title" id="pf-page-title">Find a patient or clinic</span>
-      <span class="pfh-sub" id="pf-page-sub">Search by the patient's details, or by clinical institution — switch between the two below.</span>
+      <span class="pfh-sub" id="pf-page-sub">Search by patient details or by clinical institution.</span>
     </div>
   </div>
   <div class="cs-wrap">
@@ -3665,6 +3665,7 @@ body.flow-locked{ overflow:hidden; }
       elSearch.value='';
       if(d.tools){
         const si=sourceIdx(d);
+        const ddField=ddWrap.closest('.hx-field'); if(ddField) ddField.style.display = si>=0 ? '' : 'none';
         ddWrap.style.display = si>=0 ? '' : 'none';
         if(si>=0){
           const srcs = Array.from(new Set(d.rows.map(r=>r[si]))).sort();
