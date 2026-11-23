@@ -1209,7 +1209,7 @@ body.flow-locked{ overflow:hidden; }
 .sa-back .svg-ico{ width:22px; height:22px; }
 .sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; align-items:center; gap:.85rem; }
 .sa-pagehead .sa-clinic-btn:hover{ background:none; }
-.sa-pagehead .sa-clinic-name{ font-size:1.6rem; font-weight:400; line-height:1.15; }
+.sa-pagehead .sa-clinic-name{ font-size:1.6rem; font-weight:300; line-height:1.15; }
 .sa-pagehead .sa-clinic-badge{ font-size:.875rem; font-weight:400; color:var(--gray-500); }
 .sa-pagehead .sa-clinic-ico{ width:24px; height:24px; color:#0b2a44; }
 .sa-clinic-ico-wrap{ display:flex; align-items:center; justify-content:center; width:46px; height:46px; flex:0 0 auto;
@@ -1525,7 +1525,7 @@ body.flow-locked{ overflow:hidden; }
 /* Patient notes drawer */
 .notes-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
 .notes-backdrop.open{ opacity:1; pointer-events:auto; }
-.notes-drawer{ position:fixed; top:0; right:0; bottom:0; width:880px; max-width:96vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
+.notes-drawer{ position:fixed; top:0; right:0; bottom:0; width:66.6667vw; max-width:96vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
 .notes-drawer.open{ transform:translateX(0); }
 .notes-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.1rem 1.35rem; border-bottom:1px solid var(--gray-200); flex:none; }
 .notes-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
@@ -1651,9 +1651,8 @@ body.flow-locked{ overflow:hidden; }
   <div class="nav-host"></div>
   <div class="sa-headband"><div class="sa-headband-inner">
     <div class="sa-pagehead">
-      <button class="sa-back" id="sa-back" type="button" title="Back to patient search"><svg class="svg-ico"><use href="#i-cl"/></svg></button>
+      <button class="syn-back-ico" id="sa-back" type="button" title="Back to patient search"><svg class="svg-ico"><use href="#i-cl"/></svg></button>
       <div class="sa-clinic" id="sa-clinic">
-        <span class="sa-clinic-ico-wrap"><svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg></span>
         <span class="sa-clinic-text">
           <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
           <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
@@ -1661,7 +1660,7 @@ body.flow-locked{ overflow:hidden; }
       </div>
     </div>
     <div class="sa-head-actions">
-      <button class="sa-head-btn" id="sa-search-details" type="button"><svg class="svg-ico"><use href="#i-file"/></svg>Search details</button>
+      <button class="btn-primary" id="sa-search-details" type="button"><svg class="svg-ico"><use href="#i-file"/></svg>Search details</button>
     </div>
   </div></div>
   <div class="sa-scroll"><div class="sa-scroll-inner">
@@ -3993,8 +3992,11 @@ body.flow-locked{ overflow:hidden; }
   })();
 
   /* ---- Smart Alerts header (static, no switcher) ---- */
-  function updateClinicHeader(){ document.getElementById('sa-clinic-name').textContent=activeClinic.n;
-    const parts=[activeClinic.p+' patients']; if(saCtx.depts && saCtx.depts.length) parts.push(saCtx.depts.join(', '));
+  function updateClinicHeader(){
+    const nm=[saCtx.first,saCtx.last].filter(Boolean).join(' ').trim();
+    document.getElementById('sa-clinic-name').textContent = nm || activeClinic.n;
+    const parts=[]; if(saCtx.dob) parts.push('DOB '+saCtx.dob); parts.push(activeClinic.n);
+    if(saCtx.depts && saCtx.depts.length) parts.push(saCtx.depts.join(', '));
     document.getElementById('sa-clinic-badge').textContent=parts.join(' · '); }
   { const sb=document.getElementById('sa-back'); if(sb) sb.addEventListener('click',()=>show('select')); }
 
