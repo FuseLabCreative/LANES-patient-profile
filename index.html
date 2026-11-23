@@ -1182,10 +1182,14 @@ body.flow-locked{ overflow:hidden; }
 .ps-sel-opt.sel{ background:#e7f0fd; color:var(--primary); font-weight:600; }
 
 .portal-screen .lanes-navbar{ position:sticky; top:0; z-index:1030; }
-.sa-pagehead{ display:flex; align-items:center; gap:1rem; flex:none; }
-.sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; align-items:stretch; }
+.sa-pagehead{ display:flex; align-items:center; gap:.75rem; flex:none; }
+.sa-back{ flex:none; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border:none; background:none; color:var(--gray-600); border-radius:.45rem; cursor:pointer; margin-left:-.45rem; }
+.sa-back:hover{ background:var(--gray-200); color:var(--gray-900); }
+.sa-back .svg-ico{ width:22px; height:22px; }
+.sa-pagehead .sa-clinic-btn{ padding:0; margin-left:0; align-items:center; gap:.85rem; }
 .sa-pagehead .sa-clinic-btn:hover{ background:none; }
-.sa-pagehead .sa-clinic-name{ font-size:1.5rem; line-height:1.15; }
+.sa-pagehead .sa-clinic-name{ font-size:1.6rem; font-weight:400; line-height:1.15; }
+.sa-pagehead .sa-clinic-badge{ font-size:.875rem; font-weight:400; color:var(--gray-500); }
 .sa-pagehead .sa-clinic-ico{ width:26px; height:26px; color:var(--gray-600); }
 .sa-clinic-ico-wrap{ display:inline-flex; align-items:center; justify-content:center; align-self:stretch; width:46px; flex:none;
   background:#fff; border:1px solid var(--gray-200); border-radius:8px; box-sizing:border-box; }
@@ -1586,6 +1590,7 @@ body.flow-locked{ overflow:hidden; }
   <div class="nav-host"></div>
   <div class="sa-headband"><div class="sa-headband-inner">
     <div class="sa-pagehead">
+      <button class="sa-back" id="sa-back" type="button" title="Back to patient search"><svg class="svg-ico"><use href="#i-cl"/></svg></button>
       <div class="sa-clinic" id="sa-clinic">
         <button class="sa-clinic-btn" id="sa-clinic-btn" type="button">
           <span class="sa-clinic-ico-wrap"><svg class="svg-ico sa-clinic-ico"><use href="#i-hospital"/></svg></span>
@@ -3738,6 +3743,7 @@ body.flow-locked{ overflow:hidden; }
     {n:'Pinecrest Family Practice',p:36},{n:'Willowbrook Health Clinic',p:49},{n:'Aspen Grove Medical Associates',p:61}
   ];
   let activeClinic=CLINICS[0];
+  let saCtx={ depts:[], first:'', last:'', dob:'' };
 
   /* ---- clinic card grid (select screen) ---- */
   function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
@@ -3814,6 +3820,9 @@ body.flow-locked{ overflow:hidden; }
 
     function doContinue(){
       if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); } return; }
+      saCtx={ depts:deptList().filter(x=>x.checked).map(x=>x.value),
+              first:document.getElementById('pf-first').value.trim(),
+              last:document.getElementById('pf-last').value.trim(), dob:dobInput.value };
       selectClinic(CLINICS[+clinicSel.value]);
     }
     form.addEventListener('submit',e=>{ e.preventDefault(); doContinue(); });
@@ -3834,7 +3843,10 @@ body.flow-locked{ overflow:hidden; }
 
   /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
   const clinicWrap=document.getElementById('sa-clinic'), clinicBtn=document.getElementById('sa-clinic-btn'), clinicSearch=document.getElementById('sa-clinic-search-input');
-  function updateClinicHeader(){ document.getElementById('sa-clinic-name').textContent=activeClinic.n; document.getElementById('sa-clinic-badge').textContent=activeClinic.p+' Patients'; }
+  function updateClinicHeader(){ document.getElementById('sa-clinic-name').textContent=activeClinic.n;
+    const parts=[activeClinic.p+' patients']; if(saCtx.depts && saCtx.depts.length) parts.push(saCtx.depts.join(', '));
+    document.getElementById('sa-clinic-badge').textContent=parts.join(' · '); }
+  { const sb=document.getElementById('sa-back'); if(sb) sb.addEventListener('click',()=>show('select')); }
   function buildClinicMenu(filter){ const list=document.getElementById('sa-clinic-list'); list.innerHTML=''; const q=(filter||'').toLowerCase();
     const shown=CLINICS.filter(c=>!q||c.n.toLowerCase().includes(q));
     if(!shown.length){ list.innerHTML='<div class="sa-clinic-opt"><div class="c">No clinics match your search.</div></div>'; return; }
