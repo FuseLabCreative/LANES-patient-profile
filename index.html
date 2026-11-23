@@ -1341,8 +1341,10 @@ body.flow-locked{ overflow:hidden; }
 .sd-backdrop.open{ opacity:1; pointer-events:auto; }
 .sd-modal{ position:fixed; top:50%; left:50%; transform:translate(-50%,-48%); width:600px; max-width:94vw; max-height:88vh; background:#fff; border-radius:.75rem; box-shadow:0 24px 60px rgba(16,24,40,.28); z-index:5001; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; }
 .sd-body .pf-seg{ margin-bottom:1.4rem; }
-.sd-body .pf-pane .sd-row:first-child{ padding-top:0; }
-.sd-empty{ padding:1.4rem .25rem; font-size:.9rem; color:var(--gray-500); line-height:1.5; }
+.sd-form .pf-field > label{ color:var(--gray-700); }
+.sd-read{ min-height:42px; display:flex; align-items:center; gap:.3rem; flex-wrap:wrap; border:1px solid var(--gray-300); border-radius:.45rem; padding:.45rem .75rem; font-family:inherit; font-size:.92rem; color:var(--gray-900); background:#fff; box-sizing:border-box; }
+.sd-read-tags{ gap:.3rem; }
+.sd-read-ph{ color:var(--gray-500); }
 .sd-modal.open{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%); }
 .sd-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.35rem; border-bottom:1px solid var(--gray-200); }
 .sd-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
@@ -1733,7 +1735,7 @@ body.flow-locked{ overflow:hidden; }
   <div class="nav-host"></div>
   <div class="pfh-headband">
     <div class="pfh-headband-inner">
-      <span class="pfh-title" id="pf-page-title">Find a patient</span>
+      <span class="pfh-title" id="pf-page-title">Find a patient or clinic</span>
       <span class="pfh-sub" id="pf-page-sub">Search by the patient's details, or by clinical institution — switch between the two below.</span>
     </div>
   </div>
@@ -4273,25 +4275,25 @@ body.flow-locked{ overflow:hidden; }
     const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     function render(){
       const mode = saCtx.mode || 'institution';
-      const depts=(saCtx.depts&&saCtx.depts.length)?saCtx.depts.map(d=>'<span class="sd-chip">'+esc(d)+'</span>').join(''):'<span class="sd-v">All departments</span>';
-      const patientPane = mode==='patient'
-        ? '<div class="sd-row"><span class="sd-k">First name</span><span class="sd-v">'+esc(saCtx.first||'—')+'</span></div>'+
-          '<div class="sd-row"><span class="sd-k">Last name</span><span class="sd-v">'+esc(saCtx.last||'—')+'</span></div>'+
-          '<div class="sd-row"><span class="sd-k">Date of birth</span><span class="sd-v">'+esc(saCtx.dob||'—')+'</span></div>'
-        : '<div class="sd-empty">This search was by clinical institution — no patient details were used.</div>';
-      const instPane = mode==='institution'
-        ? '<div class="sd-row"><span class="sd-k">Medical clinic</span><span class="sd-v">'+esc(activeClinic.n)+'</span></div>'+
-          '<div class="sd-row"><span class="sd-k">Departments</span><span class="sd-chips">'+depts+'</span></div>'
-        : '<div class="sd-empty">This search was by patient — no clinical institution was used.</div>';
-      body.innerHTML=
-        '<div class="pf-seg" role="tablist" aria-label="Search mode">'+
-          '<button type="button" class="pf-seg-btn'+(mode==='patient'?' active':'')+'" data-sdpane="patient" role="tab">Patient search</button>'+
-          '<button type="button" class="pf-seg-btn'+(mode==='institution'?' active':'')+'" data-sdpane="institution" role="tab">Clinical institution</button>'+
-        '</div>'+
-        '<div class="pf-panes">'+
-          '<section class="pf-pane'+(mode==='patient'?' active':'')+'" data-sdpane="patient">'+patientPane+'</section>'+
-          '<section class="pf-pane'+(mode==='institution'?' active':'')+'" data-sdpane="institution">'+instPane+'</section>'+
-        '</div>';
+      let inner;
+      if(mode==='patient'){
+        inner =
+          '<div class="pf-grid2">'+
+            '<div class="pf-field"><label>First name</label><div class="sd-read">'+esc(saCtx.first||'—')+'</div></div>'+
+            '<div class="pf-field"><label>Last name</label><div class="sd-read">'+esc(saCtx.last||'—')+'</div></div>'+
+          '</div>'+
+          '<div class="pf-field"><label>Date of birth</label><div class="sd-read">'+esc(saCtx.dob||'—')+'</div></div>';
+      } else {
+        const tags=(saCtx.depts&&saCtx.depts.length)
+          ? saCtx.depts.map(d=>'<span class="ms-tag">'+esc(d)+'</span>').join('')
+          : '<span class="sd-read-ph">All departments</span>';
+        inner =
+          '<div class="pf-col">'+
+            '<div class="pf-field"><label>Medical clinic</label><div class="sd-read">'+esc(activeClinic.n)+'</div></div>'+
+            '<div class="pf-field"><label>Departments</label><div class="sd-read sd-read-tags">'+tags+'</div></div>'+
+          '</div>';
+      }
+      body.innerHTML='<div class="sd-form">'+inner+'</div>';
     }
     body.addEventListener('click',e=>{ const b=e.target.closest('.pf-seg-btn'); if(!b) return;
       const p=b.dataset.sdpane;
@@ -4508,7 +4510,7 @@ body.flow-locked{ overflow:hidden; }
     const backSel=document.getElementById('sa-back-select'); if(backSel) backSel.addEventListener('click',()=>show('select'));
     const ph=document.querySelector('body > .patient-header .ph-row');
     if(ph && !ph.querySelector('.syn-back-ico')){ const b=document.createElement('button'); b.type='button'; b.className='syn-back-ico'; b.title='Back';
-      b.innerHTML='<svg class="svg-ico"><use href="#i-cl"/></svg>'; b.addEventListener('click',()=>show('alerts')); ph.insertBefore(b, ph.firstChild); }
+      b.innerHTML='<svg class="svg-ico"><use href="#i-cl"/></svg>'; b.title='Back to search'; b.addEventListener('click',()=>show('select')); ph.insertBefore(b, ph.firstChild); }
   })();
 
   /* ---- charts (ECharts via LC helper) ---- */
