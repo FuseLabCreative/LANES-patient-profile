@@ -1338,10 +1338,25 @@ body.flow-locked{ overflow:hidden; }
 .cs-search input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
 .cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding-bottom:2rem; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
+/* ---- select-screen standard page header (matches Patient / Clinics pages) ---- */
+.ps-headband{ flex:none; background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
+.ps-headband-inner{ width:100%; padding:1.1rem 1.5rem; box-sizing:border-box; }
+.ps-title{ display:block; font-size:1.6rem; font-weight:400; color:var(--gray-900); line-height:1.15; }
+.ps-sub{ display:block; font-size:.875rem; color:var(--gray-500); margin-top:.2rem; }
+
 /* ---- first-page patient form ---- */
 .pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.75rem 2rem; box-shadow:var(--card-shadow); }
 .pf-sec{ margin-bottom:1.6rem; }
 .pf-sec-title{ font-size:1.25rem; font-weight:600; color:var(--gray-900); margin:0 0 1.1rem; }
+/* segmented control */
+.pf-seg{ display:grid; grid-template-columns:1fr 1fr; gap:.25rem; background:var(--gray-100); border:1px solid var(--gray-200); border-radius:.55rem; padding:.25rem; margin-bottom:1.6rem; }
+.pf-seg-btn{ appearance:none; border:none; background:none; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); padding:.55rem .5rem; border-radius:.4rem; cursor:pointer; transition:background .15s, color .15s, box-shadow .15s; }
+.pf-seg-btn:hover{ color:var(--gray-900); }
+.pf-seg-btn.active{ background:#fff; color:var(--primary); box-shadow:0 1px 3px rgba(18,38,63,.12); }
+/* stacked panes — container height = tallest pane, so it never changes when switching */
+.pf-panes{ display:grid; }
+.pf-pane{ grid-area:1 / 1; align-self:start; }
+.pf-pane:not(.active){ visibility:hidden; pointer-events:none; }
 .pf-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
 .pf-grid2:last-child{ margin-bottom:0; }
 @media(max-width:620px){ .pf-grid2{ grid-template-columns:1fr; } }
@@ -1599,45 +1614,49 @@ body.flow-locked{ overflow:hidden; }
 <!-- ============ PORTAL FLOW: SELECT INSTITUTION ============ -->
 <div id="scr-select" class="portal-screen active">
   <div class="nav-host"></div>
-  <div class="cs-wrap">
-    <div class="cs-head">
-      <div class="cs-head-text">
-        <h1 class="cs-title">Find a patient</h1>
-        <p class="cs-sub">Enter the patient's details and choose where to search — everything stays in this one screen, no new tabs.</p>
-      </div>
+  <div class="ps-headband">
+    <div class="ps-headband-inner">
+      <span class="ps-title" id="pf-page-title">Find a patient</span>
+      <span class="ps-sub" id="pf-page-sub">Search by the patient's details, or by clinical institution — switch between the two below.</span>
     </div>
+  </div>
+  <div class="cs-wrap">
     <div class="cs-scroll">
       <form class="pf-form" id="pf-form" autocomplete="off">
-        <section class="pf-sec">
-          <h2 class="pf-sec-title">Demographics</h2>
-          <div class="pf-grid2">
-            <div class="pf-field"><label for="pf-first">First name</label><input type="text" id="pf-first" class="pf-input" placeholder="e.g. Maria"></div>
-            <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
-          </div>
-          <div class="pf-field">
-            <label for="pf-dob-input">Date of birth</label>
-            <span class="date-field pf-datefield" id="pf-dob">
-              <input type="text" id="pf-dob-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
-              <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
-            </span>
-          </div>
-        </section>
-        <section class="pf-sec">
-          <h2 class="pf-sec-title">Clinical institution</h2>
-          <div class="pf-col">
-            <div class="pf-field"><label for="pf-clinic">Medical clinic</label><select id="pf-clinic"></select></div>
-            <div class="pf-field" id="pf-dept-field" hidden>
-              <label>Departments</label>
-              <div class="ms" id="pf-dept">
-                <button type="button" class="ms-btn" id="pf-dept-btn"><span class="ms-tags" id="pf-dept-tags"><span class="ms-ph">Select departments…</span></span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>
-                <div class="ms-menu" id="pf-dept-menu">
-                  <div class="ms-head"><span id="pf-dept-count">0 selected</span><div class="ms-acts"><button type="button" data-all>Select all</button><span>·</span><button type="button" data-none>Clear</button></div></div>
-                  <div class="ms-body" id="pf-dept-body"></div>
+        <div class="pf-seg" role="tablist" aria-label="Search mode">
+          <button type="button" class="pf-seg-btn active" data-pane="patient" role="tab">Patient search</button>
+          <button type="button" class="pf-seg-btn" data-pane="institution" role="tab">Clinical institution</button>
+        </div>
+        <div class="pf-panes">
+          <section class="pf-pane active" data-pane="patient">
+            <div class="pf-grid2">
+              <div class="pf-field"><label for="pf-first">First name</label><input type="text" id="pf-first" class="pf-input" placeholder="e.g. Maria"></div>
+              <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
+            </div>
+            <div class="pf-field">
+              <label for="pf-dob-input">Date of birth</label>
+              <span class="date-field pf-datefield" id="pf-dob">
+                <input type="text" id="pf-dob-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
+                <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
+              </span>
+            </div>
+          </section>
+          <section class="pf-pane" data-pane="institution">
+            <div class="pf-col">
+              <div class="pf-field"><label for="pf-clinic">Medical clinic</label><select id="pf-clinic"></select></div>
+              <div class="pf-field" id="pf-dept-field" hidden>
+                <label>Departments</label>
+                <div class="ms" id="pf-dept">
+                  <button type="button" class="ms-btn" id="pf-dept-btn"><span class="ms-tags" id="pf-dept-tags"><span class="ms-ph">Select departments…</span></span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>
+                  <div class="ms-menu" id="pf-dept-menu">
+                    <div class="ms-head"><span id="pf-dept-count">0 selected</span><div class="ms-acts"><button type="button" data-all>Select all</button><span>·</span><button type="button" data-none>Clear</button></div></div>
+                    <div class="ms-body" id="pf-dept-body"></div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
         <div class="pf-actions">
           <button type="button" class="btn-primary" id="pf-submit">Continue to Smart Alerts</button>
           <button type="button" class="pf-clear" id="pf-clear">Clear all</button>
@@ -3908,6 +3927,15 @@ body.flow-locked{ overflow:hidden; }
     const clinicSel=document.getElementById('pf-clinic');
     clinicSel.innerHTML='<option value="">Select a clinic…</option>'+CLINICS.map((c,i)=>'<option value="'+i+'">'+c.n+'</option>').join('');
     enhanceSelects(form); // clinic becomes a custom dropdown component
+
+    /* segmented control — switch between the two search forms (one fixed height) */
+    form.querySelectorAll('.pf-seg-btn').forEach(btn=>btn.addEventListener('click',()=>{
+      const pane=btn.dataset.pane;
+      form.querySelectorAll('.pf-seg-btn').forEach(x=>x.classList.toggle('active', x===btn));
+      form.querySelectorAll('.pf-pane').forEach(x=>x.classList.toggle('active', x.dataset.pane===pane));
+      // close any open popups when leaving a pane
+      document.querySelectorAll('.sa-dd.open, #pf-dept.open').forEach(m=>m.classList.remove('open'));
+    }));
 
     /* departments dependent multiselect */
     const deptField=document.getElementById('pf-dept-field'), deptBody=document.getElementById('pf-dept-body'),
