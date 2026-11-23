@@ -1563,6 +1563,7 @@ body.flow-locked{ overflow:hidden; }
 .nv-compose .nv-field{ margin-bottom:.8rem; }
 .nv-compose label{ display:block; font-size:.82rem; font-weight:600; color:var(--gray-700); margin-bottom:.35rem; }
 .nv-compose select{ width:260px; max-width:100%; height:38px; border:1px solid var(--gray-300); border-radius:.4rem; padding:0 .6rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); background:#fff; }
+.nv-compose .sa-dd{ width:260px; max-width:100%; }
 .nv-compose textarea{ width:100%; min-height:160px; border:1px solid var(--gray-300); border-radius:.45rem; padding:.65rem .75rem; font-family:inherit; font-size:.9rem; color:var(--gray-800); resize:vertical; box-sizing:border-box; }
 .nv-compose textarea:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
 .nv-compose-foot{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.9rem; }
@@ -3841,6 +3842,7 @@ body.flow-locked{ overflow:hidden; }
           '<div class="nv-compose-foot"><span class="notes-asyou">Shared with everyone who can access this patient</span>'+
             '<button type="submit" class="btn-primary" id="nv-add" disabled>Add note</button></div>'+
         '</form>';
+      if(window.enhanceSelects) window.enhanceSelects(viewEl); // Context becomes a custom dropdown component
       const ta=document.getElementById('nv-text'), addBtn=document.getElementById('nv-add');
       ta.addEventListener('input',()=>{ addBtn.disabled=ta.value.trim().length===0; });
       document.getElementById('nv-compose').addEventListener('submit',e=>{ e.preventDefault();
@@ -4170,7 +4172,7 @@ body.flow-locked{ overflow:hidden; }
   }
   function openDrawer(o){ const d=document.getElementById('sa-drawer'), bd=document.getElementById('sa-drawer-backdrop');
     d.classList.toggle('open', o); bd.classList.toggle('open', o); d.setAttribute('aria-hidden', o?'false':'true'); }
-  function enhanceSelects(scope){ if(!scope) return;
+  function enhanceSelects(scope){ if(!scope) return; window.enhanceSelects=enhanceSelects;
     scope.querySelectorAll('select').forEach(sel=>{ if(sel.dataset.enh) return; sel.dataset.enh='1';
       const wrap=document.createElement('div'); wrap.className='sa-dd'; sel.parentNode.insertBefore(wrap, sel); sel.style.display='none'; wrap.appendChild(sel);
       const btn=document.createElement('button'); btn.type='button'; btn.className='sa-dd-btn'; btn.innerHTML='<span class="sa-dd-val"></span><svg class="svg-ico sa-dd-chev"><use href="#i-cd"/></svg>';
