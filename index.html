@@ -1285,6 +1285,65 @@ body.flow-locked{ overflow:hidden; }
 .cs-search input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
 .cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding-bottom:2rem; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
+/* ---- first-page patient form ---- */
+.pf-form{ max-width:740px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.9rem 2rem 1.75rem; box-shadow:0 1px 3px rgba(18,38,63,.05); }
+.pf-sec{ padding-bottom:1.5rem; margin-bottom:1.5rem; border-bottom:1px solid var(--gray-200); }
+.pf-sec:nth-of-type(2){ border-bottom:none; margin-bottom:1.25rem; }
+.pf-sec-title{ font-size:1.02rem; font-weight:700; color:var(--gray-900); margin:0 0 1.1rem; }
+.pf-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
+.pf-grid2:last-child{ margin-bottom:0; }
+@media(max-width:620px){ .pf-grid2{ grid-template-columns:1fr; } }
+.pf-field{ display:flex; flex-direction:column; gap:.4rem; min-width:0; }
+.pf-field > label{ font-size:.82rem; font-weight:600; color:var(--gray-700); }
+.pf-input{ height:42px; border:1px solid var(--gray-300); border-radius:.45rem; padding:0 .75rem; font-family:inherit; font-size:.92rem; color:var(--gray-800); background:#fff; }
+.pf-input:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+/* date of birth */
+.pf-dob{ position:relative; display:flex; gap:.5rem; align-items:stretch; }
+.pf-dob .sa-dd{ flex:1 1 auto; }
+.pf-dob .sa-dd:nth-child(3){ flex:0 0 108px; }
+.pf-cal-btn{ flex:0 0 42px; width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; color:var(--gray-600); cursor:pointer; }
+.pf-cal-btn:hover{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.06); }
+.pf-cal-btn .svg-ico{ width:18px; height:18px; }
+.pf-cal{ position:absolute; top:calc(100% + 6px); right:0; width:280px; background:#fff; border:1px solid var(--gray-200); border-radius:.55rem; box-shadow:0 12px 30px rgba(31,45,61,.18); padding:.8rem; z-index:30; }
+.pf-cal[hidden]{ display:none; }
+.pf-cal-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:.6rem; }
+.pf-cal-title{ font-size:.9rem; font-weight:700; color:var(--gray-900); }
+.pf-cal-nav{ width:30px; height:30px; display:inline-flex; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-600); border-radius:.4rem; cursor:pointer; }
+.pf-cal-nav:hover{ background:var(--gray-100); color:var(--gray-900); }
+.pf-cal-nav .svg-ico{ width:14px; height:14px; }
+.pf-cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+.pf-cal-dow{ font-size:.68rem; font-weight:700; color:var(--gray-400); text-align:center; padding:.2rem 0; }
+.pf-cal-day{ aspect-ratio:1; display:flex; align-items:center; justify-content:center; font-size:.82rem; color:var(--gray-800); background:none; border:none; border-radius:.4rem; cursor:pointer; }
+.pf-cal-day:hover{ background:var(--gray-100); }
+.pf-cal-day.sel{ background:var(--primary); color:#fff; font-weight:600; }
+.pf-cal-day.empty{ visibility:hidden; cursor:default; }
+/* departments multiselect */
+.ms{ position:relative; }
+.ms-btn{ display:flex; align-items:center; gap:.5rem; width:100%; height:42px; padding:0 .75rem; border:1px solid var(--gray-300); border-radius:.45rem; background:#fff; font-family:inherit; font-size:.92rem; color:var(--gray-800); cursor:pointer; text-align:left; }
+.ms-val{ flex:1 1 auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--gray-500); }
+.ms-val.has{ color:var(--gray-800); }
+.ms-chev{ width:12px; height:12px; color:var(--gray-500); flex:none; transition:transform .15s; }
+.ms.open .ms-chev{ transform:rotate(180deg); }
+.ms.open .ms-btn{ border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.ms-menu{ position:absolute; top:calc(100% + 5px); left:0; right:0; background:#fff; border:1px solid var(--gray-200); border-radius:.5rem; box-shadow:0 10px 26px rgba(43,48,58,.16); z-index:30; display:none; overflow:hidden; }
+.ms.open .ms-menu{ display:block; }
+.ms-head{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem .65rem; background:#f8fafc; border-bottom:1px solid var(--gray-200); font-size:.78rem; font-weight:600; color:var(--gray-600); }
+.ms-acts{ display:flex; align-items:center; gap:.35rem; }
+.ms-acts button{ background:none; border:none; padding:0; font-family:inherit; font-size:.78rem; font-weight:600; color:var(--primary); cursor:pointer; }
+.ms-acts button:hover{ text-decoration:underline; }
+.ms-acts span{ color:var(--gray-300); }
+.ms-body{ max-height:200px; overflow-y:auto; padding:.3rem; }
+.ms-opt{ display:flex; align-items:center; gap:.55rem; padding:.45rem .55rem; border-radius:.4rem; font-size:.88rem; color:var(--gray-800); cursor:pointer; }
+.ms-opt:hover{ background:var(--gray-100); }
+.ms-opt input{ width:16px; height:16px; accent-color:var(--primary); flex:none; cursor:pointer; }
+.ms-chips{ display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.55rem; }
+.ms-chip{ display:inline-flex; align-items:center; gap:.35rem; font-size:.8rem; font-weight:500; color:var(--primary); background:rgba(44,123,229,.1); border:1px solid rgba(44,123,229,.25); border-radius:1rem; padding:.2rem .3rem .2rem .6rem; }
+.ms-chip button{ display:inline-flex; width:16px; height:16px; align-items:center; justify-content:center; border:none; background:none; color:var(--primary); cursor:pointer; border-radius:50%; }
+.ms-chip button:hover{ background:rgba(44,123,229,.2); }
+.ms-chip button .svg-ico{ width:9px; height:9px; }
+.pf-actions{ display:flex; justify-content:flex-end; padding-top:.5rem; }
+.pf-actions .btn-primary{ min-width:200px; justify-content:center; }
+.pf-actions .btn-primary[disabled]{ opacity:.5; cursor:not-allowed; }
 .cs-grid{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1.1rem; max-width:1440px; margin:0 auto; }
 @media(max-width:1100px){ .cs-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
 @media(max-width:640px){ .cs-grid{ grid-template-columns:minmax(0,1fr); } }
@@ -1482,12 +1541,51 @@ body.flow-locked{ overflow:hidden; }
   <div class="cs-wrap">
     <div class="cs-head">
       <div class="cs-head-text">
-        <h1 class="cs-title">Please select a clinical institution</h1>
-        <p class="cs-sub">Open an institution to go straight to its <strong>Smart Alerts</strong> work list — everything stays in this one screen, no new tabs.</p>
+        <h1 class="cs-title">Find a patient</h1>
+        <p class="cs-sub">Enter the patient's details and choose where to search — everything stays in this one screen, no new tabs.</p>
       </div>
-      <div class="cs-search"><svg class="svg-ico"><use href="#i-search"/></svg><input type="text" id="cs-search-input" placeholder="Search institutions"></div>
     </div>
-    <div class="cs-scroll"><div class="cs-grid" id="cs-grid"></div></div>
+    <div class="cs-scroll">
+      <form class="pf-form" id="pf-form" autocomplete="off">
+        <section class="pf-sec">
+          <h2 class="pf-sec-title">Demographics</h2>
+          <div class="pf-grid2">
+            <div class="pf-field"><label for="pf-first">First name</label><input type="text" id="pf-first" class="pf-input" placeholder="e.g. Maria"></div>
+            <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
+          </div>
+          <div class="pf-field">
+            <label>Date of birth</label>
+            <div class="pf-dob" id="pf-dob">
+              <select id="pf-dob-d" aria-label="Day"></select>
+              <select id="pf-dob-m" aria-label="Month"></select>
+              <select id="pf-dob-y" aria-label="Year"></select>
+              <button type="button" class="pf-cal-btn" id="pf-cal-btn" title="Open calendar" aria-label="Open calendar"><svg class="svg-ico"><use href="#i-calendar"/></svg></button>
+              <div class="pf-cal" id="pf-cal" hidden></div>
+            </div>
+          </div>
+        </section>
+        <section class="pf-sec">
+          <h2 class="pf-sec-title">Clinical institution</h2>
+          <div class="pf-grid2">
+            <div class="pf-field"><label for="pf-clinic">Medical clinic</label><select id="pf-clinic"></select></div>
+            <div class="pf-field" id="pf-dept-field" hidden>
+              <label>Departments</label>
+              <div class="ms" id="pf-dept">
+                <button type="button" class="ms-btn" id="pf-dept-btn"><span class="ms-val" id="pf-dept-val">Select departments…</span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>
+                <div class="ms-menu" id="pf-dept-menu">
+                  <div class="ms-head"><span id="pf-dept-count">0 selected</span><div class="ms-acts"><button type="button" data-all>Select all</button><span>·</span><button type="button" data-none>Clear</button></div></div>
+                  <div class="ms-body" id="pf-dept-body"></div>
+                </div>
+              </div>
+              <div class="ms-chips" id="pf-dept-chips"></div>
+            </div>
+          </div>
+        </section>
+        <div class="pf-actions">
+          <button type="submit" class="btn-primary" id="pf-submit">Continue to Smart Alerts</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -3650,16 +3748,71 @@ body.flow-locked{ overflow:hidden; }
   let activeClinic=CLINICS[0];
 
   /* ---- clinic card grid (select screen) ---- */
-  function buildClinicGrid(filter){ const g=document.getElementById('cs-grid'); g.innerHTML=''; const q=(filter||'').toLowerCase();
-    const shown=CLINICS.filter(c=>!q||c.n.toLowerCase().includes(q));
-    if(!shown.length){ g.innerHTML='<div class="cs-empty">No institutions match your search.</div>'; return; }
-    shown.forEach(c=>{ const d=document.createElement('button'); d.type='button'; d.className='cs-card';
-      d.innerHTML='<svg class="svg-ico"><use href="#i-hospital"/></svg><div class="cs-name" title="'+c.n+'">'+c.n+'</div><div class="cs-count">'+c.p+' patients</div>';
-      d.addEventListener('click',()=>selectClinic(c)); g.appendChild(d); });
-  }
   function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
-  buildClinicGrid();
-  { const csi=document.getElementById('cs-search-input'); if(csi) csi.addEventListener('input', e=>buildClinicGrid(e.target.value)); }
+
+  /* ---- first-page patient form (demographics + clinic/departments) ---- */
+  (function buildPatientForm(){
+    const form=document.getElementById('pf-form'); if(!form) return;
+    const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DEPTS=['Primary Care','Cardiology','Emergency','Behavioral Health','Pediatrics','Radiology','Oncology','Orthopedics','OB-GYN','Neurology','Pharmacy','Laboratory'];
+    const dSel=document.getElementById('pf-dob-d'), mSel=document.getElementById('pf-dob-m'), ySel=document.getElementById('pf-dob-y'), clinicSel=document.getElementById('pf-clinic');
+    dSel.innerHTML='<option value="">Day</option>'+Array.from({length:31},(_,i)=>'<option>'+(i+1)+'</option>').join('');
+    mSel.innerHTML='<option value="">Month</option>'+MONTHS.map((m,i)=>'<option value="'+(i+1)+'">'+m+'</option>').join('');
+    const nowY=new Date().getFullYear();
+    ySel.innerHTML='<option value="">Year</option>'+Array.from({length:nowY-1915+1},(_,i)=>'<option>'+(nowY-i)+'</option>').join('');
+    clinicSel.innerHTML='<option value="">Select a clinic…</option>'+CLINICS.map((c,i)=>'<option value="'+i+'">'+c.n+'</option>').join('');
+    enhanceSelects(form); // day/month/year + clinic become custom dropdown components
+
+    /* departments dependent multiselect */
+    const deptField=document.getElementById('pf-dept-field'), deptBody=document.getElementById('pf-dept-body'),
+          deptVal=document.getElementById('pf-dept-val'), deptCount=document.getElementById('pf-dept-count'),
+          deptChips=document.getElementById('pf-dept-chips'), deptWrap=document.getElementById('pf-dept'), deptBtn=document.getElementById('pf-dept-btn');
+    const deptList=()=>[...deptBody.querySelectorAll('input[type=checkbox]')];
+    function syncDept(){ const sel=deptList().filter(x=>x.checked).map(x=>x.value), n=sel.length;
+      deptCount.textContent=n+' selected';
+      deptVal.textContent = n ? (n===1 ? sel[0] : n+' departments selected') : 'Select departments…';
+      deptVal.classList.toggle('has', n>0);
+      deptChips.innerHTML=sel.map(d=>'<span class="ms-chip">'+d+'<button type="button" data-d="'+d+'" title="Remove"><svg class="svg-ico"><use href="#i-x"/></svg></button></span>').join('');
+    }
+    function populateDepts(){ deptBody.innerHTML=DEPTS.map(d=>'<label class="ms-opt"><input type="checkbox" value="'+d+'"> '+d+'</label>').join(''); syncDept(); }
+    deptBody.addEventListener('change', syncDept);
+    deptWrap.querySelector('[data-all]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=true); syncDept(); });
+    deptWrap.querySelector('[data-none]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=false); syncDept(); });
+    deptChips.addEventListener('click',e=>{ const b=e.target.closest('[data-d]'); if(!b) return; const cb=deptList().find(x=>x.value===b.getAttribute('data-d')); if(cb){ cb.checked=false; syncDept(); } });
+    deptBtn.addEventListener('click',e=>{ e.stopPropagation(); deptWrap.classList.toggle('open'); });
+    document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dept')) deptWrap.classList.remove('open'); });
+    clinicSel.addEventListener('change',()=>{ if(clinicSel.value!==''){ populateDepts(); deptField.hidden=false; } else { deptField.hidden=true; } });
+
+    /* calendar popup for date of birth */
+    const calBtn=document.getElementById('pf-cal-btn'), cal=document.getElementById('pf-cal');
+    let viewY=1990, viewM=0;
+    function setDob(y,m,d){ ySel.value=String(y); ySel.dispatchEvent(new Event('change'));
+      mSel.value=String(m+1); mSel.dispatchEvent(new Event('change'));
+      dSel.value=String(d); dSel.dispatchEvent(new Event('change')); }
+    function renderCal(){
+      const first=new Date(viewY,viewM,1).getDay(), days=new Date(viewY,viewM+1,0).getDate();
+      const selY=ySel.value, selM=mSel.value, selD=dSel.value;
+      let h='<div class="pf-cal-top"><button type="button" class="pf-cal-nav" data-prev><svg class="svg-ico"><use href="#i-cl"/></svg></button>'+
+        '<span class="pf-cal-title">'+MONTHS[viewM]+' '+viewY+'</span>'+
+        '<button type="button" class="pf-cal-nav" data-next><svg class="svg-ico"><use href="#i-cr"/></svg></button></div><div class="pf-cal-grid">';
+      ['S','M','T','W','T','F','S'].forEach(d=>h+='<div class="pf-cal-dow">'+d+'</div>');
+      for(let i=0;i<first;i++) h+='<button type="button" class="pf-cal-day empty"></button>';
+      for(let d=1;d<=days;d++){ const sel=(selY==viewY && selM==(viewM+1) && selD==d); h+='<button type="button" class="pf-cal-day'+(sel?' sel':'')+'" data-day="'+d+'">'+d+'</button>'; }
+      cal.innerHTML=h+'</div>';
+    }
+    function openCal(){ if(ySel.value) viewY=+ySel.value; if(mSel.value) viewM=+mSel.value-1; renderCal(); cal.hidden=false; }
+    calBtn.addEventListener('click',e=>{ e.stopPropagation(); if(cal.hidden) openCal(); else cal.hidden=true; });
+    cal.addEventListener('click',e=>{ e.stopPropagation();
+      if(e.target.closest('[data-prev]')){ viewM--; if(viewM<0){viewM=11;viewY--;} renderCal(); return; }
+      if(e.target.closest('[data-next]')){ viewM++; if(viewM>11){viewM=0;viewY++;} renderCal(); return; }
+      const dd=e.target.closest('[data-day]'); if(dd){ setDob(viewY,viewM,+dd.getAttribute('data-day')); cal.hidden=true; } });
+    document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob')) cal.hidden=true; });
+
+    form.addEventListener('submit',e=>{ e.preventDefault();
+      if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); } return; }
+      selectClinic(CLINICS[+clinicSel.value]);
+    });
+  })();
 
   /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
   const clinicWrap=document.getElementById('sa-clinic'), clinicBtn=document.getElementById('sa-clinic-btn'), clinicSearch=document.getElementById('sa-clinic-search-input');
