@@ -1342,6 +1342,7 @@ body.flow-locked{ overflow:hidden; }
 .sd-modal{ position:fixed; top:50%; left:50%; transform:translate(-50%,-48%); width:600px; max-width:94vw; max-height:88vh; background:#fff; border-radius:.75rem; box-shadow:0 24px 60px rgba(16,24,40,.28); z-index:5001; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; }
 .sd-body .pf-seg{ margin-bottom:1.4rem; }
 .sd-body .pf-pane .sd-row:first-child{ padding-top:0; }
+.sd-empty{ padding:1.4rem .25rem; font-size:.9rem; color:var(--gray-500); line-height:1.5; }
 .sd-modal.open{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%); }
 .sd-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.35rem; border-bottom:1px solid var(--gray-200); }
 .sd-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
@@ -4132,7 +4133,7 @@ body.flow-locked{ overflow:hidden; }
     {n:'Pinecrest Family Practice',p:36},{n:'Willowbrook Health Clinic',p:49},{n:'Aspen Grove Medical Associates',p:61}
   ];
   let activeClinic=CLINICS[0];
-  let saCtx={ depts:[], first:'', last:'', dob:'' };
+  let saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'' };
 
   /* ---- clinic card grid (select screen) ---- */
   function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
@@ -4226,17 +4227,17 @@ body.flow-locked{ overflow:hidden; }
 
     function doContinue(){
       const mode=(form.querySelector('.pf-seg-btn.active')||{}).dataset?.pane||'patient';
-      saCtx={ depts:deptList().filter(x=>x.checked).map(x=>x.value),
-              first:document.getElementById('pf-first').value.trim(),
-              last:document.getElementById('pf-last').value.trim(), dob:dobInput.value };
       if(mode==='institution'){
-        // searching by clinic → Smart Alerts work-list
+        // searching by clinic → Smart Alerts work-list (no patient data in this search)
         if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); }
           form.querySelector('.pf-seg-btn[data-pane="institution"]').click(); return; }
+        saCtx={ mode:'institution', depts:deptList().filter(x=>x.checked).map(x=>x.value), first:'', last:'', dob:'' };
         selectClinic(CLINICS[+clinicSel.value]);
       } else {
-        // searching by patient → patient profile page
-        if(clinicSel.value!=='') activeClinic=CLINICS[+clinicSel.value];
+        // searching by patient → patient profile page (no clinical-institution data in this search)
+        saCtx={ mode:'patient', depts:[],
+                first:document.getElementById('pf-first').value.trim(),
+                last:document.getElementById('pf-last').value.trim(), dob:dobInput.value };
         show('synopsis');
       }
     }
@@ -4271,22 +4272,25 @@ body.flow-locked{ overflow:hidden; }
     if(!openBtn||!modal) return;
     const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     function render(){
+      const mode = saCtx.mode || 'institution';
       const depts=(saCtx.depts&&saCtx.depts.length)?saCtx.depts.map(d=>'<span class="sd-chip">'+esc(d)+'</span>').join(''):'<span class="sd-v">All departments</span>';
+      const patientPane = mode==='patient'
+        ? '<div class="sd-row"><span class="sd-k">First name</span><span class="sd-v">'+esc(saCtx.first||'—')+'</span></div>'+
+          '<div class="sd-row"><span class="sd-k">Last name</span><span class="sd-v">'+esc(saCtx.last||'—')+'</span></div>'+
+          '<div class="sd-row"><span class="sd-k">Date of birth</span><span class="sd-v">'+esc(saCtx.dob||'—')+'</span></div>'
+        : '<div class="sd-empty">This search was by clinical institution — no patient details were used.</div>';
+      const instPane = mode==='institution'
+        ? '<div class="sd-row"><span class="sd-k">Medical clinic</span><span class="sd-v">'+esc(activeClinic.n)+'</span></div>'+
+          '<div class="sd-row"><span class="sd-k">Departments</span><span class="sd-chips">'+depts+'</span></div>'
+        : '<div class="sd-empty">This search was by patient — no clinical institution was used.</div>';
       body.innerHTML=
         '<div class="pf-seg" role="tablist" aria-label="Search mode">'+
-          '<button type="button" class="pf-seg-btn active" data-sdpane="patient" role="tab">Patient search</button>'+
-          '<button type="button" class="pf-seg-btn" data-sdpane="institution" role="tab">Clinical institution</button>'+
+          '<button type="button" class="pf-seg-btn'+(mode==='patient'?' active':'')+'" data-sdpane="patient" role="tab">Patient search</button>'+
+          '<button type="button" class="pf-seg-btn'+(mode==='institution'?' active':'')+'" data-sdpane="institution" role="tab">Clinical institution</button>'+
         '</div>'+
         '<div class="pf-panes">'+
-          '<section class="pf-pane active" data-sdpane="patient">'+
-            '<div class="sd-row"><span class="sd-k">First name</span><span class="sd-v">'+esc(saCtx.first||'—')+'</span></div>'+
-            '<div class="sd-row"><span class="sd-k">Last name</span><span class="sd-v">'+esc(saCtx.last||'—')+'</span></div>'+
-            '<div class="sd-row"><span class="sd-k">Date of birth</span><span class="sd-v">'+esc(saCtx.dob||'—')+'</span></div>'+
-          '</section>'+
-          '<section class="pf-pane" data-sdpane="institution">'+
-            '<div class="sd-row"><span class="sd-k">Medical clinic</span><span class="sd-v">'+esc(activeClinic.n)+'</span></div>'+
-            '<div class="sd-row"><span class="sd-k">Departments</span><span class="sd-chips">'+depts+'</span></div>'+
-          '</section>'+
+          '<section class="pf-pane'+(mode==='patient'?' active':'')+'" data-sdpane="patient">'+patientPane+'</section>'+
+          '<section class="pf-pane'+(mode==='institution'?' active':'')+'" data-sdpane="institution">'+instPane+'</section>'+
         '</div>';
     }
     body.addEventListener('click',e=>{ const b=e.target.closest('.pf-seg-btn'); if(!b) return;
