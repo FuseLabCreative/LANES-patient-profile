@@ -397,10 +397,7 @@
   .ph-menu-item.has-set .svg-ico{ color:var(--primary); }
   .ph-menu-count{ flex:none; min-width:18px; height:18px; padding:0 .3rem; box-sizing:border-box; display:none; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:#fff; background:var(--primary); border-radius:1rem; }
 
-  /* ---- collapse / expand ---- */
-  .wgt-collapse{ flex:none; width:30px; height:30px; margin-left:.3rem; border:none; background:none; color:var(--gray-500); cursor:pointer; border-radius:.4rem; display:inline-flex; align-items:center; justify-content:center; }
-  .wgt-collapse:hover{ background:var(--gray-100); color:var(--gray-900); }
-  .wgt-collapse .svg-ico{ width:14px; height:14px; }
+  /* ---- collapse / expand (controlled from the Edit layout panel) ---- */
   body.v2 section.wgt-collapsed{ height:auto !important; }
   section.wgt-collapsed > :not(.panel-header){ display:none !important; }
   .lp-badge.col{ color:var(--primary); background:rgba(44,123,229,.12); }
@@ -3872,12 +3869,6 @@ body.flow-locked{ overflow:hidden; }
       bar.querySelector('.le-hide').addEventListener('click',()=>toggleHide(sec));
       bar.querySelectorAll('.le-mv').forEach(b=>b.addEventListener('click',()=>move(sec,+b.dataset.dir)));
       tools.insertBefore(bar, tools.firstChild); sec._leBar=bar;
-      // always-visible collapse/expand chevron (far right of header)
-      const hdr2=sec.querySelector('.panel-header');
-      const col=document.createElement('button'); col.type='button'; col.className='wgt-collapse'; col.title='Collapse';
-      col.innerHTML='<svg class="svg-ico"><use href="#i-cu"/></svg>';
-      col.addEventListener('click',()=>toggleCollapse(sec));
-      hdr2.appendChild(col); sec._colBtn=col;
     }
     function updateCardBar(sec){ const bar=sec._leBar; if(!bar) return;
       const pinned=sec.classList.contains('wgt-pinned'), hidden=sec.classList.contains('wgt-hidden');
