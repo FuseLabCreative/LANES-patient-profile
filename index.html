@@ -271,8 +271,8 @@
   .pts-det{ margin:.35rem 0; }
   .pts-det > summary{ cursor:pointer; font-weight:600; color:var(--primary); list-style:none; display:inline-flex; align-items:center; gap:.35rem; padding:.15rem 0; }
   .pts-det > summary::-webkit-details-marker{ display:none; }
-  .pts-det > summary::before{ content:'\\25B8'; font-size:.7rem; }
-  .pts-det[open] > summary::before{ content:'\\25BE'; }
+  .pts-det > summary::before{ content:'\25B8'; font-size:.7rem; }
+  .pts-det[open] > summary::before{ content:'\25BE'; }
   .pts-det ul{ margin:.25rem 0 .5rem; padding-left:1.1rem; }
   .pts-det li{ margin-bottom:.25rem; color:var(--gray-700); }
   .btn-ghost{ background:#fff; border:1px solid var(--gray-300); color:var(--gray-700); font-size:0.875rem;
@@ -1211,9 +1211,9 @@ body.flow-locked{ overflow:hidden; }
 .sa-pagehead .sa-clinic-btn:hover{ background:none; }
 .sa-pagehead .sa-clinic-name{ font-size:1.6rem; font-weight:400; line-height:1.15; }
 .sa-pagehead .sa-clinic-badge{ font-size:.875rem; font-weight:400; color:var(--gray-500); }
-.sa-pagehead .sa-clinic-ico{ width:26px; height:26px; color:var(--gray-600); }
-.sa-clinic-ico-wrap{ display:inline-flex; align-items:center; justify-content:center; align-self:stretch; width:46px; flex:none;
-  background:#fff; border:1px solid var(--gray-200); border-radius:8px; box-sizing:border-box; }
+.sa-pagehead .sa-clinic-ico{ width:24px; height:24px; color:#0b2a44; }
+.sa-clinic-ico-wrap{ display:flex; align-items:center; justify-content:center; width:46px; height:46px; flex:0 0 auto;
+  border-radius:50%; background:linear-gradient(135deg, #a9d4f2 0%, #47b0ff 100%); border:none; box-sizing:border-box; }
 .sa-org{ display:flex; align-items:center; gap:.4rem; margin-left:auto; }
 .sa-org-name{ font-size:.85rem; font-weight:600; color:var(--gray-800); }
 .sa-change{ font-size:.8rem; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:.3rem .55rem; border-radius:.3rem; }
@@ -1525,35 +1525,50 @@ body.flow-locked{ overflow:hidden; }
 /* Patient notes drawer */
 .notes-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
 .notes-backdrop.open{ opacity:1; pointer-events:auto; }
-.notes-drawer{ position:fixed; top:0; right:0; bottom:0; width:440px; max-width:94vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
+.notes-drawer{ position:fixed; top:0; right:0; bottom:0; width:880px; max-width:96vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
 .notes-drawer.open{ transform:translateX(0); }
-.notes-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.1rem 1.25rem; border-bottom:1px solid var(--gray-200); }
-.notes-title{ font-size:1.1rem; font-weight:700; color:var(--gray-900); }
+.notes-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; padding:1.1rem 1.35rem; border-bottom:1px solid var(--gray-200); flex:none; }
+.notes-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
 .notes-sub{ font-size:.78rem; color:var(--gray-500); margin-top:.15rem; }
 .notes-x{ width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-500); border-radius:.4rem; cursor:pointer; flex:none; }
 .notes-x:hover{ background:var(--gray-100); color:var(--gray-800); }
 .notes-x .svg-ico{ width:16px; height:16px; }
-.notes-list{ flex:1 1 auto; overflow-y:auto; padding:1rem 1.25rem; display:flex; flex-direction:column; gap:.9rem; background:#f8fafc; }
-.notes-empty{ margin:auto; text-align:center; color:var(--gray-500); font-size:.9rem; }
-.note-item{ background:#fff; border:1px solid var(--gray-200); border-radius:.55rem; padding:.8rem .9rem; }
-.note-top{ display:flex; align-items:center; gap:.55rem; }
-.note-av{ width:30px; height:30px; border-radius:50%; flex:none; display:inline-flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:600; color:var(--gray-700); background:rgba(44,123,229,.14); }
-.note-who{ display:flex; flex-direction:column; min-width:0; }
-.note-author{ font-size:.86rem; font-weight:600; color:var(--gray-900); line-height:1.2; }
-.note-meta{ font-size:.74rem; color:var(--gray-500); }
-.note-ctx{ margin-left:auto; flex:none; font-size:.72rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.1); border-radius:1rem; padding:.15rem .6rem; }
-.note-body{ margin-top:.55rem; font-size:.88rem; color:var(--gray-800); line-height:1.5; white-space:pre-wrap; word-wrap:break-word; }
-.notes-compose{ border-top:1px solid var(--gray-200); padding:.9rem 1.25rem 1.1rem; background:#fff; }
-.notes-ctx-row{ display:flex; align-items:center; gap:.5rem; margin-bottom:.55rem; }
-.notes-ctx-row label{ font-size:.8rem; font-weight:600; color:var(--gray-700); }
-.notes-ctx-row select{ flex:1 1 auto; height:34px; border:1px solid var(--gray-300); border-radius:.4rem; padding:0 .55rem; font-family:inherit; font-size:.85rem; color:var(--gray-800); background:#fff; }
-.notes-ctx-row .sa-dd{ flex:1 1 auto; }
-.filter-pop .filter-cell .sa-dd{ width:100%; }
-.notes-compose textarea{ width:100%; border:1px solid var(--gray-300); border-radius:.45rem; padding:.6rem .7rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); resize:vertical; box-sizing:border-box; }
-.notes-compose textarea:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
-.notes-compose-foot{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.6rem; }
-.notes-asyou{ font-size:.76rem; color:var(--gray-500); }
-.notes-compose .btn-primary[disabled]{ opacity:.5; cursor:not-allowed; }
+/* two-panel: list on the left, note content / composer on the right */
+.notes-main{ flex:1 1 auto; display:flex; min-height:0; }
+.notes-side{ flex:0 0 300px; display:flex; flex-direction:column; border-right:1px solid var(--gray-200); background:#f8fafc; min-height:0; }
+.notes-new{ display:flex; align-items:center; justify-content:center; gap:.4rem; margin:.85rem .85rem .4rem; height:38px; border:1px dashed var(--gray-300); border-radius:.45rem; background:#fff; font-family:inherit; font-size:.88rem; font-weight:600; color:var(--primary); cursor:pointer; flex:none; }
+.notes-new:hover{ border-color:var(--primary); background:rgba(44,123,229,.05); }
+.notes-new .svg-ico{ width:14px; height:14px; }
+.notes-sidelist{ flex:1 1 auto; overflow-y:auto; padding:.35rem .55rem .7rem; }
+.notes-item{ width:100%; text-align:left; display:block; background:#fff; border:1px solid var(--gray-200); border-left:3px solid transparent; border-radius:.45rem; padding:.6rem .7rem; margin:.35rem .3rem; cursor:pointer; font-family:inherit; }
+.notes-item:hover{ border-color:var(--gray-300); }
+.notes-item.sel{ border-color:var(--primary); border-left-color:var(--primary); background:#fff; box-shadow:0 1px 3px rgba(44,123,229,.12); }
+.notes-item-type{ font-size:.82rem; font-weight:700; color:var(--gray-900); }
+.notes-item-who{ font-size:.75rem; color:var(--gray-600); margin-top:.1rem; }
+.notes-item-date{ font-size:.72rem; color:var(--gray-500); margin-top:.15rem; }
+.notes-empty{ margin:auto; text-align:center; color:var(--gray-500); font-size:.9rem; padding:2rem; }
+/* right view */
+.notes-view{ flex:1 1 auto; min-width:0; overflow-y:auto; padding:1.4rem 1.6rem; }
+.nv-head{ border-bottom:1px solid var(--gray-200); padding-bottom:.9rem; margin-bottom:1rem; }
+.nv-type{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
+.nv-sub{ font-size:.82rem; color:var(--gray-600); margin-top:.25rem; }
+.nv-ctx{ display:inline-flex; margin-top:.5rem; font-size:.74rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.1); border-radius:1rem; padding:.15rem .65rem; }
+.nv-body{ font-size:.92rem; color:var(--gray-800); line-height:1.6; white-space:pre-wrap; word-wrap:break-word; }
+.nv-section{ margin-bottom:1.1rem; }
+.nv-section h4{ margin:0 0 .35rem; font-size:.92rem; font-weight:700; color:var(--gray-900); }
+.nv-section ul{ margin:.2rem 0 0; padding-left:1.2rem; }
+.nv-section li{ font-size:.9rem; color:var(--gray-700); margin-bottom:.2rem; }
+.nv-section p{ margin:0; font-size:.92rem; color:var(--gray-700); line-height:1.6; }
+/* composer (shown in right view for New note) */
+.nv-compose .nv-field{ margin-bottom:.8rem; }
+.nv-compose label{ display:block; font-size:.82rem; font-weight:600; color:var(--gray-700); margin-bottom:.35rem; }
+.nv-compose select{ width:260px; max-width:100%; height:38px; border:1px solid var(--gray-300); border-radius:.4rem; padding:0 .6rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); background:#fff; }
+.nv-compose textarea{ width:100%; min-height:160px; border:1px solid var(--gray-300); border-radius:.45rem; padding:.65rem .75rem; font-family:inherit; font-size:.9rem; color:var(--gray-800); resize:vertical; box-sizing:border-box; }
+.nv-compose textarea:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
+.nv-compose-foot{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.9rem; }
+.notes-asyou{ font-size:.78rem; color:var(--gray-500); }
+.nv-compose .btn-primary[disabled]{ opacity:.5; cursor:not-allowed; }
+@media(max-width:760px){ .notes-side{ flex-basis:220px; } }
 .sa-drawer-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
 .sa-drawer-backdrop.open{ opacity:1; pointer-events:auto; }
 .sa-drawer{ position:fixed; top:0; right:0; bottom:0; width:420px; max-width:92vw; background:#fff; z-index:4001; box-shadow:-12px 0 32px rgba(16,24,40,.18); display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
@@ -2475,20 +2490,13 @@ body.flow-locked{ overflow:hidden; }
     </div>
     <button class="notes-x" id="notes-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button>
   </div>
-  <div class="notes-list" id="notes-list"></div>
-  <form class="notes-compose" id="notes-compose">
-    <div class="notes-ctx-row">
-      <label for="notes-ctx">Context</label>
-      <select id="notes-ctx">
-        <option>General</option><option>Problems</option><option>Allergies</option><option>Medications</option><option>Labs</option><option>Vitals</option><option>Encounters</option><option>Demographics</option>
-      </select>
+  <div class="notes-main">
+    <div class="notes-side">
+      <button class="notes-new" id="notes-new" type="button"><svg class="svg-ico"><use href="#i-plus"/></svg>New note</button>
+      <div class="notes-sidelist" id="notes-list"></div>
     </div>
-    <textarea id="notes-text" rows="3" placeholder="Write a note about this patient…"></textarea>
-    <div class="notes-compose-foot">
-      <span class="notes-asyou" id="notes-asyou">Posting as Jane Doe · Care Coordinator</span>
-      <button type="submit" class="btn-primary" id="notes-add" disabled>Add note</button>
-    </div>
-  </form>
+    <div class="notes-view" id="notes-view"></div>
+  </div>
 </aside>
 
 <script>
@@ -3767,43 +3775,94 @@ body.flow-locked{ overflow:hidden; }
     const drawer=document.getElementById('notes-drawer'); if(!drawer) return;
     const backdrop=document.getElementById('notes-backdrop');
     const listEl=document.getElementById('notes-list');
-    const form=document.getElementById('notes-compose');
-    const ta=document.getElementById('notes-text');
-    const ctx=document.getElementById('notes-ctx');
-    const addBtn=document.getElementById('notes-add');
+    const viewEl=document.getElementById('notes-view');
     const badge=document.getElementById('ph-notes-badge');
-    const PID='00482915', KEY='lanes_notes_'+PID;
+    const PID='00482915', KEY='lanes_notes_v2_'+PID;
     const LS={ get(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return window.__notes; } },
                set(v){ window.__notes=v; try{ localStorage.setItem(KEY, JSON.stringify(v)); }catch(e){} } };
+    const CTX=['General','Problems','Allergies','Medications','Labs','Vitals','Encounters','Demographics'];
     const SEED=[
-      {author:'Dr. Elena Ruiz', role:'PCP · Cedars-Sinai', ctx:'Problems', ts:'2024-02-12T15:20:00', text:'Patient reports new left leg pain, ongoing ~1 week. Ordered imaging; will follow up at next visit.'},
-      {author:'Marcus Lee', role:'Care Coordinator · LA Care', ctx:'Demographics', ts:'2024-02-02T10:05:00', text:'Reached patient at new number. Current address confirmed — the prior address on file is outdated.'},
-      {author:'Priya Nair', role:'Pharmacist · LA Care', ctx:'Medications', ts:'2024-01-16T09:40:00', text:'Confirmed quetiapine fill at Walgreens. Counseled on adherence; no adverse effects reported.'}
+      {id:'n1', type:'ED Notification', author:'PointClickCare', role:'Automated · Cedars-Sinai ED', ctx:'Encounters', ts:'2024-02-12T01:55:00',
+        sections:[
+          {h:'Criteria Met', lines:['2 visits in 30 days','6 visits in 180 days']},
+          {h:'Security and Safety', lines:['No security events were found.']},
+          {h:'ED Care Guidelines', lines:['There are currently no ED Care Guidelines for this patient. Please check your facility’s medical records system.']},
+          {h:'Prescription Drug Report (12 mo.)', lines:['Unable to determine if a PDMP report exists because no response was received from PDMP.']},
+          {h:'E.D. Visit Count (12 mo.)', lines:['Facility visits: 2','Regional visits: 6']}
+        ]},
+      {id:'n2', type:'Discharge summary', author:'Dr. Elena Ruiz', role:'PCP · Cedars-Sinai', ctx:'Problems', ts:'2024-02-12T15:20:00',
+        text:'Patient reports new left leg pain, ongoing ~1 week. No trauma noted. Ordered imaging of the left lower extremity; will follow up at next visit. Advised rest and OTC analgesia in the interim.'},
+      {id:'n3', type:'Care coordination note', author:'Marcus Lee', role:'Care Coordinator · LA Care', ctx:'Demographics', ts:'2024-02-02T10:05:00',
+        text:'Reached patient at new number. Current address confirmed — the prior address on file is outdated and should be retired. No transportation barriers reported; patient has a stable place to live.'},
+      {id:'n4', type:'Pharmacy note', author:'Priya Nair', role:'Pharmacist · LA Care', ctx:'Medications', ts:'2024-01-16T09:40:00',
+        text:'Confirmed quetiapine 100 mg fill at Walgreens #4417. Counseled on adherence and nighttime dosing; no adverse effects reported. amLODIPine and loratadine refills on schedule.'},
+      {id:'n5', type:'Admit/Discharge/Transfer', author:'PointClickCare', role:'Automated · Glendale Adventist', ctx:'Encounters', ts:'2023-12-20T22:10:00',
+        sections:[
+          {h:'Event', lines:['Emergency Department registration','Chief complaint: abdominal pain']},
+          {h:'Disposition', lines:['Discharged home with primary-care follow-up.']},
+          {h:'Security and Safety', lines:['No security events were found.']}
+        ]},
+      {id:'n6', type:'Behavioral health note', author:'Dr. Aaron Webb', role:'Psychiatry · Alta Hospitals', ctx:'Problems', ts:'2023-11-07T13:30:00',
+        text:'Follow-up for schizophrenia, stable on current regimen. Mood euthymic, no acute SI/HI. Continue quetiapine; reinforced importance of adherence and routine follow-up.'}
     ];
     let notes=LS.get(); if(!Array.isArray(notes)){ notes=SEED.slice(); LS.set(notes); }
+    let selId=null, mode='view';
     const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const initials=n=>n.split(/\s+/).filter(Boolean).map(w=>w[0]).slice(0,2).join('').toUpperCase();
-    function fmt(ts){ const d=new Date(ts); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
-    function render(){
-      if(badge){ badge.textContent=notes.length; badge.style.display=notes.length?'':'none'; }
-      if(!notes.length){ listEl.innerHTML='<div class="notes-empty">No notes yet. Add the first note below.</div>'; return; }
-      listEl.innerHTML=notes.slice().sort((a,b)=>new Date(b.ts)-new Date(a.ts)).map(n=>
-        '<div class="note-item"><div class="note-top"><span class="note-av">'+initials(n.author)+'</span>'+
-        '<span class="note-who"><span class="note-author">'+esc(n.author)+'</span><span class="note-meta">'+esc(n.role)+' · '+fmt(n.ts)+'</span></span>'+
-        '<span class="note-ctx">'+esc(n.ctx)+'</span></div><div class="note-body">'+esc(n.text)+'</div></div>').join('');
+    const sorted=()=>notes.slice().sort((a,b)=>new Date(b.ts)-new Date(a.ts));
+    function fmtShort(ts){ const d=new Date(ts); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+    function fmtLong(ts){ const d=new Date(ts); return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' · '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
+    function updateBadge(){ if(badge){ badge.textContent=notes.length; badge.style.display=notes.length?'':'none'; } }
+    function renderList(){
+      listEl.innerHTML=sorted().map(n=>
+        '<button type="button" class="notes-item'+(n.id===selId&&mode==='view'?' sel':'')+'" data-id="'+n.id+'">'+
+          '<div class="notes-item-type">'+esc(n.type)+'</div>'+
+          '<div class="notes-item-who">'+esc(n.author)+'</div>'+
+          '<div class="notes-item-date">'+fmtShort(n.ts)+'</div>'+
+        '</button>').join('');
     }
-    function open(focus){ drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden','false'); if(focus) setTimeout(()=>ta.focus(),180); }
+    function renderView(){
+      const n=notes.find(x=>x.id===selId);
+      if(!n){ viewEl.innerHTML='<div class="notes-empty">Select a note from the list, or start a new one.</div>'; return; }
+      let bodyHtml;
+      if(n.sections){ bodyHtml=n.sections.map(s=>'<div class="nv-section"><h4>'+esc(s.h)+'</h4>'+
+        (s.lines.length>1?'<ul>'+s.lines.map(l=>'<li>'+esc(l)+'</li>').join('')+'</ul>':'<p>'+esc(s.lines[0])+'</p>')+'</div>').join(''); }
+      else { bodyHtml='<div class="nv-body">'+esc(n.text)+'</div>'; }
+      viewEl.innerHTML='<div class="nv-head"><div class="nv-type">'+esc(n.type)+'</div>'+
+        '<div class="nv-sub">'+esc(n.author)+' · '+esc(n.role)+' · '+fmtLong(n.ts)+'</div>'+
+        '<span class="nv-ctx">'+esc(n.ctx)+'</span></div>'+bodyHtml;
+    }
+    function renderCompose(){
+      viewEl.innerHTML='<div class="nv-head"><div class="nv-type">New note</div>'+
+        '<div class="nv-sub">Posting as Jane Doe · Care Coordinator</div></div>'+
+        '<form class="nv-compose" id="nv-compose">'+
+          '<div class="nv-field"><label for="nv-ctx">Context</label>'+
+            '<select id="nv-ctx">'+CTX.map(c=>'<option>'+c+'</option>').join('')+'</select></div>'+
+          '<div class="nv-field"><label for="nv-text">Note</label>'+
+            '<textarea id="nv-text" placeholder="Write a note about this patient…"></textarea></div>'+
+          '<div class="nv-compose-foot"><span class="notes-asyou">Shared with everyone who can access this patient</span>'+
+            '<button type="submit" class="btn-primary" id="nv-add" disabled>Add note</button></div>'+
+        '</form>';
+      const ta=document.getElementById('nv-text'), addBtn=document.getElementById('nv-add');
+      ta.addEventListener('input',()=>{ addBtn.disabled=ta.value.trim().length===0; });
+      document.getElementById('nv-compose').addEventListener('submit',e=>{ e.preventDefault();
+        const t=ta.value.trim(); if(!t) return;
+        const id='n'+Date.now();
+        notes.push({id, type:'Care coordination note', author:'Jane Doe', role:'Care Coordinator', ctx:document.getElementById('nv-ctx').value, ts:new Date().toISOString(), text:t});
+        LS.set(notes); selId=id; mode='view'; updateBadge(); renderList(); renderView(); listEl.scrollTop=0;
+      });
+      setTimeout(()=>ta.focus(),60);
+    }
+    function refresh(){ updateBadge(); renderList(); if(mode==='compose') renderCompose(); else renderView(); }
+    function open(){ if(mode==='view' && !selId){ const s=sorted()[0]; selId=s?s.id:null; } drawer.classList.add('open'); backdrop.classList.add('open'); drawer.setAttribute('aria-hidden','false'); refresh(); }
     function close(){ drawer.classList.remove('open'); backdrop.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
-    ta.addEventListener('input',()=>{ addBtn.disabled=ta.value.trim().length===0; });
-    form.addEventListener('submit',e=>{ e.preventDefault(); const t=ta.value.trim(); if(!t) return;
-      notes.push({author:'Jane Doe', role:'Care Coordinator', ctx:ctx.value, ts:new Date().toISOString(), text:t});
-      LS.set(notes); ta.value=''; addBtn.disabled=true; render(); listEl.scrollTop=0; });
+    listEl.addEventListener('click',e=>{ const it=e.target.closest('.notes-item'); if(!it) return; selId=it.getAttribute('data-id'); mode='view'; renderList(); renderView(); });
+    document.getElementById('notes-new').addEventListener('click',()=>{ mode='compose'; renderList(); renderCompose(); });
     document.getElementById('notes-close').addEventListener('click',close);
     backdrop.addEventListener('click',close);
     document.addEventListener('keydown',e=>{ if(e.key==='Escape' && drawer.classList.contains('open')) close(); });
-    const addNote=document.getElementById('ph-addnote-btn'); if(addNote) addNote.addEventListener('click',()=>open(false));
-    const notesBtn=document.getElementById('ph-notes-btn'); if(notesBtn) notesBtn.addEventListener('click',()=>open(false));
-    render();
+    const addNote=document.getElementById('ph-addnote-btn'); if(addNote) addNote.addEventListener('click',open);
+    const notesBtn=document.getElementById('ph-notes-btn'); if(notesBtn) notesBtn.addEventListener('click',open);
+    updateBadge();
   })();
 </script>
 
