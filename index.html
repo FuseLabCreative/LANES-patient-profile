@@ -3814,6 +3814,13 @@ body.flow-locked{ overflow:hidden; }
       selDate=null; dobInput.value=''; closePop();
       clinicSel.value=''; clinicSel.dispatchEvent(new Event('change'));
     });
+
+    // pre-filled defaults so the form can be submitted straight through while designing
+    document.getElementById('pf-first').value='Maria';
+    document.getElementById('pf-last').value='Sanchez';
+    selDate=new Date(2001,0,1); dobInput.value=fmt(selDate);
+    clinicSel.value='0'; clinicSel.dispatchEvent(new Event('change'));
+    ['Primary Care','Behavioral Health'].forEach(v=>{ const cb=deptList().find(x=>x.value===v); if(cb) cb.checked=true; }); syncDept();
   })();
 
   /* ---- clinic switcher dropdown (Smart Alerts header) ---- */
