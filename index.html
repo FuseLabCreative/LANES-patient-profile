@@ -252,7 +252,9 @@
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23748194'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
     background-repeat:no-repeat; background-position:right .55rem center; background-size:13px; }
   .btn-primary{ background:var(--primary); border:1px solid var(--primary); color:#fff; font-size:0.875rem;
-    font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap; }
+    font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap;
+    display:inline-flex; align-items:center; justify-content:center; gap:.45rem; }
+  .btn-primary .svg-ico{ flex:none; }
   .btn-primary:hover{ background:var(--primary-hover); }
   #ph-addnote-btn{ display:inline-flex; align-items:center; gap:.45rem; }
   #ph-addnote-btn .svg-ico{ width:15px; height:15px; }
@@ -877,6 +879,7 @@
   .cp-today{ font-weight:700; color:var(--primary); }
   .cp-in{ background:#eaf2fd; border-radius:0; color:var(--gray-800); }
   .cp-start, .cp-end{ background:var(--primary); color:#fff; }
+  .cp-day.cp-start:hover, .cp-day.cp-end:hover{ background:var(--primary-hover); color:#fff; }
   .cp-start{ border-radius:.3rem 0 0 .3rem; } .cp-end{ border-radius:0 .3rem .3rem 0; } .cp-only{ border-radius:.3rem; }
   .cp-foot{ display:flex; justify-content:space-between; align-items:center; margin-top:.55rem; }
   .cp-clear{ background:none; border:none; color:var(--gray-600); font-size:0.875rem; cursor:pointer; padding:.3rem .4rem; }
@@ -1229,7 +1232,9 @@ body.flow-locked{ overflow:hidden; }
 /* search details modal */
 .sd-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.4); z-index:5000; opacity:0; pointer-events:none; transition:opacity .18s; }
 .sd-backdrop.open{ opacity:1; pointer-events:auto; }
-.sd-modal{ position:fixed; top:50%; left:50%; transform:translate(-50%,-48%); width:480px; max-width:94vw; max-height:88vh; background:#fff; border-radius:.75rem; box-shadow:0 24px 60px rgba(16,24,40,.28); z-index:5001; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; }
+.sd-modal{ position:fixed; top:50%; left:50%; transform:translate(-50%,-48%); width:600px; max-width:94vw; max-height:88vh; background:#fff; border-radius:.75rem; box-shadow:0 24px 60px rgba(16,24,40,.28); z-index:5001; display:flex; flex-direction:column; opacity:0; pointer-events:none; transition:opacity .18s, transform .18s; }
+.sd-body .pf-seg{ margin-bottom:1.4rem; }
+.sd-body .pf-pane .sd-row:first-child{ padding-top:0; }
 .sd-modal.open{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%); }
 .sd-head{ display:flex; align-items:center; justify-content:space-between; padding:1.1rem 1.35rem; border-bottom:1px solid var(--gray-200); }
 .sd-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
@@ -1373,7 +1378,10 @@ body.flow-locked{ overflow:hidden; }
 .cal-pop.pf-cal-pop .cp-day{ height:38px; }
 .cal-pop.pf-cal-pop .cp-foot{ border-top:1px solid var(--gray-200); padding-top:.55rem; }
 .cal-pop.pf-cal-pop .cp-nav{ font-size:1.6rem; line-height:.8; padding:.1rem .5rem; color:var(--gray-700); }
-.cal-pop.pf-cal-pop .cp-selects{ display:flex; gap:.35rem; align-items:center; }
+.cal-pop.pf-cal-pop .cp-selects{ display:flex; gap:.4rem; align-items:center; flex:1 1 auto; }
+.cal-pop.pf-cal-pop .cp-selects .sa-dd{ flex:1 1 auto; }
+.cal-pop.pf-cal-pop .cp-selects .sa-dd:last-child{ flex:0 0 96px; }
+.cal-pop.pf-cal-pop .cp-selects .sa-dd-btn{ width:100%; }
 .cal-pop.pf-cal-pop .cp-msel, .cal-pop.pf-cal-pop .cp-ysel{ border:1px solid var(--gray-300); border-radius:.35rem; padding:.22rem 1.3rem .22rem .45rem; font-family:inherit; font-size:.85rem; font-weight:600; color:var(--gray-900); background:#fff; cursor:pointer; }
 .cal-pop.pf-cal-pop .cp-ysel{ padding-right:1.1rem; }
 /* departments multiselect */
@@ -1400,7 +1408,7 @@ body.flow-locked{ overflow:hidden; }
 .ms-opt:hover{ background:var(--gray-100); }
 .ms-opt input{ width:16px; height:16px; accent-color:var(--primary); flex:none; cursor:pointer; }
 .pf-col{ display:flex; flex-direction:column; gap:1.1rem; }
-.pf-actions{ display:flex; flex-direction:column; gap:.5rem; padding-top:.75rem; }
+.pf-actions{ display:flex; flex-direction:column; gap:.5rem; margin-top:1.75rem; }
 .pf-actions .btn-primary{ width:100%; justify-content:center; }
 .pf-actions .btn-primary[disabled]{ opacity:.5; cursor:not-allowed; }
 .pf-clear{ width:100%; background:none; border:none; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); cursor:pointer; padding:.45rem; border-radius:.45rem; }
@@ -2490,7 +2498,7 @@ body.flow-locked{ overflow:hidden; }
 <div class="sd-backdrop" id="sd-backdrop"></div>
 <div class="sd-modal" id="sd-modal" role="dialog" aria-modal="true" aria-label="Patient search details">
   <div class="sd-head">
-    <span class="sd-title">Patient search</span>
+    <span class="sd-title">Search details</span>
     <button class="sd-x" id="sd-close" type="button" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button>
   </div>
   <div class="sd-body" id="sd-body"></div>
@@ -3987,6 +3995,7 @@ body.flow-locked{ overflow:hidden; }
         h+='<button type="button" class="cp-day cp-only'+(on?' cp-start':'')+'" data-d="'+d+'">'+d+'</button>'; }
       h+='</div><div class="cp-foot"><button type="button" class="cp-clear">Clear</button><button type="button" class="cp-apply" data-done>Done</button></div>';
       pop.innerHTML=h;
+      if(window.enhanceSelects) window.enhanceSelects(pop); // month/year become custom dropdown components
     }
     function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop(); pop.style.display='block'; }
     function closePop(){ pop.style.display='none'; }
@@ -4038,16 +4047,29 @@ body.flow-locked{ overflow:hidden; }
     if(!openBtn||!modal) return;
     const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     function render(){
-      const name=[saCtx.first,saCtx.last].filter(Boolean).join(' ')||'—';
       const depts=(saCtx.depts&&saCtx.depts.length)?saCtx.depts.map(d=>'<span class="sd-chip">'+esc(d)+'</span>').join(''):'<span class="sd-v">All departments</span>';
       body.innerHTML=
-        '<div class="sd-group"><div class="sd-group-title">Demographics</div>'+
-          '<div class="sd-row"><span class="sd-k">Patient</span><span class="sd-v">'+esc(name)+'</span></div>'+
-          '<div class="sd-row"><span class="sd-k">Date of birth</span><span class="sd-v">'+esc(saCtx.dob||'—')+'</span></div></div>'+
-        '<div class="sd-group"><div class="sd-group-title">Clinical institution</div>'+
-          '<div class="sd-row"><span class="sd-k">Medical clinic</span><span class="sd-v">'+esc(activeClinic.n)+'</span></div>'+
-          '<div class="sd-row"><span class="sd-k">Departments</span><span class="sd-chips">'+depts+'</span></div></div>';
+        '<div class="pf-seg" role="tablist" aria-label="Search mode">'+
+          '<button type="button" class="pf-seg-btn active" data-sdpane="patient" role="tab">Patient search</button>'+
+          '<button type="button" class="pf-seg-btn" data-sdpane="institution" role="tab">Clinical institution</button>'+
+        '</div>'+
+        '<div class="pf-panes">'+
+          '<section class="pf-pane active" data-sdpane="patient">'+
+            '<div class="sd-row"><span class="sd-k">First name</span><span class="sd-v">'+esc(saCtx.first||'—')+'</span></div>'+
+            '<div class="sd-row"><span class="sd-k">Last name</span><span class="sd-v">'+esc(saCtx.last||'—')+'</span></div>'+
+            '<div class="sd-row"><span class="sd-k">Date of birth</span><span class="sd-v">'+esc(saCtx.dob||'—')+'</span></div>'+
+          '</section>'+
+          '<section class="pf-pane" data-sdpane="institution">'+
+            '<div class="sd-row"><span class="sd-k">Medical clinic</span><span class="sd-v">'+esc(activeClinic.n)+'</span></div>'+
+            '<div class="sd-row"><span class="sd-k">Departments</span><span class="sd-chips">'+depts+'</span></div>'+
+          '</section>'+
+        '</div>';
     }
+    body.addEventListener('click',e=>{ const b=e.target.closest('.pf-seg-btn'); if(!b) return;
+      const p=b.dataset.sdpane;
+      body.querySelectorAll('.pf-seg-btn').forEach(x=>x.classList.toggle('active', x===b));
+      body.querySelectorAll('.pf-pane').forEach(x=>x.classList.toggle('active', x.dataset.sdpane===p));
+    });
     function open(){ render(); backdrop.classList.add('open'); modal.classList.add('open'); }
     function close(){ backdrop.classList.remove('open'); modal.classList.remove('open'); }
     openBtn.addEventListener('click',open);
