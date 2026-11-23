@@ -1344,10 +1344,10 @@ body.flow-locked{ overflow:hidden; }
 .cs-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; overflow-x:hidden; padding-bottom:2rem; }
 .cs-empty{ color:var(--gray-500); font-size:.9rem; padding:1.5rem .25rem; }
 /* ---- select-screen standard page header (matches Patient / Clinics pages) ---- */
-.ps-headband{ flex:none; background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
-.ps-headband-inner{ width:100%; padding:1.1rem 1.5rem; box-sizing:border-box; }
-.ps-title{ display:block; font-size:1.6rem; font-weight:400; color:var(--gray-900); line-height:1.15; }
-.ps-sub{ display:block; font-size:.875rem; color:var(--gray-500); margin-top:.2rem; max-width:600px; }
+.pfh-headband{ flex:none; background:var(--body-bg); border-bottom:1px solid var(--gray-300); }
+.pfh-headband-inner{ width:100%; padding:1.1rem 1.5rem; box-sizing:border-box; }
+.pfh-title{ display:block; font-size:1.6rem; font-weight:400; color:var(--gray-900); line-height:1.15; margin:0; }
+.pfh-sub{ display:block; font-size:.875rem; color:var(--gray-500); line-height:1.4; margin:.2rem 0 0; max-width:600px; }
 
 /* ---- first-page patient form ---- */
 .pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.75rem 2rem; box-shadow:var(--card-shadow); }
@@ -1623,10 +1623,10 @@ body.flow-locked{ overflow:hidden; }
 <!-- ============ PORTAL FLOW: SELECT INSTITUTION ============ -->
 <div id="scr-select" class="portal-screen active">
   <div class="nav-host"></div>
-  <div class="ps-headband">
-    <div class="ps-headband-inner">
-      <span class="ps-title" id="pf-page-title">Find a patient</span>
-      <span class="ps-sub" id="pf-page-sub">Search by the patient's details, or by clinical institution — switch between the two below.</span>
+  <div class="pfh-headband">
+    <div class="pfh-headband-inner">
+      <span class="pfh-title" id="pf-page-title">Find a patient</span>
+      <span class="pfh-sub" id="pf-page-sub">Search by the patient's details, or by clinical institution — switch between the two below.</span>
     </div>
   </div>
   <div class="cs-wrap">
@@ -3938,13 +3938,20 @@ body.flow-locked{ overflow:hidden; }
     enhanceSelects(form); // clinic becomes a custom dropdown component
 
     /* segmented control — switch between the two search forms (one fixed height) */
+    const submitBtn=document.getElementById('pf-submit');
+    function syncSubmitLabel(){
+      const mode=(form.querySelector('.pf-seg-btn.active')||{}).dataset?.pane||'patient';
+      submitBtn.textContent = mode==='institution' ? 'Continue to Smart Alerts' : 'Continue to patient profile';
+    }
     form.querySelectorAll('.pf-seg-btn').forEach(btn=>btn.addEventListener('click',()=>{
       const pane=btn.dataset.pane;
       form.querySelectorAll('.pf-seg-btn').forEach(x=>x.classList.toggle('active', x===btn));
       form.querySelectorAll('.pf-pane').forEach(x=>x.classList.toggle('active', x.dataset.pane===pane));
       // close any open popups when leaving a pane
       document.querySelectorAll('.sa-dd.open, #pf-dept.open').forEach(m=>m.classList.remove('open'));
+      syncSubmitLabel();
     }));
+    syncSubmitLabel();
 
     /* departments dependent multiselect */
     const deptField=document.getElementById('pf-dept-field'), deptBody=document.getElementById('pf-dept-body'),
@@ -4009,11 +4016,20 @@ body.flow-locked{ overflow:hidden; }
     document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob') && !e.target.closest('.pf-cal-pop')) closePop(); });
 
     function doContinue(){
-      if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); } return; }
+      const mode=(form.querySelector('.pf-seg-btn.active')||{}).dataset?.pane||'patient';
       saCtx={ depts:deptList().filter(x=>x.checked).map(x=>x.value),
               first:document.getElementById('pf-first').value.trim(),
               last:document.getElementById('pf-last').value.trim(), dob:dobInput.value };
-      selectClinic(CLINICS[+clinicSel.value]);
+      if(mode==='institution'){
+        // searching by clinic → Smart Alerts work-list
+        if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); }
+          form.querySelector('.pf-seg-btn[data-pane="institution"]').click(); return; }
+        selectClinic(CLINICS[+clinicSel.value]);
+      } else {
+        // searching by patient → patient profile page
+        if(clinicSel.value!=='') activeClinic=CLINICS[+clinicSel.value];
+        show('synopsis');
+      }
     }
     form.addEventListener('submit',e=>{ e.preventDefault(); doContinue(); });
     document.getElementById('pf-submit').addEventListener('click', doContinue);
@@ -4033,9 +4049,8 @@ body.flow-locked{ overflow:hidden; }
 
   /* ---- Smart Alerts header (static, no switcher) ---- */
   function updateClinicHeader(){
-    const nm=[saCtx.first,saCtx.last].filter(Boolean).join(' ').trim();
-    document.getElementById('sa-clinic-name').textContent = nm || activeClinic.n;
-    const parts=[]; if(saCtx.dob) parts.push('DOB '+saCtx.dob); parts.push(activeClinic.n);
+    document.getElementById('sa-clinic-name').textContent = activeClinic.n;
+    const parts=[activeClinic.p+' patients'];
     if(saCtx.depts && saCtx.depts.length) parts.push(saCtx.depts.join(', '));
     document.getElementById('sa-clinic-badge').textContent=parts.join(' · '); }
   { const sb=document.getElementById('sa-back'); if(sb) sb.addEventListener('click',()=>show('select')); }
