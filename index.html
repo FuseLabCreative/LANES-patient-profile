@@ -95,11 +95,12 @@
   .app-toast.show{ opacity:1; transform:translate(-50%,0); }
   .app-toast .svg-ico{ color:#4ec77f; width:16px; height:16px; }
   /* ===== history / related-contacts trigger icons + modal ===== */
-  .hx-ico{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; margin-left:.3rem; padding:0;
-    border:1px solid rgba(44,123,229,.28); background:rgba(44,123,229,.1); border-radius:.375rem; cursor:pointer;
-    color:var(--primary); vertical-align:middle; flex:0 0 auto; transition:color .15s, background .15s, border-color .15s; }
-  .hx-ico svg{ width:15px; height:15px; }
-  .hx-ico:hover{ color:#fff; background:var(--primary); border-color:var(--primary); }
+  .hx-ico{ display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; margin-left:.35rem; padding:0;
+    border:1px solid var(--primary); background:var(--primary); border-radius:.45rem; cursor:pointer;
+    color:#fff; vertical-align:middle; flex:0 0 auto; box-shadow:0 1px 2px rgba(44,123,229,.35); transition:background .15s, border-color .15s, box-shadow .15s, transform .05s; }
+  .hx-ico svg{ width:16px; height:16px; }
+  .hx-ico:hover{ background:#1f6fe0; border-color:#1f6fe0; box-shadow:0 2px 6px rgba(44,123,229,.45); }
+  .hx-ico:active{ transform:translateY(1px); }
   .ov-kv .v{ display:inline-flex; align-items:center; gap:0; justify-content:flex-end; flex-wrap:wrap; }
   .hx-overlay{ position:fixed; inset:0; z-index:2000; display:none; align-items:center; justify-content:center;
     background:rgba(31,45,61,.4); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); padding:4vh 2vw; overflow:auto; }
@@ -343,7 +344,7 @@
   .wgt-btn .svg-ico{ width:15px; height:15px; }
   .wgt-btn.on{ color:var(--primary); background:rgba(44,123,229,.12); }
   body.v2 section.wgt-pinned{ order:-1; }
-  body.v2 section.wgt-pinned .panel{ box-shadow:0 0 0 2px rgba(44,123,229,.4), 0 1px 3px rgba(18,38,63,.06); }
+  body.v2 section.wgt-pinned .panel{ box-shadow:0 0 0 2px rgba(44,123,229,.22), 0 1px 3px rgba(18,38,63,.06); }
   section.wgt-hidden{ display:none !important; }
   .wgt-tray{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding:.6rem .9rem; margin-bottom:.9rem; background:#eef5ff; border:1px solid #cfe1fb; border-radius:.5rem; }
   .wgt-tray[hidden]{ display:none !important; }
@@ -745,14 +746,21 @@
   body.nav-tabs #ph-clear{ display:none !important; }
   body.nav-tabs #ph-filter-row{ display:none !important; }
   /* shared filter popover (used by Version 2 header button and Version 3 panel button) */
-  .filter-pop{ position:fixed; z-index:1100; width:264px; background:#fff; border:1px solid var(--gray-200);
-    border-radius:.6rem; box-shadow:0 12px 34px rgba(31,45,61,.2); padding:.65rem; display:none; }
-  .filter-pop.open{ display:block; }
-  .filter-pop-head{ display:flex; align-items:center; justify-content:space-between; margin:0 .15rem .5rem; }
-  .filter-pop-head .t{ font-size:0.875rem; text-transform:none; letter-spacing:normal; color:var(--gray-500); font-weight:600; }
-  .filter-pop-clear{ font-size:0.875rem; color:var(--primary); background:none; border:none; cursor:pointer; padding:0; display:none; }
+  /* filter panel standardized as a right-side drawer (same pattern as Patient notes) */
+  .filter-pop-backdrop{ position:fixed; inset:0; background:rgba(16,24,40,.35); z-index:4000; opacity:0; pointer-events:none; transition:opacity .2s; }
+  .filter-pop-backdrop.open{ opacity:1; pointer-events:auto; }
+  .filter-pop{ position:fixed; top:0; right:0; bottom:0; width:380px; max-width:92vw; z-index:4001; background:#fff;
+    box-shadow:-12px 0 32px rgba(16,24,40,.18); padding:0; display:flex; flex-direction:column; transform:translateX(100%); transition:transform .22s ease; }
+  .filter-pop.open{ transform:translateX(0); }
+  .filter-pop-head{ display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.1rem 1.25rem; border-bottom:1px solid var(--gray-200); margin:0; }
+  .filter-pop-head .t{ font-size:1.1rem; font-weight:700; color:var(--gray-900); }
+  .filter-pop-headacts{ display:flex; align-items:center; gap:.4rem; }
+  .filter-pop-clear{ font-size:0.85rem; font-weight:600; color:var(--primary); background:none; border:none; cursor:pointer; padding:.2rem .3rem; display:none; }
   .filter-pop-clear.show{ display:inline; }
-  .filter-pop .filter-bar{ display:flex; flex-direction:column; gap:.4rem; flex-wrap:nowrap; }
+  .filter-pop-x{ width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-500); border-radius:.4rem; cursor:pointer; }
+  .filter-pop-x:hover{ background:var(--gray-100); color:var(--gray-800); }
+  .filter-pop-x .svg-ico{ width:16px; height:16px; }
+  .filter-pop .filter-bar{ display:flex; flex-direction:column; gap:.9rem; flex-wrap:nowrap; padding:1.1rem 1.25rem; overflow-y:auto; }
   .filter-pop .filter-cell{ width:100%; min-width:0; }
   /* when filters are applied: tint the filter button and show a count badge */
   #ph-filter-btn.has-set, #v3-filter-btn.has-set{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.08); }
@@ -794,7 +802,7 @@
 
   /* 9 — Card sections: bold outline + per-section accent so tiles are easy to tell apart; 10 — tighter gap */
   body.v2 .panel{ box-shadow:0 1px 3px rgba(18,38,63,.06); border:1px solid var(--gray-300); border-radius:.6rem;
-    border-top:3px solid var(--sec-accent,var(--primary)); }
+    border-top:3px solid var(--sec-accent,#bcd4f1); }
   body.v2 .info-card{ box-shadow:0 1px 3px rgba(18,38,63,.06); border:1px solid var(--gray-300); }
   body.v2 .info-cards{ gap:.85rem; }
   body.v2 .main-grid{ gap:1.15rem; flex:1 1 auto; min-width:0; max-width:1440px; margin:0 auto; }
@@ -1436,6 +1444,8 @@ body.flow-locked{ overflow:hidden; }
 .notes-ctx-row{ display:flex; align-items:center; gap:.5rem; margin-bottom:.55rem; }
 .notes-ctx-row label{ font-size:.8rem; font-weight:600; color:var(--gray-700); }
 .notes-ctx-row select{ flex:1 1 auto; height:34px; border:1px solid var(--gray-300); border-radius:.4rem; padding:0 .55rem; font-family:inherit; font-size:.85rem; color:var(--gray-800); background:#fff; }
+.notes-ctx-row .sa-dd{ flex:1 1 auto; }
+.filter-pop .filter-cell .sa-dd{ width:100%; }
 .notes-compose textarea{ width:100%; border:1px solid var(--gray-300); border-radius:.45rem; padding:.6rem .7rem; font-family:inherit; font-size:.88rem; color:var(--gray-800); resize:vertical; box-sizing:border-box; }
 .notes-compose textarea:focus{ outline:none; border-color:var(--primary); box-shadow:0 0 0 .18rem rgba(44,123,229,.15); }
 .notes-compose-foot{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.6rem; }
@@ -2722,20 +2732,20 @@ body.flow-locked{ overflow:hidden; }
     const fbar = document.getElementById('filter-bar');
     // shared filter popover: move the plates into a floating panel that both the V2 header button
     // and the V3 panel button open — keeps filters available without disturbing the page layout
+    const fbackdrop = document.createElement('div'); fbackdrop.className='filter-pop-backdrop'; fbackdrop.id='filter-pop-backdrop'; document.body.appendChild(fbackdrop);
     const fpop = document.createElement('div'); fpop.className='filter-pop'; fpop.id='filter-pop';
-    fpop.innerHTML = '<div class="filter-pop-head"><span class="t">Filters</span><button class="filter-pop-clear" id="filter-pop-clear">Clear all</button></div>';
+    fpop.innerHTML = '<div class="filter-pop-head"><span class="t">Filters</span><div class="filter-pop-headacts"><button class="filter-pop-clear" id="filter-pop-clear">Clear all</button><button class="filter-pop-x" id="filter-pop-x" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div></div>';
     document.body.appendChild(fpop);
     if(fbar) fpop.appendChild(fbar);
     const filterBtns = [fbtn, document.getElementById('v3-filter-btn')].filter(Boolean);
     filterBtns.forEach(b=>{ if(!b.querySelector('.filter-count')){ const s=document.createElement('span'); s.className='filter-count'; b.appendChild(s); } });
     let fpopAnchor = null;
-    function positionPop(a){ const r=a.getBoundingClientRect(); let left=r.right-fpop.offsetWidth; left=Math.max(8, Math.min(left, window.innerWidth-fpop.offsetWidth-8)); fpop.style.left=left+'px'; fpop.style.top=(r.bottom+6)+'px'; }
-    function closePop(){ fpop.classList.remove('open'); filterBtns.forEach(b=>b.classList.remove('active')); fpopAnchor=null; }
-    function openPop(a){ fpopAnchor=a; fpop.classList.add('open'); positionPop(a); filterBtns.forEach(b=>b.classList.toggle('active', b===a)); }
+    function closePop(){ fpop.classList.remove('open'); fbackdrop.classList.remove('open'); filterBtns.forEach(b=>b.classList.remove('active')); fpopAnchor=null; }
+    function openPop(a){ fpopAnchor=a; fpop.classList.add('open'); fbackdrop.classList.add('open'); filterBtns.forEach(b=>b.classList.toggle('active', b===a)); }
     filterBtns.forEach(b=> b.addEventListener('click', e=>{ e.stopPropagation(); if(fpop.classList.contains('open') && fpopAnchor===b) closePop(); else openPop(b); }));
-    document.addEventListener('click', e=>{ if(fpop.classList.contains('open') && !e.target.closest('#filter-pop') && !e.target.closest('#ph-filter-btn') && !e.target.closest('#v3-filter-btn')) closePop(); });
-    window.addEventListener('scroll', ()=>{ if(fpop.classList.contains('open') && fpopAnchor) positionPop(fpopAnchor); }, {passive:true});
-    window.addEventListener('resize', ()=>{ if(fpop.classList.contains('open') && fpopAnchor) positionPop(fpopAnchor); });
+    fbackdrop.addEventListener('click', closePop);
+    document.getElementById('filter-pop-x').addEventListener('click', closePop);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape' && fpop.classList.contains('open')) closePop(); });
 
     // filter plates with custom list dropdowns (mock data)
     const filterDefs = [
@@ -3840,6 +3850,7 @@ body.flow-locked{ overflow:hidden; }
     buildVtChips();
     wireChecklist();
     enhanceSelects(document.getElementById('sa-drawer'));
+    enhanceSelects(document.getElementById('notes-drawer'));
     document.addEventListener('click',()=>document.querySelectorAll('.sa-dd.open').forEach(m=>m.classList.remove('open')));
     const fb=document.getElementById('sa-filters-btn'); if(fb) fb.addEventListener('click',()=>openDrawer(true));
     const dc=document.getElementById('sa-drawer-close'); if(dc) dc.addEventListener('click',()=>openDrawer(false));
