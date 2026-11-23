@@ -254,6 +254,27 @@
   .btn-primary{ background:var(--primary); border:1px solid var(--primary); color:#fff; font-size:0.875rem;
     font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap; }
   .btn-primary:hover{ background:var(--primary-hover); }
+  #ph-addnote-btn{ display:inline-flex; align-items:center; gap:.45rem; }
+  #ph-addnote-btn .svg-ico{ width:15px; height:15px; }
+  .notes-count{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:rgba(255,255,255,.28); color:#fff; font-size:.72rem; font-weight:700; }
+  /* Patient Summary card */
+  .pt-summary{ background:#fff; border:1px solid var(--gray-200); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.2rem 1.5rem 1.35rem; margin-bottom:.85rem; }
+  .pts-head{ display:flex; align-items:baseline; gap:.75rem; margin-bottom:.9rem; padding-bottom:.7rem; border-bottom:1px solid var(--gray-200); }
+  .pts-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
+  .pts-updated{ font-size:.8rem; color:var(--gray-500); }
+  .pts-body{ font-size:.92rem; color:var(--gray-800); line-height:1.6; max-width:940px; }
+  .pts-body > p{ margin:0 0 .55rem; }
+  .pts-body strong{ color:var(--gray-900); font-weight:600; }
+  .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:500; color:var(--gray-700); background:var(--gray-100); border:1px solid var(--gray-200); border-radius:.35rem; padding:.1rem .5rem; margin:0 .1rem; }
+  .pts-list{ margin:.3rem 0 0; padding-left:1.2rem; }
+  .pts-list > li{ margin-bottom:.3rem; }
+  .pts-det{ margin:.35rem 0; }
+  .pts-det > summary{ cursor:pointer; font-weight:600; color:var(--primary); list-style:none; display:inline-flex; align-items:center; gap:.35rem; padding:.15rem 0; }
+  .pts-det > summary::-webkit-details-marker{ display:none; }
+  .pts-det > summary::before{ content:'\\25B8'; font-size:.7rem; }
+  .pts-det[open] > summary::before{ content:'\\25BE'; }
+  .pts-det ul{ margin:.25rem 0 .5rem; padding-left:1.1rem; }
+  .pts-det li{ margin-bottom:.25rem; color:var(--gray-700); }
   .btn-ghost{ background:#fff; border:1px solid var(--gray-300); color:var(--gray-700); font-size:0.875rem;
     font-weight:500; padding:.45rem 1rem; border-radius:.375rem; cursor:pointer; white-space:nowrap; }
   .btn-ghost:hover{ background:var(--gray-200); }
@@ -1820,9 +1841,8 @@ body.flow-locked{ overflow:hidden; }
       <button class="notes-btn v2-only active" id="ph-overview-btn" title="Patient overview"><svg class="svg-ico"><use href="#i-person"/></svg></button>
       <button class="notes-btn v2-only" id="ph-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="fb-dot"></span></button>
       <a href="#" class="btn-ghost v1-only"><svg class="svg-ico"><use href="#i-note"/></svg> Notes (0)</a>
-      <button class="notes-btn v2-only" id="ph-notes-btn" title="Patient notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge" id="ph-notes-badge">3</span></button>
       <button class="notes-btn has-label v2-only" id="ph-history-btn" title="Patient history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
-      <button class="btn-primary" id="ph-addnote-btn">Add note</button>
+      <button class="btn-primary" id="ph-addnote-btn"><svg class="svg-ico"><use href="#i-note"/></svg>Notes<span class="notes-count" id="ph-notes-badge">3</span></button>
     </div>
   </div>
   <div class="ph-filter-row v2-only" id="ph-filter-row">
@@ -1867,6 +1887,46 @@ body.flow-locked{ overflow:hidden; }
   </aside>
 
   <div class="content">
+
+  <!-- ============ PATIENT SUMMARY ============ -->
+  <section class="pt-summary" id="pt-summary">
+    <div class="pts-head">
+      <span class="pts-title">Patient Summary</span>
+      <span class="pts-updated">Last updated 2 days ago</span>
+    </div>
+    <div class="pts-body">
+      <p><strong>Patient:</strong> Maria Sanchez, 23 years old, Female, Hispanic or Latino. Medi-Cal coverage active.</p>
+      <p><strong>Summary period:</strong> ~ 02/28/2022 – 02/13/2024.</p>
+      <p><strong>Evidence of potential new conditions:</strong> <span class="pts-chip">Fibromyalgia</span> <span class="pts-chip">Chronic pain syndrome</span> <span class="pts-chip">Schizophrenia (unspecified)</span></p>
+      <p><strong>Social:</strong> Over the past 2 years reports a steady place to live and no issues with food security, finances, or access to care. Engaged in ongoing behavioral-health follow-up; no transportation barriers reported.</p>
+      <p><strong>Allergies:</strong> Codeine (itching). Sources disagree on Haldol — confirm before prescribing.</p>
+      <p><strong>History:</strong> Regular primary-care contacts with several ED visits across LA County, Cedars-Sinai, and Alta Hospitals over the past 2 years.</p>
+      <div class="pts-appts">
+        <strong>Recent appointments:</strong>
+        <ul class="pts-list">
+          <li>02/12/2024 — Cedars-Sinai Medical Center (Primary Care)
+            <details class="pts-det">
+              <summary>Medical history</summary>
+              <ul>
+                <li><strong>Fibromyalgia (M79.7)</strong> — chronic widespread pain; conservative management.</li>
+                <li><strong>Schizophrenia, unspecified (F20.9)</strong> — stable on quetiapine; behavioral-health follow-up.</li>
+                <li><strong>Recurrent pain</strong> — right hip (M25.551), abdominal (R10.9), ventral hernia (K43.9).</li>
+              </ul>
+            </details>
+            <details class="pts-det">
+              <summary>Current medications</summary>
+              <ul>
+                <li>amLODIPine 5 mg oral tablet — once daily</li>
+                <li>QUEtiapine 100 mg oral tablet — nightly</li>
+                <li>loratadine 10 mg oral tablet — once daily</li>
+                <li>LORazepam 1 mg oral tablet — as needed</li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <!-- ============ INFO CARDS ============ -->
   <div class="info-cards" id="sec-overview">
@@ -3751,7 +3811,7 @@ body.flow-locked{ overflow:hidden; }
     document.getElementById('notes-close').addEventListener('click',close);
     backdrop.addEventListener('click',close);
     document.addEventListener('keydown',e=>{ if(e.key==='Escape' && drawer.classList.contains('open')) close(); });
-    const addNote=document.getElementById('ph-addnote-btn'); if(addNote) addNote.addEventListener('click',()=>open(true));
+    const addNote=document.getElementById('ph-addnote-btn'); if(addNote) addNote.addEventListener('click',()=>open(false));
     const notesBtn=document.getElementById('ph-notes-btn'); if(notesBtn) notesBtn.addEventListener('click',()=>open(false));
     render();
   })();
