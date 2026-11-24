@@ -1333,9 +1333,10 @@ body.flow-locked{ overflow:hidden; }
 .sa-headband{ flex:none; border-bottom:1px solid var(--gray-300); }
 .sa-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .sa-head-actions{ display:flex; align-items:center; gap:.5rem; flex:none; }
-.sa-edit-btn{ display:inline-flex; align-items:center; gap:.4rem; flex:none; font-family:inherit; font-size:.875rem; font-weight:600; color:var(--gray-700); background:#fff; border:1px solid var(--gray-300); border-radius:.45rem; padding:.42rem .8rem; cursor:pointer; }
+.hdr-nameline{ display:inline-flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+.sa-edit-btn{ display:inline-flex; align-items:center; gap:.3rem; flex:none; font-family:inherit; font-size:.78rem; font-weight:600; color:var(--gray-700); background:#fff; border:1px solid var(--gray-300); border-radius:.4rem; padding:.28rem .55rem; cursor:pointer; }
 .sa-edit-btn:hover{ background:var(--gray-100); color:var(--gray-900); border-color:var(--gray-400); }
-.sa-edit-btn .svg-ico{ width:15px; height:15px; }
+.sa-edit-btn .svg-ico{ width:13px; height:13px; }
 .sa-head-btn{ display:inline-flex; align-items:center; gap:.45rem; height:38px; padding:0 .9rem; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; font-family:inherit; font-size:.9rem; font-weight:500; color:var(--gray-700); cursor:pointer; white-space:nowrap; }
 .sa-head-btn:hover{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.06); }
 .sa-head-btn .svg-ico{ width:16px; height:16px; }
@@ -1798,11 +1799,13 @@ body.flow-locked{ overflow:hidden; }
     <div class="sa-pagehead">
       <div class="sa-clinic" id="sa-clinic">
         <span class="sa-clinic-text">
-          <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+          <span class="hdr-nameline">
+            <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
+            <button class="sa-edit-btn js-edit-search" id="sa-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit search</button>
+          </span>
           <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
         </span>
       </div>
-      <button class="sa-edit-btn" id="sa-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit search</button>
     </div>
   </div></div>
   <div class="sa-scroll"><div class="sa-scroll-inner">
@@ -1971,7 +1974,10 @@ body.flow-locked{ overflow:hidden; }
   <div class="ph-row">
     <div class="ph-avatar">MS</div>
     <div class="ph-id">
-      <span class="ph-name">Maria Sanchez</span>
+      <span class="hdr-nameline">
+        <span class="ph-name">Maria Sanchez</span>
+        <button class="sa-edit-btn js-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit search</button>
+      </span>
       <span class="ph-meta">DOB 01/01/2001 · 23 yrs · Female · MRN 00482915</span>
     </div>
     <!-- Patient tags hidden for now — remove display:none to restore -->
@@ -4273,10 +4279,10 @@ body.flow-locked{ overflow:hidden; }
 
   /* ---- Search details modal ---- */
   (function editSearchModal(){
-    const openBtn=document.getElementById('sa-edit-search'), modal=document.getElementById('sd-modal'),
+    const openBtns=[...document.querySelectorAll('.js-edit-search')], modal=document.getElementById('sd-modal'),
           backdrop=document.getElementById('sd-backdrop'), body=document.getElementById('sd-body'),
           form=document.getElementById('pf-form');
-    if(!openBtn||!modal||!form) return;
+    if(!openBtns.length||!modal||!form) return;
     const formHome=form.parentNode;           // where the form lives on the first page
     function restore(){ if(formHome && form.parentNode!==formHome) formHome.appendChild(form); }
     function open(){
@@ -4292,7 +4298,7 @@ body.flow-locked{ overflow:hidden; }
       document.getElementById('pf-submit').click();   // runs the form's own navigation (patient profile / Smart Alerts)
       if(!(mode==='institution' && clinicEmpty)) close(); // navigated → tidy up; else let the form show validation
     }
-    openBtn.addEventListener('click',open);
+    openBtns.forEach(b=>b.addEventListener('click',open));
     document.getElementById('sd-close').addEventListener('click',close);
     document.getElementById('sd-cancel').addEventListener('click',close);
     document.getElementById('sd-apply').addEventListener('click',apply);
@@ -4498,9 +4504,6 @@ body.flow-locked{ overflow:hidden; }
       renderTable(); });
     // back buttons
     const backSel=document.getElementById('sa-back-select'); if(backSel) backSel.addEventListener('click',()=>show('select'));
-    const ph=document.querySelector('body > .patient-header .ph-row');
-    if(ph && !ph.querySelector('.syn-back-ico')){ const b=document.createElement('button'); b.type='button'; b.className='syn-back-ico'; b.title='Back';
-      b.innerHTML='<svg class="svg-ico"><use href="#i-cl"/></svg>'; b.title='Back to search'; b.addEventListener('click',()=>show('select')); ph.insertBefore(b, ph.firstChild); }
   })();
 
   /* ---- charts (ECharts via LC helper) ---- */
