@@ -1759,12 +1759,15 @@ body.flow-locked{ overflow:hidden; }
               <div class="pf-field"><label for="pf-first">First name</label><input type="text" id="pf-first" class="pf-input" placeholder="e.g. Maria"></div>
               <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
             </div>
-            <div class="pf-field">
-              <label for="pf-dob-input">Date of birth</label>
-              <span class="date-field pf-datefield" id="pf-dob">
-                <input type="text" id="pf-dob-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
-                <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
-              </span>
+            <div class="pf-grid2">
+              <div class="pf-field">
+                <label for="pf-dob-input">Date of birth</label>
+                <span class="date-field pf-datefield" id="pf-dob">
+                  <input type="text" id="pf-dob-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
+                  <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
+                </span>
+              </div>
+              <div class="pf-field"><label for="pf-mrn">MRN</label><input type="text" id="pf-mrn" class="pf-input" placeholder="e.g. 00482915"></div>
             </div>
           </section>
           <section class="pf-pane" data-pane="institution">
@@ -4145,7 +4148,7 @@ body.flow-locked{ overflow:hidden; }
     {n:'Pinecrest Family Practice',p:36},{n:'Willowbrook Health Clinic',p:49},{n:'Aspen Grove Medical Associates',p:61}
   ];
   let activeClinic=CLINICS[0];
-  let saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'' };
+  let saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'', mrn:'' };
 
   /* ---- clinic card grid (select screen) ---- */
   function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
@@ -4243,13 +4246,14 @@ body.flow-locked{ overflow:hidden; }
         // searching by clinic → Smart Alerts work-list (no patient data in this search)
         if(clinicSel.value===''){ const db=clinicSel.closest('.pf-field').querySelector('.sa-dd-btn'); if(db){ db.style.borderColor='var(--danger)'; db.focus(); }
           form.querySelector('.pf-seg-btn[data-pane="institution"]').click(); return; }
-        saCtx={ mode:'institution', depts:deptList().filter(x=>x.checked).map(x=>x.value), first:'', last:'', dob:'' };
+        saCtx={ mode:'institution', depts:deptList().filter(x=>x.checked).map(x=>x.value), first:'', last:'', dob:'', mrn:'' };
         selectClinic(CLINICS[+clinicSel.value]);
       } else {
         // searching by patient → patient profile page (no clinical-institution data in this search)
         saCtx={ mode:'patient', depts:[],
                 first:document.getElementById('pf-first').value.trim(),
-                last:document.getElementById('pf-last').value.trim(), dob:dobInput.value };
+                last:document.getElementById('pf-last').value.trim(), dob:dobInput.value,
+                mrn:document.getElementById('pf-mrn').value.trim() };
         show('synopsis');
       }
     }
@@ -4257,6 +4261,7 @@ body.flow-locked{ overflow:hidden; }
     document.getElementById('pf-submit').addEventListener('click', doContinue);
     document.getElementById('pf-clear').addEventListener('click',()=>{
       document.getElementById('pf-first').value=''; document.getElementById('pf-last').value='';
+      document.getElementById('pf-mrn').value='';
       selDate=null; dobInput.value=''; closePop();
       clinicSel.value=''; clinicSel.dispatchEvent(new Event('change'));
     });
@@ -4264,6 +4269,7 @@ body.flow-locked{ overflow:hidden; }
     // pre-filled defaults so the form can be submitted straight through while designing
     document.getElementById('pf-first').value='Maria';
     document.getElementById('pf-last').value='Sanchez';
+    document.getElementById('pf-mrn').value='00482915';
     selDate=new Date(2001,0,1); dobInput.value=fmt(selDate);
     clinicSel.value='0'; clinicSel.dispatchEvent(new Event('change'));
     ['Primary Care','Behavioral Health'].forEach(v=>{ const cb=deptList().find(x=>x.value===v); if(cb) cb.checked=true; }); syncDept();
