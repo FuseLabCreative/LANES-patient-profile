@@ -887,7 +887,7 @@
   .filter-pop-x{ width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center; border:none; background:none; color:var(--gray-500); border-radius:.4rem; cursor:pointer; }
   .filter-pop-x:hover{ background:var(--gray-100); color:var(--gray-800); }
   .filter-pop-x .svg-ico{ width:16px; height:16px; }
-  .filter-pop .filter-bar{ display:flex; flex-direction:column; gap:.9rem; flex-wrap:nowrap; padding:1.1rem 1.25rem; overflow-y:auto; }
+  .filter-pop .filter-bar{ display:flex; flex-direction:column; gap:.9rem; flex-wrap:nowrap; padding:1.1rem 1.25rem; overflow:visible; }
   .filter-pop .filter-cell{ width:100%; min-width:0; }
   /* when filters are applied: tint the filter button and show a count badge */
   #ph-filter-btn.has-set, #v3-filter-btn.has-set{ border-color:var(--primary); color:var(--primary); background:rgba(44,123,229,.08); }
@@ -1804,7 +1804,7 @@ body.flow-locked{ overflow:hidden; }
         <span class="sa-clinic-text">
           <span class="hdr-nameline">
             <span class="sa-clinic-name" id="sa-clinic-name">&mdash;</span>
-            <button class="sa-edit-btn js-edit-search" id="sa-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit search</button>
+            <button class="sa-edit-btn js-edit-search" id="sa-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-search"/></svg>Edit search</button>
           </span>
           <span class="sa-clinic-badge" id="sa-clinic-badge">0 Patients</span>
         </span>
@@ -1979,7 +1979,7 @@ body.flow-locked{ overflow:hidden; }
     <div class="ph-id">
       <span class="hdr-nameline">
         <span class="ph-name">Maria Sanchez</span>
-        <button class="sa-edit-btn js-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-sliders"/></svg>Edit search</button>
+        <button class="sa-edit-btn js-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-search"/></svg>Edit search</button>
       </span>
       <span class="ph-meta">DOB 01/01/2001 · 23 yrs · Female · MRN 00482915</span>
     </div>
