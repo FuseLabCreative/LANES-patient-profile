@@ -280,6 +280,17 @@
   /* chips */
   .pts-chips{ display:flex; flex-wrap:wrap; gap:.4rem; }
   .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.1); border-radius:1rem; padding:.22rem .75rem; }
+  /* What's new summary */
+  .pts-new{ display:flex; align-items:center; gap:.6rem .9rem; flex-wrap:wrap; padding:.7rem .95rem; background:rgba(44,123,229,.08); border-radius:.55rem; margin:0 0 1.3rem; }
+  .pts-new-label{ display:inline-flex; align-items:center; gap:.4rem; font-size:.82rem; font-weight:700; color:var(--primary); }
+  .pts-new-label .svg-ico{ width:15px; height:15px; }
+  .pts-newchips{ display:flex; gap:.4rem; flex-wrap:wrap; }
+  .pts-newchip{ display:inline-flex; align-items:center; font-size:.78rem; font-weight:600; color:var(--primary); background:rgba(44,123,229,.14); border-radius:1rem; padding:.18rem .65rem; text-decoration:none; cursor:pointer; }
+  .pts-newchip:hover{ background:rgba(44,123,229,.24); }
+  /* highlight newly added rows across tables */
+  tbody tr:has(.badge-new){ background:rgba(44,123,229,.06); }
+  tbody tr:has(.badge-new) > td:first-child{ box-shadow:inset 3px 0 0 var(--primary); }
+  section.sec-flash > .panel{ box-shadow:0 0 0 2px var(--primary), var(--card-shadow); }
   /* pills */
   .pts-pill{ display:inline-flex; align-items:center; font-size:.74rem; font-weight:700; color:var(--gray-600); background:var(--gray-100); border-radius:1rem; padding:.12rem .65rem; }
   .pts-pill.ok{ color:#1a7f5a; background:rgba(26,127,90,.12); }
@@ -2060,6 +2071,15 @@ body.flow-locked{ overflow:hidden; }
       <span class="pts-updated"><svg class="svg-ico"><use href="#i-history"/></svg>Updated 2 days ago</span>
     </div>
     <div class="pts-body">
+      <div class="pts-new">
+        <span class="pts-new-label"><svg class="svg-ico"><use href="#i-info"/></svg>New since your last review</span>
+        <span class="pts-newchips">
+          <a class="pts-newchip" href="#" data-sec="sec-problems">1 problem</a>
+          <a class="pts-newchip" href="#" data-sec="sec-labs">9 labs</a>
+          <a class="pts-newchip" href="#" data-sec="sec-documents">2 documents</a>
+          <a class="pts-newchip" href="#" data-sec="sec-encounters">1 encounter</a>
+        </span>
+      </div>
       <div class="pts-cols">
       <div class="pts-col">
       <dl class="pts-facts">
@@ -4007,6 +4027,15 @@ body.flow-locked{ overflow:hidden; }
     (state.hidden||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-hidden'); });
     (state.pinned||[]).forEach(id=>{ const s=byId(id); if(s) s.classList.add('wgt-pinned'); });
     secs.forEach(updateCardBar); applyOrder();
+  })();
+
+  /* ===== What's-new chips → jump to the relevant card ===== */
+  (function whatsNewJump(){
+    document.querySelectorAll('.pts-newchip[data-sec]').forEach(ch=>ch.addEventListener('click',e=>{
+      e.preventDefault(); const sec=document.getElementById(ch.dataset.sec); if(!sec) return;
+      sec.scrollIntoView({behavior:'smooth', block:'start'});
+      sec.classList.add('sec-flash'); setTimeout(()=>sec.classList.remove('sec-flash'),1400);
+    }));
   })();
 
   /* ===== Combined page-options menu (Filters / History / Edit layout) ===== */
