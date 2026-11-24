@@ -1356,6 +1356,8 @@ body.flow-locked{ overflow:hidden; }
 .sd-x .svg-ico{ width:16px; height:16px; }
 .sd-body{ padding:1.25rem 1.35rem; overflow-y:auto; }
 .sd-body.sd-body-edit{ overflow:visible; }
+.sd-body-formhost .pf-form{ max-width:none; margin:0; border:none; box-shadow:none; padding:0; }
+.sd-body-formhost .pf-actions{ display:none; }
 .sd-group{ margin-bottom:1.3rem; }
 .sd-group:last-child{ margin-bottom:0; }
 .sd-group-title{ font-size:.85rem; font-weight:700; color:var(--gray-600); margin-bottom:.6rem; }
@@ -4272,59 +4274,29 @@ body.flow-locked{ overflow:hidden; }
   /* ---- Search details modal ---- */
   (function editSearchModal(){
     const openBtn=document.getElementById('sa-edit-search'), modal=document.getElementById('sd-modal'),
-          backdrop=document.getElementById('sd-backdrop'), body=document.getElementById('sd-body');
-    if(!openBtn||!modal) return;
-    const DEPTS=['Primary Care','Cardiology','Emergency','Behavioral Health','Pediatrics','Radiology','Oncology','Orthopedics','OB-GYN','Neurology','Pharmacy','Laboratory'];
-    let clinicSel, deptBody, deptTags, deptCount, deptWrap;
-    const deptList=()=>deptBody?[...deptBody.querySelectorAll('input[type=checkbox]')]:[];
-    function syncDept(){ const sel=deptList().filter(x=>x.checked).map(x=>x.value), n=sel.length;
-      deptCount.textContent=n+' selected';
-      deptTags.innerHTML = n ? sel.map(v=>'<span class="ms-tag">'+v+'<button type="button" data-rm="'+v+'">×</button></span>').join('')
-                             : '<span class="ms-ph">Select departments…</span>'; }
-    function buildForm(){
-      body.classList.add('sd-body-edit');
-      body.innerHTML=
-        '<div class="sd-form"><div class="pf-col">'+
-          '<div class="pf-field"><label for="ed-clinic">Medical clinic</label><select id="ed-clinic"></select></div>'+
-          '<div class="pf-field"><label>Departments</label>'+
-            '<div class="ms" id="ed-dept">'+
-              '<button type="button" class="ms-btn" id="ed-dept-btn"><span class="ms-tags" id="ed-dept-tags"><span class="ms-ph">Select departments…</span></span><svg class="svg-ico ms-chev"><use href="#i-cd"/></svg></button>'+
-              '<div class="ms-menu" id="ed-dept-menu">'+
-                '<div class="ms-head"><span id="ed-dept-count">0 selected</span><div class="ms-acts"><button type="button" data-all>Select all</button><span>·</span><button type="button" data-none>Clear</button></div></div>'+
-                '<div class="ms-body" id="ed-dept-body"></div>'+
-              '</div>'+
-            '</div>'+
-          '</div>'+
-        '</div></div>';
-      clinicSel=body.querySelector('#ed-clinic');
-      clinicSel.innerHTML=CLINICS.map((c,i)=>'<option value="'+i+'">'+c.n+'</option>').join('');
-      const ci=CLINICS.indexOf(activeClinic); clinicSel.value=String(ci>=0?ci:0);
-      if(window.enhanceSelects) window.enhanceSelects(body);
-      deptWrap=body.querySelector('#ed-dept'); deptBody=body.querySelector('#ed-dept-body');
-      deptTags=body.querySelector('#ed-dept-tags'); deptCount=body.querySelector('#ed-dept-count');
-      deptBody.innerHTML=DEPTS.map(d=>'<label class="ms-opt"><input type="checkbox" value="'+d+'"> '+d+'</label>').join('');
-      (saCtx.depts||[]).forEach(v=>{ const cb=deptList().find(x=>x.value===v); if(cb) cb.checked=true; });
-      syncDept();
-      deptBody.addEventListener('change',syncDept);
-      body.querySelector('#ed-dept-btn').addEventListener('click',e=>{ e.stopPropagation(); deptWrap.classList.toggle('open'); });
-      deptWrap.querySelector('[data-all]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=true); syncDept(); });
-      deptWrap.querySelector('[data-none]').addEventListener('click',()=>{ deptList().forEach(x=>x.checked=false); syncDept(); });
-      deptTags.addEventListener('click',e=>{ const b=e.target.closest('[data-rm]'); if(!b) return; e.stopPropagation(); const cb=deptList().find(x=>x.value===b.getAttribute('data-rm')); if(cb){ cb.checked=false; syncDept(); } });
+          backdrop=document.getElementById('sd-backdrop'), body=document.getElementById('sd-body'),
+          form=document.getElementById('pf-form');
+    if(!openBtn||!modal||!form) return;
+    const formHome=form.parentNode;           // where the form lives on the first page
+    function restore(){ if(formHome && form.parentNode!==formHome) formHome.appendChild(form); }
+    function open(){
+      // host the real first-page form (segment control + both panes + calendar + navigation)
+      body.classList.add('sd-body-edit','sd-body-formhost'); body.appendChild(form);
+      backdrop.classList.add('open'); modal.classList.add('open');
     }
-    function open(){ buildForm(); backdrop.classList.add('open'); modal.classList.add('open'); }
-    function close(){ backdrop.classList.remove('open'); modal.classList.remove('open'); body.classList.remove('sd-body-edit'); }
+    function close(){ backdrop.classList.remove('open'); modal.classList.remove('open');
+      body.classList.remove('sd-body-edit','sd-body-formhost'); restore(); }
     function apply(){
-      const idx=parseInt(clinicSel.value,10)||0;
-      saCtx={ mode:'institution', depts:deptList().filter(x=>x.checked).map(x=>x.value), first:'', last:'', dob:'' };
-      close();
-      selectClinic(CLINICS[idx]); // re-runs the clinic work-list (header + table) for the chosen clinic
+      const seg=form.querySelector('.pf-seg-btn.active'); const mode=seg?seg.dataset.pane:'institution';
+      const clinicEmpty = document.getElementById('pf-clinic').value==='';
+      document.getElementById('pf-submit').click();   // runs the form's own navigation (patient profile / Smart Alerts)
+      if(!(mode==='institution' && clinicEmpty)) close(); // navigated → tidy up; else let the form show validation
     }
     openBtn.addEventListener('click',open);
     document.getElementById('sd-close').addEventListener('click',close);
     document.getElementById('sd-cancel').addEventListener('click',close);
     document.getElementById('sd-apply').addEventListener('click',apply);
     backdrop.addEventListener('click',close);
-    document.addEventListener('click',e=>{ if(deptWrap && !e.target.closest('#ed-dept')) deptWrap.classList.remove('open'); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape' && modal.classList.contains('open')) close(); });
   })();
 
