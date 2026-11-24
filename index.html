@@ -1397,6 +1397,8 @@ body.flow-locked{ overflow:hidden; }
 .sa-actions{ display:flex; align-items:center; gap:.4rem; flex:0 0 auto; padding:.5rem 0 .5rem .6rem; }
 .sa-actions.sep{ border-left:1px solid var(--gray-200); margin-left:.4rem; }
 .sa-actions .hbtn{ position:relative; }
+.hbtn-labeled{ width:auto !important; padding:0 .8rem; gap:.4rem; font-family:inherit; font-size:.85rem; font-weight:600; color:var(--gray-700); }
+.hbtn-labeled .svg-ico{ width:14px; height:14px; }
 .sa-search-wrap{ display:flex; align-items:center; }
 .sa-search-exp{ display:none; align-items:center; gap:.3rem; }
 .sa-search-wrap.open .sa-sbtn{ display:none; }
@@ -1820,11 +1822,11 @@ body.flow-locked{ overflow:hidden; }
       <div class="sa-tabhead">
         <div class="sa-tabs" id="sa-tabs"></div>
         <div class="sa-actions" id="sa-actions">
+          <button class="hbtn hbtn-labeled" id="sa-filters-btn" type="button" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span>Filters</span><span class="sa-fcount" id="sa-fcount" hidden>0</span></button>
           <div class="sa-search-wrap" id="sa-search-wrap">
             <button class="hbtn sa-sbtn" id="sa-search-open" type="button" title="Search"><svg class="svg-ico"><use href="#i-search"/></svg></button>
             <div class="sa-search-exp"><input type="text" placeholder="Search" id="sa-search-input"><button class="hbtn" id="sa-search-close" type="button" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div>
           </div>
-          <button class="hbtn" id="sa-filters-btn" type="button" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg><span class="sa-fcount" id="sa-fcount" hidden>0</span></button>
           <button class="hbtn" id="sa-csv" type="button" title="Export CSV"><svg class="svg-ico"><use href="#i-download"/></svg></button>
         </div>
       </div>
