@@ -1862,10 +1862,10 @@ body.flow-locked{ overflow:hidden; }
             <span class="qn-text"><span class="qn-title">Smart Alerts</span><span class="qn-sub">Clinic encounter work-list</span></span>
             <svg class="svg-ico qn-arrow"><use href="#i-cl"/></svg>
           </button>
-          <button type="button" class="qn-card qn-soon" id="qn-audit" aria-disabled="true" title="Audit Reports — coming soon">
+          <button type="button" class="qn-card" id="qn-audit">
             <span class="qn-ico"><svg class="svg-ico"><use href="#i-file"/></svg></span>
             <span class="qn-text"><span class="qn-title">Audit Reports</span><span class="qn-sub">Access &amp; disclosure logs</span></span>
-            <span class="qn-soon-tag">Soon</span>
+            <svg class="svg-ico qn-arrow"><use href="#i-cl"/></svg>
           </button>
         </div>
       </div>
@@ -4337,7 +4337,7 @@ body.flow-locked{ overflow:hidden; }
     const qa=document.getElementById('qn-alerts'), qd=document.getElementById('qn-audit'), ab=document.getElementById('audit-back');
     if(qa) qa.addEventListener('click',()=>{ saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'', mrn:'' };
       selectClinic(activeClinic || CLINICS[0]); });
-    // Audit Reports has no design page yet — card is a placeholder, no navigation
+    if(qd) qd.addEventListener('click',()=>{ renderAudit(); show('audit'); });
     if(ab) ab.addEventListener('click',()=>show('select'));
     let auditDone=false;
     function renderAudit(){
