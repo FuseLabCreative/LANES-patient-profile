@@ -1233,7 +1233,13 @@
   .v3-sec{ padding:1.5rem; background:rgba(255,255,255,.5); }
   /* header: patient profile on top, then one actions row where Add note fills the space */
   .v3-profile{ display:flex; align-items:center; gap:.6rem; }
-  .v3-actions{ display:flex; align-items:center; gap:.5rem; margin-top:.9rem; }
+  .v3-actions{ display:flex; align-items:center; gap:.5rem; margin-top:.9rem; flex-wrap:wrap; }
+  .v3-actions .ph-menu{ position:relative; }
+  /* Notes is the one prominent note button (full row); Options + Filters sit on the row below */
+  .v3-actions .v3-addnote{ flex:1 1 100%; }
+  .v3-actions .v3-opts{ flex:1 1 auto; }
+  .v3-actions .v3-opts #v3-opts-btn{ width:100%; justify-content:center; }
+  .v3-actions .v3-addnote .notes-count{ margin-left:.1rem; }
   /* Add note: design-system outline-primary button that fills the row, with a + icon */
   .v3-addnote{ flex:1 1 auto; display:flex; align-items:center; justify-content:center; gap:.4rem; padding:.55rem 1rem;
     border:1px solid var(--primary); border-radius:.55rem; background:transparent; color:var(--primary); font-size:0.9rem; font-weight:600;
@@ -3149,8 +3155,15 @@ body.flow-locked{ overflow:hidden; }
     v3header.innerHTML =
       '<div class="v3-profile"><div class="v3-avatar">MS</div><div class="v3-id"><span class="v3-name">Maria Sanchez</span><span class="v3-meta">23 yrs · Female · MRN 00482915</span></div></div>'+
       '<div class="v3-actions">'+
-        '<button class="v3-addnote"><svg class="svg-ico"><use href="#i-plus"/></svg>Add note</button>'+
-        '<button class="notes-btn" title="Notes"><svg class="svg-ico"><use href="#i-note"/></svg><span class="notes-badge">3</span></button>'+
+        '<button class="v3-addnote" id="v3-notes-btn"><svg class="svg-ico"><use href="#i-note"/></svg>Notes<span class="notes-count">3</span></button>'+
+        '<div class="ph-menu v3-opts" id="v3-opts">'+
+          '<button class="notes-btn has-label" id="v3-opts-btn" type="button" title="Page options" aria-haspopup="true" aria-expanded="false"><svg class="svg-ico"><use href="#i-sliders"/></svg><span>Options</span><svg class="svg-ico ph-menu-chev"><use href="#i-cd"/></svg></button>'+
+          '<div class="ph-menu-pop" id="v3-opts-pop" role="menu">'+
+            '<button type="button" class="ph-menu-item" data-act="filters" role="menuitem"><svg class="svg-ico"><use href="#i-filter"/></svg><span>Filters</span></button>'+
+            '<button type="button" class="ph-menu-item" data-act="history" role="menuitem"><svg class="svg-ico"><use href="#i-history"/></svg><span>History</span></button>'+
+            '<button type="button" class="ph-menu-item" data-act="edit" role="menuitem"><svg class="svg-ico"><use href="#i-move"/></svg><span>Edit layout</span></button>'+
+          '</div>'+
+        '</div>'+
         '<button class="notes-btn" id="v3-filter-btn" title="Filters"><svg class="svg-ico"><use href="#i-filter"/></svg></button>'+
       '</div>';
     // navigation moves to the top of the main area (horizontal): category buttons + section links
@@ -3166,6 +3179,25 @@ body.flow-locked{ overflow:hidden; }
     const pageEl = document.querySelector('.page'); pageEl.insertBefore(v3, pageEl.firstChild);
     const contentEl = document.querySelector('.content'); contentEl.insertBefore(v3mainnav, contentEl.firstChild);
     window.__v3OvMount = v3ovsec.querySelector('#v3-ov');
+
+    // wire the v3 sidebar Notes button (opens the notes drawer) and Options menu
+    (function wireV3Actions(){
+      const nb=document.getElementById('v3-notes-btn');
+      if(nb) nb.addEventListener('click',()=>{ const b=document.getElementById('ph-addnote-btn')||document.getElementById('ph-notes-btn'); if(b) b.click(); });
+      const wrap=document.getElementById('v3-opts');
+      if(wrap){
+        const ob=document.getElementById('v3-opts-btn'), pop=document.getElementById('v3-opts-pop');
+        const openM=()=>{ wrap.classList.add('open'); ob.setAttribute('aria-expanded','true'); };
+        const closeM=()=>{ wrap.classList.remove('open'); ob.setAttribute('aria-expanded','false'); };
+        ob.addEventListener('click',e=>{ e.stopPropagation(); wrap.classList.contains('open')?closeM():openM(); });
+        pop.addEventListener('click',e=>{ const it=e.target.closest('.ph-menu-item'); if(!it) return; const act=it.dataset.act; closeM();
+          if(act==='filters'){ const b=document.getElementById('v3-filter-btn')||document.getElementById('ph-filter-btn'); if(b) b.click(); }
+          else if(act==='history'){ const b=document.getElementById('ph-history-btn'); if(b) b.click(); }
+          else if(act==='edit'){ if(window.__layoutEditToggle) window.__layoutEditToggle(); } });
+        document.addEventListener('click',e=>{ if(!e.target.closest('#v3-opts')) closeM(); });
+        document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeM(); });
+      }
+    })();
 
     function updateV3Cats(){ v3nav.querySelectorAll('.v3-cat').forEach(b=>b.classList.toggle('active', b.dataset.cat===activeCat)); }
     function buildV3Sub(catId){ const g=groups.find(x=>x.id===catId); if(!g) return;
