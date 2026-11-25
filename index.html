@@ -912,6 +912,18 @@
   .app-tip.below::after{ top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:var(--gray-900); }
   [data-tip]{ cursor:help; }
   .cat-tab[data-tip]{ cursor:pointer; }
+  /* tab subcategory hover preview */
+  .cat-preview{ position:fixed; z-index:6000; min-width:250px; max-width:320px; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; box-shadow:0 14px 40px rgba(16,24,40,.2); padding:.4rem; opacity:0; transform:translateY(4px); pointer-events:none; transition:opacity .12s, transform .12s; }
+  .cat-preview.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
+  .cp-head{ font-size:.72rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); padding:.45rem .6rem .35rem; }
+  .cp-item{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; width:100%; text-align:left; background:none; border:none; font-family:inherit; border-radius:.4rem; padding:.5rem .6rem; cursor:pointer; }
+  .cp-item:hover{ background:var(--gray-100); }
+  .cp-label{ display:inline-flex; align-items:center; gap:.45rem; font-size:.88rem; font-weight:600; color:var(--gray-900); }
+  .cp-right{ display:inline-flex; align-items:center; gap:.5rem; flex:none; }
+  .cp-sub{ font-size:.72rem; font-weight:600; color:var(--primary); }
+  .cp-sub.alert{ color:var(--danger); }
+  .cp-count{ font-size:.8rem; font-weight:700; color:var(--gray-500); min-width:1.5rem; text-align:right; }
+  .cat-preview .alert-dot{ margin:0; }
 
   /* "needs attention" indicator shown on tabs/chips (V2) and nav buttons/links (V3) */
   .alert-dot{ display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--danger); vertical-align:middle; margin-left:.3rem; flex:0 0 auto; }
@@ -1504,6 +1516,11 @@ body.flow-locked{ overflow:hidden; }
 .qn-sub{ font-size:.78rem; color:var(--gray-500); }
 .qn-arrow{ flex:none; width:16px; height:16px; color:var(--gray-400); transform:rotate(180deg); }
 .qn-card:hover .qn-arrow{ color:var(--primary); }
+.qn-card.qn-soon{ cursor:default; }
+.qn-card.qn-soon:hover{ border-color:var(--gray-200); box-shadow:var(--card-shadow); }
+.qn-card.qn-soon .qn-ico{ background:var(--gray-100); color:var(--gray-400); }
+.qn-card.qn-soon .qn-title{ color:var(--gray-600); }
+.qn-soon-tag{ flex:none; font-size:.68rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); background:var(--gray-100); border-radius:1rem; padding:.14rem .55rem; }
 .audit-outcome{ display:inline-flex; align-items:center; font-size:.8rem; font-weight:600; border-radius:1rem; padding:.12rem .6rem; }
 .audit-outcome.ok{ color:#1a7f5a; background:rgba(26,127,90,.12); }
 .audit-outcome.bad{ color:var(--danger); background:rgba(230,55,87,.1); }
@@ -1841,10 +1858,10 @@ body.flow-locked{ overflow:hidden; }
             <span class="qn-text"><span class="qn-title">Smart Alerts</span><span class="qn-sub">Clinic encounter work-list</span></span>
             <svg class="svg-ico qn-arrow"><use href="#i-cl"/></svg>
           </button>
-          <button type="button" class="qn-card" id="qn-audit">
+          <button type="button" class="qn-card qn-soon" id="qn-audit" aria-disabled="true" title="Audit Reports — coming soon">
             <span class="qn-ico"><svg class="svg-ico"><use href="#i-file"/></svg></span>
             <span class="qn-text"><span class="qn-title">Audit Reports</span><span class="qn-sub">Access &amp; disclosure logs</span></span>
-            <svg class="svg-ico qn-arrow"><use href="#i-cl"/></svg>
+            <span class="qn-soon-tag">Soon</span>
           </button>
         </div>
       </div>
@@ -2999,7 +3016,6 @@ body.flow-locked{ overflow:hidden; }
     groups.forEach(g=>{ if(g.id==='cat-overview') return; const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id;
       const al=g.items.filter(it=>it[2]&&it[2].alert);
       t.innerHTML=g.label+(al.length?'<span class="alert-dot"></span>':'');
-      if(al.length) t.dataset.tip='Needs attention — '+al.map(it=>it[1]+(it[2].sub?' ('+it[2].sub+')':'')).join(', ');
       catTabs.appendChild(t); });
     // place the category tabs inside the page header, next to the title (before the actions)
     const phRow = document.querySelector('.patient-header .ph-row');
@@ -3081,6 +3097,36 @@ body.flow-locked{ overflow:hidden; }
     }
     window.__showCategory = showCategory;
     catTabs.addEventListener('click', e=>{ const t=e.target.closest('.cat-tab'); if(t) showCategory(t.dataset.cat); });
+
+    // ---- hover preview: see a tab's subcategories before clicking ----
+    const preview=document.createElement('div'); preview.className='cat-preview'; document.body.appendChild(preview);
+    let pvTab=null, pvTimer=null;
+    function buildPreview(g){
+      return '<div class="cp-head">'+g.label+' · '+g.items.length+' sections</div>'+
+        g.items.map(([id,label,meta])=>{ meta=meta||{};
+          return '<button class="cp-item" data-cat="'+g.id+'" data-target="'+id+'">'+
+            '<span class="cp-label">'+label+(meta.alert?'<span class="alert-dot"></span>':'')+'</span>'+
+            '<span class="cp-right">'+(meta.sub?'<span class="cp-sub'+(meta.alert?' alert':'')+'">'+meta.sub+'</span>':'')+(meta.c!=null?'<span class="cp-count">'+meta.c+'</span>':'')+'</span>'+
+          '</button>'; }).join('');
+    }
+    function showPreview(tab){
+      const g=groups.find(x=>x.id===tab.dataset.cat); if(!g||!g.items||!g.items.length) return;
+      preview.innerHTML=buildPreview(g); preview.classList.add('show');
+      const r=tab.getBoundingClientRect(), pr=preview.getBoundingClientRect();
+      let left=Math.max(8, Math.min(r.left, window.innerWidth-pr.width-8));
+      preview.style.top=(r.bottom+8)+'px'; preview.style.left=left+'px'; pvTab=tab;
+    }
+    function hidePreview(){ preview.classList.remove('show'); pvTab=null; }
+    const cancelHide=()=>clearTimeout(pvTimer);
+    const scheduleHide=()=>{ clearTimeout(pvTimer); pvTimer=setTimeout(hidePreview,160); };
+    catTabs.addEventListener('mouseover',e=>{ const t=e.target.closest('.cat-tab'); if(t && t!==pvTab){ cancelHide(); showPreview(t); } });
+    catTabs.addEventListener('mouseout',e=>{ if(e.target.closest('.cat-tab')) scheduleHide(); });
+    preview.addEventListener('mouseenter',cancelHide);
+    preview.addEventListener('mouseleave',scheduleHide);
+    preview.addEventListener('click',e=>{ const it=e.target.closest('.cp-item'); if(!it) return;
+      showCategory(it.dataset.cat); hidePreview();
+      const sec=document.getElementById(it.dataset.target); if(sec) setTimeout(()=>sec.scrollIntoView({behavior:'smooth',block:'start'}),90); });
+    window.addEventListener('resize',hidePreview);
 
     // ===== Version 3: left rail — patient header on top, then nav buttons, then section links =====
     const v3 = document.createElement('aside'); v3.className='v3-left'; v3.id='v3-left';
@@ -4278,7 +4324,7 @@ body.flow-locked{ overflow:hidden; }
     const qa=document.getElementById('qn-alerts'), qd=document.getElementById('qn-audit'), ab=document.getElementById('audit-back');
     if(qa) qa.addEventListener('click',()=>{ saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'', mrn:'' };
       selectClinic(activeClinic || CLINICS[0]); });
-    if(qd) qd.addEventListener('click',()=>{ renderAudit(); show('audit'); });
+    // Audit Reports has no design page yet — card is a placeholder, no navigation
     if(ab) ab.addEventListener('click',()=>show('select'));
     let auditDone=false;
     function renderAudit(){
