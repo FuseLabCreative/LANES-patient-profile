@@ -3122,7 +3122,7 @@ body.flow-locked{ overflow:hidden; }
     const preview=document.createElement('div'); preview.className='cat-preview'; document.body.appendChild(preview);
     let pvTab=null, pvTimer=null;
     function buildPreview(g){
-      return '<div class="cp-head">'+g.label+'<span class="cp-count">'+g.items.length+' sections</span></div>'+
+      return '<div class="cp-head">'+g.label+'</div>'+
         g.items.map(([id,label,meta])=>{ meta=meta||{};
           return '<button class="cp-item" data-cat="'+g.id+'" data-target="'+id+'">'+
             '<span class="cp-label">'+label+'</span>'+
