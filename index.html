@@ -1166,7 +1166,9 @@
   /* expanded panel: floats below the bar as one connected card */
   .ovp-body{ display:none; }
   .ov-plate.open .ovp-body{ display:block; position:absolute; top:100%; left:0; right:0; background:#fff;
-    border:1px solid var(--gray-200); border-top:none; border-radius:0 0 .7rem .7rem; box-shadow:0 10px 30px rgba(31,45,61,.12); padding:1rem; }
+    border:1px solid var(--gray-200); border-top:none; border-radius:0 0 .7rem .7rem; box-shadow:0 10px 30px rgba(31,45,61,.12); padding:1rem;
+    /* page scroll is locked while open, so the panel scrolls internally when it's taller than the viewport */
+    max-height:calc(100vh - var(--stick-plate,190px) - 96px); overflow-y:auto; }
   /* expanded detail cards, matching the reference plate design */
   .ovx-cards{ display:grid; grid-template-columns:repeat(auto-fit,minmax(264px,1fr)); gap:.9rem; }
   .ovx-card{ background:#f6f8fc; border:1px solid var(--gray-200); border-radius:.6rem; padding:.9rem 1rem; min-width:0;
