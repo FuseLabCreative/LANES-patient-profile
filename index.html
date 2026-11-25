@@ -1363,8 +1363,6 @@ body.flow-locked{ overflow:hidden; }
 #scr-alerts.portal-screen.active{ display:flex; flex-direction:column; }
 #scr-audit.portal-screen{ overflow:hidden; }
 #scr-audit.portal-screen.active{ display:flex; flex-direction:column; }
-#scr-results.portal-screen{ overflow:hidden; }
-#scr-results.portal-screen.active{ display:flex; flex-direction:column; }
 .sa-headband{ flex:none; border-bottom:1px solid var(--gray-300); }
 .sa-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .sa-head-actions{ display:flex; align-items:center; gap:.5rem; flex:none; }
@@ -1411,6 +1409,11 @@ body.flow-locked{ overflow:hidden; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
 .sa-chart{ height:260px; width:100%; }
 @media(max-width:900px){ .sa-charts{ grid-template-columns:1fr; } }
+/* patient-search mode: table reused as a patient picker — hide clinic-only widgets */
+body.sa-patient-mode .sa-charts{ display:none; }
+body.sa-patient-mode #sa-tabs{ display:none; }
+body.sa-patient-mode .sa-tabhead{ justify-content:flex-end; padding-top:.6rem; padding-bottom:.6rem; }
+body.sa-patient-mode .sa-clinic-badge{ color:var(--gray-600); }
 .sa-tabs{ display:flex; gap:.3rem; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); padding:0 1.25rem; }
 .sa-tab{ display:inline-flex; align-items:center; gap:.5rem; padding:.7rem 1rem; background:none; border:none; border-bottom:2px solid transparent; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); cursor:pointer; }
 .sa-tab.active{ color:var(--primary); border-bottom-color:var(--primary); }
@@ -1523,24 +1526,6 @@ body.flow-locked{ overflow:hidden; }
 .qn-card.qn-soon .qn-ico{ background:var(--gray-100); color:var(--gray-400); }
 .qn-card.qn-soon .qn-title{ color:var(--gray-600); }
 .qn-soon-tag{ flex:none; font-size:.68rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); background:var(--gray-100); border-radius:1rem; padding:.14rem .55rem; }
-
-/* ---- patient results list ---- */
-.pr-list{ display:flex; flex-direction:column; gap:.75rem; max-width:920px; }
-.pr-row{ display:flex; align-items:center; gap:1rem; width:100%; text-align:left; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1rem 1.1rem; font-family:inherit; cursor:pointer; box-shadow:var(--card-shadow); transition:border-color .15s, box-shadow .15s, transform .05s; }
-.pr-row:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(44,123,229,.14); }
-.pr-row:active{ transform:translateY(1px); }
-.pr-avatar{ flex:none; width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg,#a9d4f2,#47b0ff); color:#0b2a44; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; }
-.pr-main{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:.2rem; }
-.pr-name{ font-size:1.02rem; font-weight:700; color:var(--gray-900); display:inline-flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
-.pr-best{ font-size:.68rem; font-weight:700; color:var(--primary); background:rgba(44,123,229,.12); border-radius:1rem; padding:.1rem .5rem; }
-.pr-meta{ font-size:.85rem; color:var(--gray-600); }
-.pr-meta b{ color:var(--gray-900); font-weight:600; }
-.pr-sub{ flex:none; text-align:right; display:flex; flex-direction:column; gap:.15rem; }
-.pr-loc{ font-size:.82rem; font-weight:600; color:var(--gray-800); }
-.pr-last{ font-size:.75rem; color:var(--gray-500); }
-.pr-arrow{ flex:none; width:16px; height:16px; color:var(--gray-400); transform:rotate(180deg); }
-.pr-row:hover .pr-arrow{ color:var(--primary); }
-@media (max-width:640px){ .pr-sub{ display:none; } }
 .audit-outcome{ display:inline-flex; align-items:center; font-size:.8rem; font-weight:600; border-radius:1rem; padding:.12rem .6rem; }
 .audit-outcome.ok{ color:#1a7f5a; background:rgba(26,127,90,.12); }
 .audit-outcome.bad{ color:var(--danger); background:rgba(230,55,87,.1); }
@@ -1921,25 +1906,7 @@ body.flow-locked{ overflow:hidden; }
 </div>
 
 <!-- ============ PORTAL FLOW: PATIENT RESULTS ============ -->
-<div id="scr-results" class="portal-screen">
-  <div class="nav-host"></div>
-  <div class="sa-headband"><div class="sa-headband-inner">
-    <div class="sa-pagehead">
-      <div class="sa-clinic">
-        <span class="sa-clinic-text">
-          <span class="hdr-nameline">
-            <span class="sa-clinic-name">Select a patient</span>
-            <button class="sa-edit-btn js-edit-search" type="button" title="Edit search"><svg class="svg-ico"><use href="#i-search"/></svg>Edit search</button>
-          </span>
-          <span class="sa-clinic-badge" id="results-sub">&mdash;</span>
-        </span>
-      </div>
-    </div>
-  </div></div>
-  <div class="sa-scroll"><div class="sa-scroll-inner">
-    <div class="pr-list" id="results-list"></div>
-  </div></div>
-</div>
+<!-- (retired) dedicated patient-picker card list — patient name search now reuses the Smart Alerts table -->
 
 <!-- ============ PORTAL FLOW: SMART ALERTS ============ -->
 <div id="scr-alerts" class="portal-screen">
@@ -4327,48 +4294,19 @@ body.flow-locked{ overflow:hidden; }
 <script>
 /* ===== Portal flow controller: Select Institution -> Smart Alerts -> Patient Synopsis ===== */
 (function(){
-  const scrSelect=document.getElementById('scr-select'), scrAlerts=document.getElementById('scr-alerts'), scrAudit=document.getElementById('scr-audit'), scrResults=document.getElementById('scr-results');
+  const scrSelect=document.getElementById('scr-select'), scrAlerts=document.getElementById('scr-alerts'), scrAudit=document.getElementById('scr-audit');
   function setLogos(){ const s=document.querySelector('.lanes-navbar .lanes-logo-img'); if(s&&s.src) document.querySelectorAll('.ps-logo-img').forEach(i=>{ i.src=s.src; }); }
   function show(which){
     scrSelect.classList.toggle('active', which==='select');
     scrAlerts.classList.toggle('active', which==='alerts');
     if(scrAudit) scrAudit.classList.toggle('active', which==='audit');
-    if(scrResults) scrResults.classList.toggle('active', which==='results');
     document.body.classList.toggle('flow-synopsis', which==='synopsis');
     document.body.classList.toggle('flow-locked', which!=='synopsis');
     window.scrollTo(0,0);
-    if(which==='alerts') setTimeout(renderCharts, 60);
+    if(which==='alerts' && !document.body.classList.contains('sa-patient-mode')) setTimeout(renderCharts, 60);
     if(which==='synopsis') window.dispatchEvent(new Event('resize'));
   }
   window.LANESflow={ show };
-
-  /* ---- patient search results (disambiguation) ---- */
-  function renderResults(){
-    const first=(saCtx.first||'').trim(), last=(saCtx.last||'').trim();
-    const initials=(s)=>s.split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
-    // the real demo patient is always the top/best match; the rest are look-alikes
-    const cands=[
-      {name:(first||'Maria')+' '+(last||'Sanchez'), dob:'01/01/2001', age:23, sex:'Female', mrn:'00482915', loc:'UCLA Health Clinic', last:'Last seen Feb 12, 2024', best:true},
-      {name:(first||'Maria')+' '+(last||'Sanchez'), dob:'07/19/1988', age:37, sex:'Female', mrn:'00913447', loc:'Cedars-Sinai Medical Center', last:'Last seen Nov 02, 2025'},
-      {name:(first?first[0]+'. ':'M. ')+(last||'Sanchez'), dob:'03/30/1965', age:60, sex:'Female', mrn:'00551022', loc:'LA County Dept. of Health Services', last:'Last seen Aug 14, 2025'},
-      {name:(first||'Maria')+' '+(last||'Sanchez'), dob:'11/05/1994', age:31, sex:'Male', mrn:'00778201', loc:'Northeast Valley Health', last:'Last seen Jun 21, 2025'}
-    ];
-    const sub=document.getElementById('results-sub');
-    if(sub) sub.textContent=cands.length+' patients match "'+[first,last].filter(Boolean).join(' ')+'"'+(saCtx.dob?' · DOB '+saCtx.dob:'');
-    const list=document.getElementById('results-list'); if(!list) return;
-    list.innerHTML=cands.map((c,i)=>'<button type="button" class="pr-row" data-idx="'+i+'">'+
-      '<span class="pr-avatar">'+initials(c.name)+'</span>'+
-      '<span class="pr-main"><span class="pr-name">'+c.name+(c.best?'<span class="pr-best">Best match</span>':'')+'</span>'+
-        '<span class="pr-meta">DOB <b>'+c.dob+'</b> · '+c.age+' yrs · '+c.sex+' · MRN <b>'+c.mrn+'</b></span></span>'+
-      '<span class="pr-sub"><span class="pr-loc">'+c.loc+'</span><span class="pr-last">'+c.last+'</span></span>'+
-      '<svg class="svg-ico pr-arrow"><use href="#i-cl"/></svg>'+
-    '</button>').join('');
-    list.querySelectorAll('.pr-row').forEach(r=>r.addEventListener('click',()=>{
-      // demo: every candidate opens the single patient profile
-      show('synopsis');
-    }));
-  }
-  window.__renderResults=renderResults;
 
   /* ---- reusable attention tooltip ---- */
   (function tooltips(){
@@ -4437,7 +4375,7 @@ body.flow-locked{ overflow:hidden; }
   let saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'', mrn:'' };
 
   /* ---- clinic card grid (select screen) ---- */
-  function selectClinic(c){ activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
+  function selectClinic(c){ saMode='clinic'; document.body.classList.remove('sa-patient-mode'); activeClinic=c; refreshClinicData(); updateClinicHeader(); buildTabs(); show('alerts'); }
 
   /* ---- first-page patient form (demographics + clinic/departments) ---- */
   (function buildPatientForm(){
@@ -4541,7 +4479,7 @@ body.flow-locked{ overflow:hidden; }
                 last:document.getElementById('pf-last').value.trim(), dob:dobInput.value,
                 mrn:document.getElementById('pf-mrn').value.trim() };
         if(saCtx.mrn){ show('synopsis'); }           // MRN uniquely identifies the patient → straight to profile
-        else { if(window.__renderResults) window.__renderResults(); show('results'); }  // name/DOB → pick from matches
+        else if(window.__showPatientSearch){ window.__showPatientSearch(saCtx.first, saCtx.last, saCtx.dob); }  // name/DOB → Smart Alerts table filtered to matches
       }
     }
     form.addEventListener('submit',e=>{ e.preventDefault(); doContinue(); });
@@ -4568,6 +4506,33 @@ body.flow-locked{ overflow:hidden; }
     const parts=[activeClinic.p+' patients'];
     if(saCtx.depts && saCtx.depts.length) parts.push(saCtx.depts.join(', '));
     document.getElementById('sa-clinic-badge').textContent=parts.join(' · '); }
+
+  /* ---- patient search → reuse Smart Alerts table (Option A) ---- */
+  let saMode='clinic';
+  function buildPatientRows(first,last){
+    const L=(last||'Sanchez'), F=(first||'Maria');
+    const full=L+', '+F, abbr=L+', '+(F?F[0]+'.':'M.');
+    return [
+      {dt:'10/14/2026 09:24 AM', loc:'UCLA Health – Westwood Clinic', spec:'Primary Care', visit:'Outpatient', event:'Registration', name:full, dob:'01/01/2001 (25)', disch:'', los:'', emg:2, inp:0, note:'Care plan updated', prog:'Health Net ECM'},
+      {dt:'09/30/2026 06:58 PM', loc:'Cedars-Sinai Medical Center', spec:'Hospital', visit:'Emergency', event:'Discharge', name:full, dob:'01/01/2001 (25)', disch:'10/01/2026', los:'1 days', emg:6, inp:0, note:'High ED utilizer', prog:'Health Net ECM'},
+      {dt:'08/22/2026 11:05 AM', loc:'Cedars-Sinai Medical Center', spec:'Specialty', visit:'Inpatient', event:'Admit', name:full, dob:'07/19/1988 (38)', disch:'', los:'', emg:1, inp:2, note:'', prog:''},
+      {dt:'07/09/2026 02:40 PM', loc:'LA County Dept. of Health Services', spec:'Clinic', visit:'Outpatient', event:'Registration', name:abbr, dob:'03/30/1965 (61)', disch:'', los:'', emg:0, inp:0, note:'New member', prog:'LA Care ECM'},
+      {dt:'06/18/2026 10:12 AM', loc:'Northeast Valley Health Corporation', spec:'Primary Care', visit:'Outpatient', event:'Registration', name:full, dob:'11/05/1994 (32)', disch:'', los:'', emg:0, inp:0, note:'', prog:''}
+    ];
+  }
+  function showPatientSearch(first,last,dob){
+    saMode='patient'; document.body.classList.add('sa-patient-mode');
+    DATA['__psearch']=buildPatientRows(first,last); activeTab='__psearch';
+    vtFilter=[]; quickFilter=null; sortCol=null; curPage=1;
+    const si=document.getElementById('sa-search-input'); if(si) si.value='';
+    const sWrap=document.getElementById('sa-search-wrap'), sActions=document.getElementById('sa-actions');
+    if(sWrap) sWrap.classList.remove('open'); if(sActions) sActions.classList.remove('searching');
+    const nm=[first,last].filter(Boolean).join(' ')||'patient';
+    document.getElementById('sa-clinic-name').textContent='Select a patient';
+    document.getElementById('sa-clinic-badge').textContent=DATA['__psearch'].length+' records match “'+nm+'”'+(dob?' · DOB '+dob:'');
+    renderTable(); show('alerts');
+  }
+  window.__showPatientSearch=showPatientSearch;
   { const sb=document.getElementById('sa-back'); if(sb) sb.addEventListener('click',()=>show('select')); }
 
   /* ---- Search details modal ---- */
@@ -4671,7 +4636,7 @@ body.flow-locked{ overflow:hidden; }
       tr.querySelector('.sa-pname').addEventListener('click',()=>show('synopsis'));
       tr.querySelector('.sa-xp-btn').addEventListener('click',e=>toggleDetail(tr,r,e.currentTarget));
       tb.appendChild(tr); });
-    document.getElementById('sa-pager-info').textContent='Showing '+(total?start+1:0)+' to '+(start+shown.length)+' of '+total.toLocaleString()+' encounters';
+    document.getElementById('sa-pager-info').textContent='Showing '+(total?start+1:0)+' to '+(start+shown.length)+' of '+total.toLocaleString()+(saMode==='patient'?' records':' encounters');
     const nav=document.getElementById('sa-pager-nav');
     nav.innerHTML='<button class="sa-pg-btn" id="sa-pg-prev" type="button"'+(curPage<=1?' disabled':'')+'><svg class="svg-ico"><use href="#i-cl"/></svg></button>'+
       '<span class="sa-pg-label">Page '+curPage+' of '+pages+'</span>'+
@@ -4848,9 +4813,6 @@ body.flow-locked{ overflow:hidden; }
     // Audit Reports screen: same navbar
     const auNav=cloneNav();
     const auHost=document.querySelector('#scr-audit .nav-host'); if(auHost) auHost.appendChild(auNav);
-    // Patient results screen: same navbar
-    const rsNav=cloneNav();
-    const rsHost=document.querySelector('#scr-results .nav-host'); if(rsHost) rsHost.appendChild(rsNav);
     // keep the cloned date/time in step with the live navbar
     const syncDt=()=>{ const t=(realNav.querySelector('#user-datetime')||{}).textContent||''; document.querySelectorAll('.nav-host .user-datetime').forEach(d=>d.textContent=t); };
     syncDt(); setInterval(syncDt,1000);
