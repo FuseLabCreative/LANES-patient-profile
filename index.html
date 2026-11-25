@@ -1235,10 +1235,8 @@
   .v3-profile{ display:flex; align-items:center; gap:.6rem; }
   .v3-actions{ display:flex; align-items:center; gap:.5rem; margin-top:.9rem; flex-wrap:wrap; }
   .v3-actions .ph-menu{ position:relative; }
-  /* Notes is the one prominent note button (full row); Options + Filters sit on the row below */
+  /* Notes is the one prominent note button (full row); Options + Filters are icon buttons below */
   .v3-actions .v3-addnote{ flex:1 1 100%; }
-  .v3-actions .v3-opts{ flex:1 1 auto; }
-  .v3-actions .v3-opts #v3-opts-btn{ width:100%; justify-content:center; }
   .v3-actions .v3-addnote .notes-count{ margin-left:.1rem; }
   /* Add note: design-system outline-primary button that fills the row, with a + icon */
   .v3-addnote{ flex:1 1 auto; display:flex; align-items:center; justify-content:center; gap:.4rem; padding:.55rem 1rem;
@@ -3157,7 +3155,7 @@ body.flow-locked{ overflow:hidden; }
       '<div class="v3-actions">'+
         '<button class="v3-addnote" id="v3-notes-btn"><svg class="svg-ico"><use href="#i-note"/></svg>Notes<span class="notes-count">3</span></button>'+
         '<div class="ph-menu v3-opts" id="v3-opts">'+
-          '<button class="notes-btn has-label" id="v3-opts-btn" type="button" title="Page options" aria-haspopup="true" aria-expanded="false"><svg class="svg-ico"><use href="#i-sliders"/></svg><span>Options</span><svg class="svg-ico ph-menu-chev"><use href="#i-cd"/></svg></button>'+
+          '<button class="notes-btn" id="v3-opts-btn" type="button" title="Options" aria-haspopup="true" aria-expanded="false"><svg class="svg-ico"><use href="#i-sliders"/></svg></button>'+
           '<div class="ph-menu-pop" id="v3-opts-pop" role="menu">'+
             '<button type="button" class="ph-menu-item" data-act="filters" role="menuitem"><svg class="svg-ico"><use href="#i-filter"/></svg><span>Filters</span></button>'+
             '<button type="button" class="ph-menu-item" data-act="history" role="menuitem"><svg class="svg-ico"><use href="#i-history"/></svg><span>History</span></button>'+
