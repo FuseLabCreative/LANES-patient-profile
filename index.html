@@ -1403,7 +1403,11 @@ body.flow-locked{ overflow:hidden; }
 .sd-chip{ font-size:.8rem; font-weight:500; color:var(--gray-700); background:var(--gray-200); border:1px solid var(--gray-300); border-radius:.35rem; padding:.12rem .55rem; }
 .sd-foot{ display:flex; align-items:center; justify-content:space-between; gap:.6rem; padding:1rem 1.35rem; border-top:1px solid var(--gray-200); }
 .sa-scroll{ flex:1 1 auto; min-height:0; overflow-y:auto; }
-.sa-scroll-inner{ max-width:1440px; width:100%; margin:0 auto; padding:1.5rem 1.5rem 3rem; box-sizing:border-box; }
+.sa-scroll-inner{ max-width:1440px; width:100%; margin:0 auto; padding:1.5rem 1.5rem 3rem; box-sizing:border-box; min-height:100%; display:flex; flex-direction:column; }
+.sa-scroll-inner > .sa-charts{ flex:none; }
+/* the table card fills the remaining page height, so it's one consistent height whether it shows 5 rows or 10 */
+.sa-scroll-inner > .sa-panel{ flex:1 1 auto; display:flex; flex-direction:column; min-height:360px; }
+.sa-scroll-inner > .sa-panel > .table-scroll{ flex:1 1 auto; min-height:0; }
 .sa-charts{ display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem; }
 .sa-chart-card{ background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:1rem 1.1rem; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
@@ -4677,6 +4681,7 @@ body.flow-locked{ overflow:hidden; }
       b.innerHTML='Matching records <span class="sa-count">'+((DATA['__psearch']||[]).length)+'</span>';
       host.appendChild(b); renderTable(); setTimeout(updateTabSep,0); return;
     }
+    if(!TABS.some(t=>t.key===activeTab)) activeTab=TABS[0].key;   // recover from patient-mode's __psearch tab
     TABS.forEach(t=>{ const b=document.createElement('button'); b.className='sa-tab'+(t.key===activeTab?' active':'');
       b.innerHTML=t.name+' <span class="sa-count">'+COUNTS[t.key]+'</span>';
       b.addEventListener('click',()=>{ activeTab=t.key; curPage=1; const tt=document.getElementById('sa-tabtitle'); if(tt) tt.textContent=t.name;
