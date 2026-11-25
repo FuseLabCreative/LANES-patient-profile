@@ -261,7 +261,8 @@
   .notes-count{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:rgba(255,255,255,.28); color:#fff; font-size:.72rem; font-weight:700; }
   /* Patient Summary card */
   .pt-summary{ background:#fff; border:1px solid var(--gray-200); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.2rem 1.5rem 1.4rem; margin:0 auto 1.5rem; max-width:1440px; }
-  .pts-head{ display:flex; align-items:center; gap:.6rem; margin-bottom:1.05rem; padding-bottom:.8rem; border-bottom:1px solid var(--gray-200); }
+  /* full-bleed divider: reach the card's left/right edges */
+  .pts-head{ display:flex; align-items:center; gap:.6rem; margin:0 -1.5rem 1.05rem; padding:0 1.5rem .8rem; border-bottom:1px solid var(--gray-200); }
   .pts-head-ico{ flex:none; width:30px; height:30px; border-radius:.5rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(44,123,229,.1); color:var(--primary); }
   .pts-head-ico .svg-ico{ width:17px; height:17px; }
   .pts-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); }
@@ -281,7 +282,7 @@
   .pts-chips{ display:flex; flex-wrap:wrap; gap:.4rem; }
   .pts-chip{ display:inline-flex; align-items:center; font-size:.82rem; font-weight:600; color:var(--gray-700); background:var(--gray-100); border-radius:1rem; padding:.22rem .75rem; }
   /* What's new summary */
-  .pts-new{ display:flex; align-items:center; gap:.6rem .9rem; flex-wrap:wrap; padding:0 0 .9rem; border-bottom:1px solid var(--gray-200); margin:0 0 1.2rem; }
+  .pts-new{ display:flex; align-items:center; gap:.6rem .9rem; flex-wrap:wrap; padding:0 1.5rem .9rem; border-bottom:1px solid var(--gray-200); margin:0 -1.5rem 1.2rem; }
   .pts-new-label{ display:inline-flex; align-items:center; gap:.4rem; font-size:.82rem; font-weight:700; color:var(--primary); }
   .pts-new-label .svg-ico{ width:15px; height:15px; }
   .pts-newchips{ display:flex; gap:.4rem; flex-wrap:wrap; }
