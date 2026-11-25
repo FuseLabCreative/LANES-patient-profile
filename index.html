@@ -905,6 +905,14 @@
   .filter-count{ position:absolute; top:-5px; right:-5px; min-width:15px; height:15px; padding:0 3px; border-radius:8px;
     background:var(--primary); color:#fff; font-size:0.875rem; font-weight:700; line-height:1; display:none; align-items:center; justify-content:center; }
   .has-set .filter-count{ display:inline-flex; }
+  /* reusable attention tooltip */
+  .app-tip{ position:fixed; z-index:6000; max-width:260px; background:var(--gray-900); color:#fff; font-size:.78rem; font-weight:500; line-height:1.4; padding:.5rem .7rem; border-radius:.45rem; box-shadow:0 8px 24px rgba(16,24,40,.28); pointer-events:none; opacity:0; transform:translateY(2px); transition:opacity .12s, transform .12s; }
+  .app-tip.show{ opacity:1; transform:translateY(0); }
+  .app-tip::after{ content:''; position:absolute; left:var(--tip-ax,50%); top:100%; transform:translateX(-50%); border:6px solid transparent; border-top-color:var(--gray-900); }
+  .app-tip.below::after{ top:auto; bottom:100%; border-top-color:transparent; border-bottom-color:var(--gray-900); }
+  [data-tip]{ cursor:help; }
+  .cat-tab[data-tip]{ cursor:pointer; }
+
   /* "needs attention" indicator shown on tabs/chips (V2) and nav buttons/links (V3) */
   .alert-dot{ display:inline-block; width:5px; height:5px; border-radius:50%; background:var(--danger); vertical-align:middle; margin-left:.3rem; flex:0 0 auto; }
   .cat-tab .alert-dot{ margin-bottom:.12rem; }
@@ -2954,7 +2962,7 @@ body.flow-locked{ overflow:hidden; }
     const toc = document.getElementById('toc');
     const mkItem=(id,label,meta)=>{ meta=meta||{}; const d=document.createElement('div'); d.className='toc-item'; d.dataset.target=id;
       let h='<div class="ti-main"><span class="ti-label">'+label+'</span>';
-      if(meta.alert) h+='<span class="ti-alert" title="Needs attention"></span>';
+      if(meta.alert) h+='<span class="ti-alert" data-tip="'+label+(meta.sub?' — '+meta.sub:' needs attention')+'"></span>';
       if(meta.c!=null) h+='<span class="ti-count">'+meta.c+'</span>';
       h+='</div>';
       if(meta.sub) h+='<div class="ti-sub">'+meta.sub+'</div>';
@@ -2988,7 +2996,11 @@ body.flow-locked{ overflow:hidden; }
     const catTabs = document.createElement('div'); catTabs.className='cat-tabs';
     // Overview has no tab — it's opened from the header person button instead
     const catHasAlert = g => g.items.some(it=>it[2]&&it[2].alert);
-    groups.forEach(g=>{ if(g.id==='cat-overview') return; const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id; t.innerHTML=g.label+(catHasAlert(g)?'<span class="alert-dot" title="Needs attention"></span>':''); catTabs.appendChild(t); });
+    groups.forEach(g=>{ if(g.id==='cat-overview') return; const t=document.createElement('button'); t.className='cat-tab'; t.dataset.cat=g.id;
+      const al=g.items.filter(it=>it[2]&&it[2].alert);
+      t.innerHTML=g.label+(al.length?'<span class="alert-dot"></span>':'');
+      if(al.length) t.dataset.tip='Needs attention — '+al.map(it=>it[1]+(it[2].sub?' ('+it[2].sub+')':'')).join(', ');
+      catTabs.appendChild(t); });
     // place the category tabs inside the page header, next to the title (before the actions)
     const phRow = document.querySelector('.patient-header .ph-row');
     const phActions = phRow.querySelector('.ph-actions');
@@ -3005,9 +3017,9 @@ body.flow-locked{ overflow:hidden; }
     ];
     const metricFields = [
       {lbl:'Coverage', val:'Medi-Cal'}, {lbl:'Medications', val:'62'}, {lbl:'Problems', val:'241'},
-      {lbl:'Vitals', val:'318'}, {lbl:'Labs', val:'38'}, {lbl:'Allergies', val:'10', alert:true},
+      {lbl:'Vitals', val:'318'}, {lbl:'Labs', val:'38'}, {lbl:'Allergies', val:'10', alert:true, reason:'Allergies need review — sources disagree. Confirm before prescribing.'},
     ];
-    const fieldHtml = f => '<div class="ovc-field"><span class="ovc-lbl">'+f.lbl+'</span><span class="ovc-val">'+(f.alert?'<span class="ovc-alert">!</span>':'')+f.val+(f.dim?'<span class="dim">'+f.dim+'</span>':'')+'</span></div>';
+    const fieldHtml = f => '<div class="ovc-field"><span class="ovc-lbl">'+f.lbl+'</span><span class="ovc-val">'+(f.alert?'<span class="ovc-alert" data-tip="'+(f.reason||(f.lbl+' needs attention'))+'">!</span>':'')+f.val+(f.dim?'<span class="dim">'+f.dim+'</span>':'')+'</span></div>';
     const ovPlate = document.createElement('div'); ovPlate.className='ov-plate'; ovPlate.id='ov-plate-v2';
     ovPlate.innerHTML =
       '<div class="ovp-backdrop"><div class="ovp-blur b1"></div><div class="ovp-blur b2"></div><div class="ovp-blur b3"></div><div class="ovp-dim"></div></div>'+
@@ -4235,6 +4247,31 @@ body.flow-locked{ overflow:hidden; }
     if(which==='synopsis') window.dispatchEvent(new Event('resize'));
   }
   window.LANESflow={ show };
+
+  /* ---- reusable attention tooltip ---- */
+  (function tooltips(){
+    const tip=document.createElement('div'); tip.className='app-tip'; document.body.appendChild(tip);
+    let cur=null;
+    function showFor(el){
+      const msg=el.getAttribute('data-tip'); if(!msg) return;
+      tip.textContent=msg; tip.classList.add('show');
+      const r=el.getBoundingClientRect(), tr=tip.getBoundingClientRect();
+      let top=r.top-tr.height-10, below=false;
+      if(top<8){ top=r.bottom+10; below=true; }
+      let left=r.left+r.width/2-tr.width/2;
+      left=Math.max(8, Math.min(left, window.innerWidth-tr.width-8));
+      tip.style.top=top+'px'; tip.style.left=left+'px';
+      tip.classList.toggle('below', below);
+      const ax=Math.max(10, Math.min(r.left+r.width/2-left, tr.width-10));
+      tip.style.setProperty('--tip-ax', ax+'px');
+      cur=el;
+    }
+    function hide(){ tip.classList.remove('show'); cur=null; }
+    document.addEventListener('mouseover',e=>{ const el=e.target.closest('[data-tip]'); if(el && el!==cur) showFor(el); });
+    document.addEventListener('mouseout',e=>{ const el=e.target.closest('[data-tip]'); if(el && (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest('[data-tip]'))) hide(); });
+    document.addEventListener('scroll',()=>{ if(cur) hide(); }, true);
+    window.addEventListener('resize', hide);
+  })();
 
   /* ---- first-page quick navigation ---- */
   (function quickNav(){
