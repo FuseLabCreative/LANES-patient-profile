@@ -1409,11 +1409,6 @@ body.flow-locked{ overflow:hidden; }
 .sa-chart-title{ font-size:.9rem; font-weight:600; color:var(--gray-800); text-align:center; margin-bottom:.4rem; }
 .sa-chart{ height:260px; width:100%; }
 @media(max-width:900px){ .sa-charts{ grid-template-columns:1fr; } }
-/* patient-search mode: table reused as a patient picker — hide clinic-only widgets */
-body.sa-patient-mode .sa-charts{ display:none; }
-body.sa-patient-mode #sa-tabs{ display:none; }
-body.sa-patient-mode .sa-tabhead{ justify-content:flex-end; padding-top:.6rem; padding-bottom:.6rem; }
-body.sa-patient-mode .sa-clinic-badge{ color:var(--gray-600); }
 .sa-tabs{ display:flex; gap:.3rem; flex-wrap:wrap; border-bottom:1px solid var(--gray-200); padding:0 1.25rem; }
 .sa-tab{ display:inline-flex; align-items:center; gap:.5rem; padding:.7rem 1rem; background:none; border:none; border-bottom:2px solid transparent; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-600); cursor:pointer; }
 .sa-tab.active{ color:var(--primary); border-bottom-color:var(--primary); }
@@ -4303,7 +4298,7 @@ body.sa-patient-mode .sa-clinic-badge{ color:var(--gray-600); }
     document.body.classList.toggle('flow-synopsis', which==='synopsis');
     document.body.classList.toggle('flow-locked', which!=='synopsis');
     window.scrollTo(0,0);
-    if(which==='alerts' && !document.body.classList.contains('sa-patient-mode')) setTimeout(renderCharts, 60);
+    if(which==='alerts') setTimeout(renderCharts, 60);
     if(which==='synopsis') window.dispatchEvent(new Event('resize'));
   }
   window.LANESflow={ show };
@@ -4530,7 +4525,7 @@ body.sa-patient-mode .sa-clinic-badge{ color:var(--gray-600); }
     const nm=[first,last].filter(Boolean).join(' ')||'patient';
     document.getElementById('sa-clinic-name').textContent='Select a patient';
     document.getElementById('sa-clinic-badge').textContent=DATA['__psearch'].length+' records match “'+nm+'”'+(dob?' · DOB '+dob:'');
-    renderTable(); show('alerts');
+    buildTabs(); show('alerts');
   }
   window.__showPatientSearch=showPatientSearch;
   { const sb=document.getElementById('sa-back'); if(sb) sb.addEventListener('click',()=>show('select')); }
@@ -4676,6 +4671,12 @@ body.sa-patient-mode .sa-clinic-badge{ color:var(--gray-600); }
       series:[ser('ED','#e63757',6),ser('Outpatient','#2c9b8f',5),ser('Inpatient','#5c7cfa',3)] });
   }
   function buildTabs(){ const host=document.getElementById('sa-tabs'); host.innerHTML='';
+    if(saMode==='patient'){
+      // patient picker: one contextual tab in place of the clinic work-list tabs — same chrome
+      const b=document.createElement('button'); b.className='sa-tab active'; b.type='button';
+      b.innerHTML='Matching records <span class="sa-count">'+((DATA['__psearch']||[]).length)+'</span>';
+      host.appendChild(b); renderTable(); setTimeout(updateTabSep,0); return;
+    }
     TABS.forEach(t=>{ const b=document.createElement('button'); b.className='sa-tab'+(t.key===activeTab?' active':'');
       b.innerHTML=t.name+' <span class="sa-count">'+COUNTS[t.key]+'</span>';
       b.addEventListener('click',()=>{ activeTab=t.key; curPage=1; const tt=document.getElementById('sa-tabtitle'); if(tt) tt.textContent=t.name;
