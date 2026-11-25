@@ -1404,6 +1404,7 @@ body.flow-locked{ overflow:hidden; }
 .sd-body.sd-body-edit{ overflow:visible; }
 .sd-body-formhost .pf-form{ max-width:none; margin:0; border:none; box-shadow:none; padding:0; }
 .sd-body-formhost .pf-actions{ display:none; }
+.sd-body .quick-nav{ max-width:none; margin:1.3rem 0 0; padding-top:1.1rem; border-top:1px solid var(--gray-200); }
 .sd-group{ margin-bottom:1.3rem; }
 .sd-group:last-child{ margin-bottom:0; }
 .sd-group-title{ font-size:.85rem; font-weight:700; color:var(--gray-600); margin-bottom:.6rem; }
@@ -4578,17 +4579,24 @@ body.flow-locked{ overflow:hidden; }
   (function editSearchModal(){
     const openBtns=[...document.querySelectorAll('.js-edit-search')], modal=document.getElementById('sd-modal'),
           backdrop=document.getElementById('sd-backdrop'), body=document.getElementById('sd-body'),
-          form=document.getElementById('pf-form');
+          form=document.getElementById('pf-form'), quickNav=document.querySelector('.quick-nav');
     if(!openBtns.length||!modal||!form) return;
     const formHome=form.parentNode;           // where the form lives on the first page
-    function restore(){ if(formHome && form.parentNode!==formHome) formHome.appendChild(form); }
+    const quickHome=quickNav?quickNav.parentNode:null, quickNext=quickNav?quickNav.nextSibling:null;
+    function restore(){
+      if(formHome && form.parentNode!==formHome) formHome.appendChild(form);
+      if(quickNav && quickHome && quickNav.parentNode!==quickHome) quickHome.insertBefore(quickNav, quickNext);
+    }
     function open(){
-      // host the real first-page form (segment control + both panes + calendar + navigation)
+      // host the real first-page form (segment control + both panes + calendar + navigation) and the quick links
       body.classList.add('sd-body-edit','sd-body-formhost'); body.appendChild(form);
+      if(quickNav) body.appendChild(quickNav);
       backdrop.classList.add('open'); modal.classList.add('open');
     }
     function close(){ backdrop.classList.remove('open'); modal.classList.remove('open');
       body.classList.remove('sd-body-edit','sd-body-formhost'); restore(); }
+    // a quick link navigates to another screen — close the modal after it fires
+    if(quickNav) quickNav.addEventListener('click',e=>{ if(e.target.closest('.qn-card') && modal.classList.contains('open')) close(); });
     function apply(){
       const seg=form.querySelector('.pf-seg-btn.active'); const mode=seg?seg.dataset.pane:'institution';
       const clinicEmpty = document.getElementById('pf-clinic').value==='';
