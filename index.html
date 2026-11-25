@@ -855,7 +855,8 @@
      with the labels dropped to the patient-description line; center the pills row too */
   body.v2.nav-tabs .ph-row .cat-tabs{ position:absolute; left:50%; bottom:-1px; transform:translateX(-50%);
     margin:0; align-items:flex-end; gap:.1rem; overflow:visible; }
-  body.v2.nav-tabs .ph-row .cat-tab{ padding:.1rem .95rem .7rem; }
+  /* raise the tab text onto the same line as the DOB meta (keep the underline on the header border) */
+  body.v2.nav-tabs .ph-row .cat-tab{ padding:.1rem .95rem 1.35rem; }
   body.v2.nav-tabs .cat-subnav{ justify-content:center; }
   /* tabs mode: the content + overview rail share the same centered 1440 band as the header,
      so cards stay left-aligned with the header and the rail docks to the header's right edge */
