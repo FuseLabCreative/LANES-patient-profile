@@ -1213,7 +1213,9 @@
   /* page = left column (~1/4, the grid gap is the space between the two) + main area */
   body.nav-v3 .page{ display:grid; grid-template-columns:1fr 3fr; gap:0; padding:0; align-items:start; }
   body.nav-v3 .layout{ display:block; min-width:0; padding:0 1.5rem 1.5rem; }
-  body.nav-v3 .content{ min-width:0; }
+  /* cap the content column at 1440 (matching the sticky nav) so sections never stick out
+     beside the sticky nav and show through while scrolling on wide screens */
+  body.nav-v3 .content{ min-width:0; max-width:1440px; margin:0 auto; }
   /* the active category is shown by the nav bar, so the duplicate heading is hidden */
   body.nav-v3 .cat-heading{ display:none; }
   body.nav-v3 .main-grid{ max-width:1440px; margin:0 auto; }
