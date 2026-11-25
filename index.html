@@ -917,6 +917,7 @@
   .cat-preview{ position:fixed; z-index:6000; min-width:250px; max-width:320px; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; box-shadow:0 14px 40px rgba(16,24,40,.2); padding:.4rem; opacity:0; transform:translateY(4px); pointer-events:none; transition:opacity .12s, transform .12s; }
   .cat-preview.show{ opacity:1; transform:translateY(0); pointer-events:auto; }
   .cp-head{ font-size:.72rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); padding:.45rem .6rem .35rem; }
+  .cp-count{ display:inline-flex; align-items:center; font-size:.68rem; font-weight:700; letter-spacing:.01em; color:var(--gray-600); background:var(--gray-100); border-radius:1rem; padding:.1rem .5rem; }
   .cp-item{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; width:100%; text-align:left; background:none; border:none; font-family:inherit; border-radius:.4rem; padding:.5rem .6rem; cursor:pointer; }
   .cp-item:hover{ background:var(--gray-100); }
   .cp-label{ display:inline-flex; align-items:center; gap:.45rem; font-size:.88rem; font-weight:600; color:var(--gray-900); }
@@ -3121,7 +3122,7 @@ body.flow-locked{ overflow:hidden; }
     const preview=document.createElement('div'); preview.className='cat-preview'; document.body.appendChild(preview);
     let pvTab=null, pvTimer=null;
     function buildPreview(g){
-      return '<div class="cp-head">'+g.label+' · '+g.items.length+' sections</div>'+
+      return '<div class="cp-head">'+g.label+'<span class="cp-count">'+g.items.length+' sections</span></div>'+
         g.items.map(([id,label,meta])=>{ meta=meta||{};
           return '<button class="cp-item" data-cat="'+g.id+'" data-target="'+id+'">'+
             '<span class="cp-label">'+label+(meta.alert?'<span class="alert-dot"></span>':'')+'</span>'+
