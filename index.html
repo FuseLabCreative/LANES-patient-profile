@@ -4114,7 +4114,13 @@ body.flow-locked{ overflow:hidden; }
     function applyOrder(){ const base=orderedSecs();
       const pinned=base.filter(s=>s.classList.contains('wgt-pinned'));
       const rest=base.filter(s=>!s.classList.contains('wgt-pinned'));
-      [...pinned,...rest].forEach((s,i)=>s.style.order=String(i)); }
+      const ordered=[...pinned,...rest];
+      ordered.forEach((s,i)=>s.style.order=String((i+1)*10));
+      // keep each category heading flex-ordered just before its category's first section
+      grid.querySelectorAll(':scope > .cat-heading').forEach(h=>{
+        const cat=h.dataset.cat; const idx=cat?ordered.findIndex(s=>s.dataset.cat===cat):-1;
+        h.style.order = idx>=0 ? String((idx+1)*10 - 1) : '0';
+      }); }
     function save(){ state.hidden=secs.filter(s=>s.classList.contains('wgt-hidden')).map(s=>s.id);
       state.pinned=secs.filter(s=>s.classList.contains('wgt-pinned')).map(s=>s.id);
       state.order=orderedSecs().map(s=>s.id); LS.set(state); }
