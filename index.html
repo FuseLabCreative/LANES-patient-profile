@@ -3231,8 +3231,8 @@ body.flow-locked{ overflow:hidden; }
     gearMenu.innerHTML =
       '<div class="gm-userhead"><div class="n">Jane Doe</div><div class="r">Care coordinator</div><div class="dt" id="gm-datetime"></div></div>'+
       '<div class="gm-title">Layouts</div>'+
-      '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
-      '<button class="gm-item" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Grouped tabs with section chips</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item active" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Grouped tabs with section chips</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
       '<button class="gm-item" data-mode="v3"><span class="gm-txt"><span class="gm-name">Version 3</span><span class="gm-desc">Left panel with nav, profile and section links</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
     navUser.appendChild(gearMenu);
 
@@ -3299,7 +3299,7 @@ body.flow-locked{ overflow:hidden; }
     setInterval(()=>{ const el=document.getElementById('user-datetime'); if(gmDt && el) gmDt.textContent = el.textContent; }, 1000);
 
     setVersion('v2');
-    setMode('sidebar'); // default layout: Version 1 (left sidebar)
+    setMode('tabs'); // default layout: Version 1 (grouped tabs)
   })();
 
   /* ===== Version 2 interactive bits: header filters, combined date-range, overview rail ===== */
