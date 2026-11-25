@@ -1341,6 +1341,8 @@ body.flow-locked{ overflow:hidden; }
 .sa-change:hover{ background:var(--gray-100); }
 #scr-alerts.portal-screen{ overflow:hidden; }
 #scr-alerts.portal-screen.active{ display:flex; flex-direction:column; }
+#scr-audit.portal-screen{ overflow:hidden; }
+#scr-audit.portal-screen.active{ display:flex; flex-direction:column; }
 .sa-headband{ flex:none; border-bottom:1px solid var(--gray-300); }
 .sa-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
 .sa-head-actions{ display:flex; align-items:center; gap:.5rem; flex:none; }
@@ -1478,6 +1480,25 @@ body.flow-locked{ overflow:hidden; }
 .pfh-headband-inner{ width:100%; padding:.5rem 1.5rem; box-sizing:border-box; min-height:84px; display:flex; flex-direction:column; justify-content:center; }
 .pfh-title{ display:block; font-size:1.6rem; font-weight:400; color:var(--gray-900); line-height:1.15; margin:0; }
 .pfh-sub{ display:block; font-size:.875rem; color:var(--gray-500); line-height:1.4; margin:.2rem 0 0; max-width:600px; }
+
+/* ---- quick navigation links ---- */
+.quick-nav{ max-width:600px; margin:1.5rem auto 0; }
+.quick-nav-label{ font-size:.73rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); margin:0 0 .6rem; }
+.quick-nav-cards{ display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
+@media (max-width:560px){ .quick-nav-cards{ grid-template-columns:1fr; } }
+.qn-card{ display:flex; align-items:center; gap:.75rem; text-align:left; font-family:inherit; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:.85rem .95rem; cursor:pointer; box-shadow:var(--card-shadow); transition:border-color .15s, box-shadow .15s, transform .05s; }
+.qn-card:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(44,123,229,.14); }
+.qn-card:active{ transform:translateY(1px); }
+.qn-ico{ flex:none; width:38px; height:38px; border-radius:.5rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(44,123,229,.1); color:var(--primary); }
+.qn-ico .svg-ico{ width:19px; height:19px; }
+.qn-text{ flex:1 1 auto; min-width:0; display:flex; flex-direction:column; gap:.1rem; }
+.qn-title{ font-size:.95rem; font-weight:700; color:var(--gray-900); }
+.qn-sub{ font-size:.78rem; color:var(--gray-500); }
+.qn-arrow{ flex:none; width:16px; height:16px; color:var(--gray-400); transform:rotate(180deg); }
+.qn-card:hover .qn-arrow{ color:var(--primary); }
+.audit-outcome{ display:inline-flex; align-items:center; font-size:.8rem; font-weight:600; border-radius:1rem; padding:.12rem .6rem; }
+.audit-outcome.ok{ color:#1a7f5a; background:rgba(26,127,90,.12); }
+.audit-outcome.bad{ color:var(--danger); background:rgba(230,55,87,.1); }
 
 /* ---- first-page patient form ---- */
 .pf-form{ max-width:600px; margin:0 auto; background:#fff; border:1px solid var(--gray-200); border-radius:.65rem; padding:1.75rem 2rem; box-shadow:var(--card-shadow); }
@@ -1804,8 +1825,54 @@ body.flow-locked{ overflow:hidden; }
           <button type="button" class="pf-clear" id="pf-clear">Clear all</button>
         </div>
       </form>
+      <div class="quick-nav">
+        <div class="quick-nav-label">Quick links</div>
+        <div class="quick-nav-cards">
+          <button type="button" class="qn-card" id="qn-alerts">
+            <span class="qn-ico"><svg class="svg-ico"><use href="#i-pulse"/></svg></span>
+            <span class="qn-text"><span class="qn-title">Smart Alerts</span><span class="qn-sub">Clinic encounter work-list</span></span>
+            <svg class="svg-ico qn-arrow"><use href="#i-cl"/></svg>
+          </button>
+          <button type="button" class="qn-card" id="qn-audit">
+            <span class="qn-ico"><svg class="svg-ico"><use href="#i-file"/></svg></span>
+            <span class="qn-text"><span class="qn-title">Audit Reports</span><span class="qn-sub">Access &amp; disclosure logs</span></span>
+            <svg class="svg-ico qn-arrow"><use href="#i-cl"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
+</div>
+
+<!-- ============ PORTAL FLOW: AUDIT REPORTS ============ -->
+<div id="scr-audit" class="portal-screen">
+  <div class="nav-host"></div>
+  <div class="sa-headband"><div class="sa-headband-inner">
+    <div class="sa-pagehead">
+      <div class="sa-clinic">
+        <span class="sa-clinic-text">
+          <span class="hdr-nameline">
+            <span class="sa-clinic-name">Audit Reports</span>
+            <button class="sa-edit-btn" id="audit-back" type="button" title="Back to search"><svg class="svg-ico"><use href="#i-cl"/></svg>Back to search</button>
+          </span>
+          <span class="sa-clinic-badge">Access &amp; disclosure activity · last 30 days</span>
+        </span>
+      </div>
+    </div>
+  </div></div>
+  <div class="sa-scroll"><div class="sa-scroll-inner">
+    <div class="sa-panel">
+      <div class="sa-panel-head"><h2>Audit log</h2></div>
+      <div class="table-scroll">
+        <table class="lanes-table sa-table">
+          <thead><tr>
+            <th>Date / Time</th><th>User</th><th>Role</th><th>Action</th><th>Patient</th><th>Source / Org</th><th>Outcome</th>
+          </tr></thead>
+          <tbody id="audit-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div></div>
 </div>
 
 <!-- ============ PORTAL FLOW: SMART ALERTS ============ -->
@@ -4155,11 +4222,12 @@ body.flow-locked{ overflow:hidden; }
 <script>
 /* ===== Portal flow controller: Select Institution -> Smart Alerts -> Patient Synopsis ===== */
 (function(){
-  const scrSelect=document.getElementById('scr-select'), scrAlerts=document.getElementById('scr-alerts');
+  const scrSelect=document.getElementById('scr-select'), scrAlerts=document.getElementById('scr-alerts'), scrAudit=document.getElementById('scr-audit');
   function setLogos(){ const s=document.querySelector('.lanes-navbar .lanes-logo-img'); if(s&&s.src) document.querySelectorAll('.ps-logo-img').forEach(i=>{ i.src=s.src; }); }
   function show(which){
     scrSelect.classList.toggle('active', which==='select');
     scrAlerts.classList.toggle('active', which==='alerts');
+    if(scrAudit) scrAudit.classList.toggle('active', which==='audit');
     document.body.classList.toggle('flow-synopsis', which==='synopsis');
     document.body.classList.toggle('flow-locked', which!=='synopsis');
     window.scrollTo(0,0);
@@ -4167,6 +4235,33 @@ body.flow-locked{ overflow:hidden; }
     if(which==='synopsis') window.dispatchEvent(new Event('resize'));
   }
   window.LANESflow={ show };
+
+  /* ---- first-page quick navigation ---- */
+  (function quickNav(){
+    const qa=document.getElementById('qn-alerts'), qd=document.getElementById('qn-audit'), ab=document.getElementById('audit-back');
+    if(qa) qa.addEventListener('click',()=>{ saCtx={ mode:'institution', depts:[], first:'', last:'', dob:'', mrn:'' };
+      selectClinic(activeClinic || CLINICS[0]); });
+    if(qd) qd.addEventListener('click',()=>{ renderAudit(); show('audit'); });
+    if(ab) ab.addEventListener('click',()=>show('select'));
+    let auditDone=false;
+    function renderAudit(){
+      if(auditDone) return; auditDone=true;
+      const tb=document.getElementById('audit-tbody'); if(!tb) return;
+      const rows=[
+        ['11/24/2026 4:12 PM','Jane Doe','Care Coordinator','Viewed record','Sanchez, Maria','UCLA Health Clinic','Success'],
+        ['11/24/2026 2:48 PM','Marcus Lee','Care Coordinator','Exported CSV','Multiple (Smart Alerts)','LA Care','Success'],
+        ['11/23/2026 6:03 PM','Dr. Elena Ruiz','Physician','Viewed record','Lopez, Karen','Cedars-Sinai Medical Center','Success'],
+        ['11/23/2026 1:15 PM','Priya Nair','Pharmacist','Opened document','Sanchez, Maria','UCLA Health Clinic','Success'],
+        ['11/22/2026 9:41 AM','Jane Doe','Care Coordinator','Edited search','Multiple (Smart Alerts)','Health Net','Success'],
+        ['11/21/2026 3:27 PM','System','Automated','Consent check','Sanchez, Maria','California Dept. of Health Care Services','Denied — consent on file'],
+        ['11/20/2026 10:12 AM','Dr. Aaron Webb','Physician','Viewed record','Nelson, James','Northeast Valley Health','Success'],
+        ['11/19/2026 5:50 PM','Marcus Lee','Care Coordinator','Printed summary','King, Joseph','HealthCare LA','Success']
+      ];
+      tb.innerHTML=rows.map(r=>'<tr>'+r.map((c,i)=> i===6
+        ? '<td><span class="audit-outcome '+(/Denied/.test(c)?'bad':'ok')+'">'+c+'</span></td>'
+        : '<td'+(i===0?' class="muted"':'')+'>'+c+'</td>').join('')+'</tr>').join('');
+    }
+  })();
 
   /* ---- clinical sites ---- */
   const CLINICS=[
@@ -4590,6 +4685,9 @@ body.flow-locked{ overflow:hidden; }
     // Smart Alerts screen: same navbar, Search kept; institution selector lives in the page header
     const alNav=cloneNav();
     const alHost=document.querySelector('#scr-alerts .nav-host'); if(alHost) alHost.appendChild(alNav);
+    // Audit Reports screen: same navbar
+    const auNav=cloneNav();
+    const auHost=document.querySelector('#scr-audit .nav-host'); if(auHost) auHost.appendChild(auNav);
     // keep the cloned date/time in step with the live navbar
     const syncDt=()=>{ const t=(realNav.querySelector('#user-datetime')||{}).textContent||''; document.querySelectorAll('.nav-host .user-datetime').forEach(d=>d.textContent=t); };
     syncDt(); setInterval(syncDt,1000);
