@@ -1221,6 +1221,10 @@
   body.nav-v3 .main-grid{ max-width:1440px; margin:0 auto; }
   /* sections clear the sticky navbar + horizontal nav bar when scrolled to */
   body.nav-v3 .main-grid > section, body.nav-v3 .info-card{ scroll-margin-top:168px; }
+  /* use borders, not drop-shadows, for the cards here — the shadow bled a grey band
+     under the sticky tabs/links while scrolling */
+  body.nav-v3 .panel, body.nav-v3 .info-card{ box-shadow:none; border:1px solid var(--gray-200); }
+  body.nav-v3 .pt-summary{ box-shadow:none; }
   /* no Overview tab — the overview data lives in the left panel, so hide it in the main flow */
   body.v2.nav-v3 #cat-overview, body.v2.nav-v3 .info-cards{ display:none !important; }
   /* panel: subsections are soft-tinted plates separated by 1px gaps (no borders) */
