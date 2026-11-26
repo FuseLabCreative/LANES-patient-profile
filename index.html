@@ -1256,6 +1256,35 @@
   .v3-addnote:hover{ background:var(--primary); color:#fff; }
   .v3-addnote .svg-ico{ width:14px; height:14px; }
   /* main-area horizontal nav: category buttons + section links on top of the content */
+  /* ===== Version 2: Patient Synopsis layout (nav-synopsis) ===== */
+  .syn-head{ display:none; }
+  .nav-patient-chip{ display:none; }
+  body.nav-synopsis .toc{ display:none; }
+  body.nav-synopsis .patient-header{ display:none; }
+  body.nav-synopsis .patient-search{ display:none; }   /* the centered patient chip replaces the search box */
+  body.nav-synopsis .cat-subnav, body.nav-synopsis .ov-rail{ display:none !important; }
+  body.nav-synopsis .layout{ display:block; }
+  body.nav-synopsis .content{ max-width:1440px; margin:0 auto; }
+  body.nav-synopsis .cat-heading{ display:none; }
+  body.nav-synopsis .syn-head{ display:block; margin:0 0 1.25rem; }
+  /* centered patient chip in the top bar */
+  body.nav-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border:1px solid var(--gray-200); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); }
+  .npc-avatar{ width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#a9d4f2,#47b0ff); color:#0b2a44; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:.7rem; flex:none; }
+  .npc-text{ display:flex; flex-direction:column; line-height:1.15; }
+  .npc-name{ font-weight:700; font-size:.86rem; color:var(--gray-900); }
+  .npc-meta{ font-size:.72rem; color:var(--gray-600); }
+  /* title + insights row */
+  .syn-title{ font-size:1.5rem; font-weight:700; color:var(--gray-900); margin:0 0 .9rem; }
+  .syn-insights{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding-bottom:1rem; border-bottom:1px solid var(--gray-200); }
+  .syn-ins-label{ font-weight:700; color:var(--gray-700); font-size:.95rem; margin-right:.1rem; }
+  .syn-toggle{ display:inline-flex; background:var(--gray-100); border:1px solid var(--gray-200); border-radius:.45rem; padding:.15rem; gap:.15rem; }
+  .syn-tg-btn{ width:36px; height:30px; border:none; background:none; border-radius:.35rem; color:var(--gray-600); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+  .syn-tg-btn:hover{ color:var(--gray-900); }
+  .syn-tg-btn.active{ background:#fff; color:var(--primary); box-shadow:0 1px 2px rgba(18,38,63,.12); }
+  .syn-select{ font-family:inherit; font-size:.85rem; font-weight:600; color:var(--gray-800); background:#fff; border:1px solid var(--gray-300); border-radius:.4rem; padding:.42rem .6rem; cursor:pointer; }
+  .syn-section{ flex:1 1 220px; min-width:160px; max-width:420px; }
+  .syn-lookback{ margin-left:auto; }
+  @media(max-width:620px){ .syn-section{ flex-basis:100%; max-width:none; } .syn-lookback{ margin-left:0; } }
   body:not(.nav-v3) .v3-mainnav{ display:none; }
   body.nav-v3 .v3-mainnav{ position:sticky; top:62px; z-index:800; background:var(--body-bg); max-width:1440px; margin:0 auto;
     display:flex; flex-direction:column; gap:.7rem; padding:1.5rem 0 1rem; }
@@ -2085,6 +2114,10 @@ body.flow-locked{ overflow:hidden; }
       </div>
       <input type="text" placeholder="Search patients by name or DOB">
     </div>
+    <div class="nav-patient-chip" id="nav-patient-chip">
+      <span class="npc-avatar">MS</span>
+      <span class="npc-text"><span class="npc-name">Maria Sanchez</span><span class="npc-meta">DOB 01/01/2001 · 23 yrs</span></span>
+    </div>
     <div class="nav-user">
       <div class="nav-help-wrap">
         <button class="nav-help" id="help-btn" title="Feedback / Help" aria-haspopup="true" aria-expanded="false"><svg class="svg-ico"><use href="#i-help"/></svg></button>
@@ -2205,6 +2238,25 @@ body.flow-locked{ overflow:hidden; }
   </aside>
 
   <div class="content">
+
+  <!-- ============ VERSION 2: PATIENT SYNOPSIS HEADER (shown only in nav-synopsis) ============ -->
+  <div class="syn-head">
+    <h1 class="syn-title">Patient Synopsis</h1>
+    <div class="syn-insights">
+      <span class="syn-ins-label">Insights</span>
+      <div class="syn-toggle" role="group" aria-label="Insights view">
+        <button type="button" class="syn-tg-btn active" data-view="summary" title="Summary insights"><svg class="svg-ico"><use href="#i-file"/></svg></button>
+        <button type="button" class="syn-tg-btn" data-view="timeline" title="History timeline"><svg class="svg-ico"><use href="#i-history"/></svg></button>
+      </div>
+      <select class="syn-select syn-section" id="syn-section" aria-label="Jump to section"></select>
+      <select class="syn-select syn-lookback" id="syn-lookback" aria-label="Lookback period">
+        <option>Lookback: 6 months</option>
+        <option>Lookback: 1 year</option>
+        <option>Lookback: 3 years</option>
+        <option>Lookback: All time</option>
+      </select>
+    </div>
+  </div>
 
   <!-- ============ PATIENT SUMMARY ============ -->
   <section class="pt-summary" id="pt-summary">
@@ -3263,18 +3315,24 @@ body.flow-locked{ overflow:hidden; }
     gearMenu.innerHTML =
       '<div class="gm-userhead"><div class="n">Jane Doe</div><div class="r">Care coordinator</div><div class="dt" id="gm-datetime"></div></div>'+
       '<div class="gm-title">Layouts</div>'+
-      '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
-      /* Version 2 (tabs) and Version 3 (v3) hidden for now */
+      '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="synopsis"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Patient Synopsis with insights &amp; lookback</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
+      /* legacy grouped-tabs and left-panel layouts hidden for now */
     navUser.appendChild(gearMenu);
 
     function setMode(mode){
-      document.body.classList.remove('nav-sidebar','nav-tabs','nav-v3');
+      document.body.classList.remove('nav-sidebar','nav-tabs','nav-v3','nav-synopsis');
       if(mode==='tabs'){
         document.body.classList.add('nav-tabs');
         showCategory(activeCat);
       } else if(mode==='v3'){
         document.body.classList.add('nav-v3');
         showCategory(activeCat); buildV3Sub(activeCat); updateV3Cats();
+        window.scrollTo({top:0});
+      } else if(mode==='synopsis'){
+        document.body.classList.add('nav-synopsis');
+        grid.querySelectorAll(':scope > [data-cat]').forEach(el=>{ el.style.display=''; });
+        if(window.__synInit) window.__synInit();
         window.scrollTo({top:0});
       } else {
         document.body.classList.add('nav-sidebar');
@@ -3288,6 +3346,27 @@ body.flow-locked{ overflow:hidden; }
       document.body.classList.toggle('v1', ver!=='v2');
       gearMenu.querySelectorAll('.gm-item[data-ver]').forEach(i=>i.classList.toggle('active', i.dataset.ver===ver));
     }
+    // Version 2 (Patient Synopsis): populate the insights-row controls + sync the header chip
+    let synReady=false;
+    function __synInit(){
+      if(!synReady){
+        const sel=document.getElementById('syn-section');
+        if(sel){
+          sel.innerHTML='<option value="">Jump to section…</option>'+
+            groups.filter(g=>g.items&&g.items.length).map(g=>'<optgroup label="'+g.label+'">'+
+              g.items.map(it=>'<option value="'+it[0]+'">'+it[1]+'</option>').join('')+'</optgroup>').join('');
+          sel.addEventListener('change',()=>{ const id=sel.value; if(!id) return; const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); });
+        }
+        const tgl=[...document.querySelectorAll('.syn-toggle .syn-tg-btn')];
+        tgl.forEach(b=>b.addEventListener('click',()=>tgl.forEach(x=>x.classList.toggle('active',x===b))));
+        synReady=true;
+      }
+      const nm=document.querySelector('.ph-name'), cn=document.querySelector('#nav-patient-chip .npc-name');
+      const av=document.querySelector('.ph-avatar'), ca=document.querySelector('#nav-patient-chip .npc-avatar');
+      if(nm&&cn) cn.textContent=nm.textContent.trim();
+      if(av&&ca) ca.textContent=av.textContent.trim();
+    }
+    window.__synInit=__synInit;
 
     function closeMenu(){ gearMenu.classList.remove('open'); document.querySelectorAll('.nav-user.menu-open').forEach(n=>n.classList.remove('menu-open')); }
     function toggleMenu(e, host){ e.stopPropagation(); const open=!gearMenu.classList.contains('open');
