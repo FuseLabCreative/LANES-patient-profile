@@ -1293,9 +1293,9 @@
   body.nav-synopsis .layout{ display:flex; gap:3rem; align-items:flex-start; }   /* left nav + content, like Version 1 */
   body.nav-synopsis .content{ flex:1 1 auto; min-width:0; }
   body.nav-synopsis .cat-heading{ display:none; }
-  /* synopsis header sits at the top of the content column, spanning its width */
-  body.nav-synopsis .syn-head{ display:block; position:sticky; top:63px; z-index:30; background:var(--body-bg);
-    margin:0 0 1.25rem; padding:.2rem 0 .8rem; border-bottom:1px solid var(--gray-300); }
+  /* synopsis header spans the full page width above the sidebar + content */
+  body.nav-synopsis .syn-head{ display:block; position:sticky; top:var(--nav-h,63px); z-index:30; background:var(--body-bg);
+    margin:-1.25rem -1.5rem 1.25rem; padding:.45rem 1.5rem .85rem; border-bottom:1px solid var(--gray-300); }
   /* centered patient chip in the top bar */
   body.nav-synopsis.flow-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.55); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); cursor:pointer; backdrop-filter:blur(2px); transition:background .14s, border-color .14s, box-shadow .14s; }
   body.nav-synopsis .nav-patient-chip:hover{ background:rgba(255,255,255,.8); border-color:rgba(255,255,255,.8); box-shadow:0 2px 8px rgba(18,38,63,.14); }
@@ -2281,16 +2281,8 @@ body.flow-locked{ overflow:hidden; }
 </div>
 
 <div class="page">
- <div class="layout">
 
-  <!-- ============ LEFT TABLE OF CONTENTS ============ -->
-  <aside class="toc" id="toc">
-    <!-- nav injected by JS -->
-  </aside>
-
-  <div class="content">
-
-  <!-- ============ VERSION 2: PATIENT SYNOPSIS HEADER (shown only in nav-synopsis) ============ -->
+  <!-- ============ VERSION 2: PATIENT SYNOPSIS HEADER (full-width, on top) ============ -->
   <div class="syn-head">
     <div class="syn-titlerow">
       <h1 class="syn-title">Patient Synopsis</h1>
@@ -2307,6 +2299,15 @@ body.flow-locked{ overflow:hidden; }
       </div>
     </div>
   </div>
+
+ <div class="layout">
+
+  <!-- ============ LEFT TABLE OF CONTENTS ============ -->
+  <aside class="toc" id="toc">
+    <!-- nav injected by JS -->
+  </aside>
+
+  <div class="content">
 
   <!-- ============ PATIENT SUMMARY ============ -->
   <section class="pt-summary" id="pt-summary">
@@ -3703,10 +3704,13 @@ body.flow-locked{ overflow:hidden; }
     if(!nav || !ph) return;
     const subnav = document.querySelector('.cat-subnav');
     const plate = document.querySelector('.ov-plate');
+    const synHead = document.querySelector('.syn-head');
     function updateStick(){
       const isTabs = document.body.classList.contains('nav-tabs');
       document.body.style.setProperty('--nav-h', nav.offsetHeight + 'px');
-      const base = nav.offsetHeight + ph.offsetHeight;
+      // in synopsis mode the full-width Patient Synopsis header pins under the navbar; the sidebar sticks below it
+      const synH = (synHead && document.body.classList.contains('nav-synopsis')) ? synHead.offsetHeight : 0;
+      const base = nav.offsetHeight + ph.offsetHeight + synH;
       document.body.style.setProperty('--stick', (base + 6) + 'px');
       // patient-details plate pins directly under the header in tabs mode; chips pin under the plate
       const plateH = (plate && isTabs) ? plate.offsetHeight : 0;
@@ -3716,7 +3720,7 @@ body.flow-locked{ overflow:hidden; }
       document.body.style.setProperty('--stick-plate', (base + subH) + 'px');
       document.body.style.setProperty('--stick-sub', (base + subH + plateH + 10) + 'px');
     }
-    if(window.ResizeObserver){ new ResizeObserver(updateStick).observe(ph); new ResizeObserver(updateStick).observe(nav); if(subnav) new ResizeObserver(updateStick).observe(subnav); if(plate) new ResizeObserver(updateStick).observe(plate); }
+    if(window.ResizeObserver){ new ResizeObserver(updateStick).observe(ph); new ResizeObserver(updateStick).observe(nav); if(subnav) new ResizeObserver(updateStick).observe(subnav); if(plate) new ResizeObserver(updateStick).observe(plate); if(synHead) new ResizeObserver(updateStick).observe(synHead); }
     window.addEventListener('resize', updateStick);
     updateStick();
   })();
