@@ -1532,7 +1532,7 @@ body.flow-locked{ overflow:hidden; }
 .quick-nav-label{ font-size:.73rem; font-weight:700; letter-spacing:.03em; color:var(--gray-500); margin:0 0 .6rem; }
 .quick-nav-cards{ display:grid; grid-template-columns:1fr 1fr; gap:.75rem; }
 @media (max-width:560px){ .quick-nav-cards{ grid-template-columns:1fr; } }
-.qn-card{ display:flex; align-items:center; gap:.75rem; text-align:left; font-family:inherit; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:.85rem .95rem; cursor:pointer; box-shadow:var(--card-shadow); transition:border-color .15s, box-shadow .15s, transform .05s; }
+.qn-card{ display:flex; align-items:center; gap:.75rem; text-align:left; font-family:inherit; background:#fff; border:1px solid var(--gray-200); border-radius:.6rem; padding:.85rem .95rem; cursor:pointer; box-shadow:0 1px 3px rgba(18,38,63,.07); transition:border-color .15s, box-shadow .15s, transform .05s; }
 .qn-card:hover{ border-color:var(--primary); box-shadow:0 6px 18px rgba(44,123,229,.14); }
 .qn-card:active{ transform:translateY(1px); }
 .qn-ico{ flex:none; width:38px; height:38px; border-radius:.5rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(44,123,229,.1); color:var(--primary); }
@@ -1577,6 +1577,8 @@ body.flow-locked{ overflow:hidden; }
 .pf-datefield .cal{ right:.75rem; }
 .pf-datefield .cal .svg-ico{ width:16px; height:16px; }
 .cal-pop.pf-cal-pop{ position:absolute; top:calc(100% + 6px); left:0; right:0; width:auto; box-sizing:border-box; z-index:2000; }
+/* when there isn't room below (e.g. low in the Edit search modal), open upward so the actions row stays in view */
+.cal-pop.pf-cal-pop.pf-cal-up{ top:auto; bottom:calc(100% + 6px); }
 .cal-pop.pf-cal-pop .cp-day{ height:38px; }
 .cal-pop.pf-cal-pop .cp-foot{ border-top:1px solid var(--gray-200); padding-top:.55rem; }
 .cal-pop.pf-cal-pop .cp-nav{ flex:none; width:40px; height:40px; display:inline-flex; align-items:center; justify-content:center; font-size:1.2rem; line-height:1; padding:0; color:var(--gray-600); border:1px solid var(--gray-300); border-radius:.45rem; background:#fff; }
@@ -4501,7 +4503,11 @@ body.flow-locked{ overflow:hidden; }
       pop.innerHTML=h;
       if(window.enhanceSelects) window.enhanceSelects(pop); // month/year become custom dropdown components
     }
-    function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop(); pop.style.display='block'; }
+    function openPop(){ if(selDate){ viewY=selDate.getFullYear(); viewM=selDate.getMonth(); } renderPop(); pop.classList.remove('pf-cal-up'); pop.style.display='block';
+      // flip upward if the popup would spill past the modal (or viewport) bottom
+      requestAnimationFrame(()=>{ const r=pop.getBoundingClientRect(); const modal=dobWrap.closest('#sd-modal');
+        const limit=modal? Math.min(window.innerHeight, modal.getBoundingClientRect().bottom) : window.innerHeight;
+        if(r.bottom > limit-8) pop.classList.add('pf-cal-up'); }); }
     function closePop(){ pop.style.display='none'; }
     dobWrap.addEventListener('click',e=>{ if(e.target.closest('.cp-msel,.cp-ysel')) return; e.stopPropagation(); if(pop.style.display==='none') openPop(); else closePop(); });
     pop.addEventListener('change',e=>{ if(e.target.classList.contains('cp-msel')){ viewM=+e.target.value; renderPop(); } else if(e.target.classList.contains('cp-ysel')){ viewY=+e.target.value; renderPop(); } });
