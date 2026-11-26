@@ -49,12 +49,16 @@
   /* text variant sitting next to the Demo badge */
   .nav-help-text{ width:auto; height:auto; padding:.32rem .6rem; font-size:.9rem; font-weight:500; border-radius:.4rem; }
   .nav-help-left{ margin-left:.4rem; }
-  .nav-help-home{ position:absolute; width:0; height:0; overflow:visible; }   /* menu's idle home before it's moved to the trigger */
+  /* Version 1 keeps the right-side icon; Version 2 uses the text link next to the Demo badge */
+  body.nav-sidebar .nav-help-left{ display:none; }
+  body.nav-synopsis .nav-help-left{ display:flex; }
+  body.nav-synopsis .nav-help-icon{ display:none; }
   /* Feedback / Help popover */
   .nav-help-wrap{ position:relative; display:flex; }
-  .help-menu{ position:absolute; left:0; right:auto; top:46px; width:300px; background:#fff; border:1px solid var(--gray-200);
+  .help-menu{ position:absolute; right:0; left:auto; top:46px; width:300px; background:#fff; border:1px solid var(--gray-200);
     border-radius:.6rem; box-shadow:var(--card-shadow); z-index:120; display:none; overflow:hidden; }
   .help-menu.open{ display:block; }
+  .nav-help-left .help-menu{ left:0; right:auto; }   /* left-aligned under the Demo-badge trigger */
   .help-head{ padding:.85rem 1rem .7rem; border-bottom:1px solid var(--gray-200); }
   .help-title{ display:block; font-size:0.95rem; font-weight:600; color:var(--gray-900); }
   .help-sub{ display:block; font-size:0.8rem; color:var(--gray-500); margin-top:.15rem; }
@@ -826,11 +830,15 @@
   body.v2 .scope-dd-chev{ color:#0b3b66; }
   body.v2 .scope-dd-btn:focus{ box-shadow:0 0 0 .14rem rgba(255,255,255,.25); }
 
-  /* 4 — Navbar right: name + datetime stack with a settings gear */
+  /* 4 — Navbar right. Version 1 (sidebar): compact pill card. Version 2 (synopsis): name + datetime + gear */
   .user-card{ display:none; }
-  body.v2 .user-card{ display:none; }
-  body.v2 .user-info{ display:flex; }
-  body.v2 .gear{ display:flex; }
+  body.nav-sidebar .user-info, body.nav-sidebar .gear{ display:none; }
+  body.nav-sidebar .user-card{ display:flex; align-items:center; gap:.45rem; cursor:pointer; background:rgba(255,255,255,.28);
+    border:1px solid rgba(255,255,255,.5); border-radius:.45rem; padding:.28rem .5rem .28rem .35rem; }
+  body.nav-sidebar .user-card:hover{ background:rgba(255,255,255,.42); }
+  body.nav-synopsis .user-card{ display:none; }
+  body.nav-synopsis .user-info{ display:flex; }
+  body.nav-synopsis .gear{ display:flex; }
   .uc-avatar{ width:26px; height:26px; border-radius:50%; background:#13456f; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.875rem; font-weight:600; flex:0 0 auto; }
   .uc-name{ font-size:0.875rem; font-weight:600; color:#13456f; white-space:nowrap; }
   .uc-chev{ color:#13456f; display:flex; font-size:0.875rem; transition:transform .15s; }
@@ -1277,8 +1285,9 @@
   .npc-text{ display:flex; flex-direction:column; line-height:1.15; }
   .npc-name{ font-weight:700; font-size:.86rem; color:var(--gray-900); }
   .npc-meta{ font-size:.72rem; color:var(--gray-600); }
-  /* title + insights row */
-  .syn-title{ font-size:1.5rem; font-weight:700; color:var(--gray-900); margin:0 0 .9rem; }
+  /* title row (title + lookback aligned) then the insights row */
+  .syn-titlerow{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin:0 0 .5rem; }
+  .syn-title{ font-size:1.95rem; font-weight:500; color:var(--gray-900); margin:0; letter-spacing:-.01em; }
   .syn-insights{ display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; padding-bottom:1rem; border-bottom:1px solid var(--gray-200); }
   .syn-ins-label{ font-weight:700; color:var(--gray-700); font-size:.95rem; margin-right:.1rem; }
   .syn-toggle{ display:inline-flex; gap:.4rem; }
@@ -1287,7 +1296,7 @@
   .syn-tg-btn:active{ background:var(--gray-100); }
   .syn-lookback{ margin-left:auto; display:inline-flex; align-items:center; gap:.55rem; }
   .syn-lb-label{ font-size:.82rem; font-weight:600; color:var(--gray-600); white-space:nowrap; }
-  .syn-insights .syn-lb-field{ width:150px; flex:0 0 150px; }
+  .syn-head .syn-lb-field{ width:150px; flex:0 0 150px; }
   /* the shared calendar popup is sized for a full-width field; the compact Lookback field needs a fixed width, right-aligned so it stays on screen */
   #syn-lookback .pf-cal-pop{ left:auto; right:0; width:300px; }
   .syn-lb-field input{ height:34px; font-size:.85rem; font-weight:600; padding:0 2rem 0 .65rem; }
@@ -2130,7 +2139,8 @@ body.flow-locked{ overflow:hidden; }
       <span class="npc-text"><span class="npc-name">Maria Sanchez</span><span class="npc-meta">DOB 01/01/2001 · 23 yrs</span></span>
     </div>
     <div class="nav-user">
-      <div class="nav-help-wrap nav-help-home" aria-hidden="true">
+      <div class="nav-help-wrap nav-help-home">
+        <button class="nav-help nav-help-icon" title="Feedback / Help" aria-haspopup="true" aria-expanded="false"><svg class="svg-ico"><use href="#i-help"/></svg></button>
         <div class="help-menu" id="help-menu" role="menu">
           <div class="help-head">
             <span class="help-title">Feedback &amp; Help</span>
@@ -2251,19 +2261,21 @@ body.flow-locked{ overflow:hidden; }
 
   <!-- ============ VERSION 2: PATIENT SYNOPSIS HEADER (shown only in nav-synopsis) ============ -->
   <div class="syn-head">
-    <h1 class="syn-title">Patient Synopsis</h1>
-    <div class="syn-insights">
-      <span class="syn-ins-label">Insights</span>
-      <div class="syn-toggle">
-        <button type="button" class="syn-tg-btn" data-view="summary" title="Summary insights"><svg class="svg-ico"><use href="#i-file"/></svg></button>
-        <button type="button" class="syn-tg-btn" data-view="timeline" title="History timeline"><svg class="svg-ico"><use href="#i-history"/></svg></button>
-      </div>
+    <div class="syn-titlerow">
+      <h1 class="syn-title">Patient Synopsis</h1>
       <div class="syn-lookback">
         <span class="syn-lb-label">Lookback from</span>
         <span class="date-field pf-datefield syn-lb-field" id="syn-lookback">
           <input type="text" id="syn-lookback-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
           <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
         </span>
+      </div>
+    </div>
+    <div class="syn-insights">
+      <span class="syn-ins-label">Insights</span>
+      <div class="syn-toggle">
+        <button type="button" class="syn-tg-btn" data-view="summary" title="Summary insights"><svg class="svg-ico"><use href="#i-file"/></svg></button>
+        <button type="button" class="syn-tg-btn" data-view="timeline" title="History timeline"><svg class="svg-ico"><use href="#i-history"/></svg></button>
       </div>
     </div>
   </div>
