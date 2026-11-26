@@ -697,6 +697,18 @@
   .ic-head{ display:flex; align-items:center; gap:.5rem; margin-bottom:.75rem; }
   .ic-title{ font-weight:600; color:var(--gray-900); font-size:.98rem; }
   .ic-badge{ background:var(--gray-200); color:var(--gray-700); font-size:0.875rem; font-weight:600; padding:.1rem .45rem; border-radius:1rem; }
+  /* overview data tables (Most recent encounters, Re-admissions) */
+  .ov-table-wrap{ overflow-x:auto; }
+  .ov-table{ width:100%; border-collapse:collapse; font-size:.8rem; }
+  .ov-table th{ text-align:left; font-weight:600; color:var(--gray-500); font-size:.68rem; letter-spacing:.02em; text-transform:uppercase; padding:.35rem .55rem; border-bottom:1px solid var(--gray-300); white-space:nowrap; vertical-align:bottom; }
+  .ov-table td{ padding:.55rem .55rem; border-bottom:1px solid var(--gray-200); color:var(--gray-800); vertical-align:top; line-height:1.3; }
+  .ov-table tbody tr:last-child td{ border-bottom:none; }
+  .ov-time{ display:block; color:var(--gray-500); font-size:.72rem; margin-top:.1rem; }
+  .ov-muted{ color:var(--gray-500); font-style:italic; }
+  .vt-badge{ display:inline-block; padding:.12rem .5rem; border-radius:1rem; font-size:.7rem; font-weight:600; white-space:nowrap; }
+  .vt-badge.emerg{ background:#fde7ef; color:#d6336c; }
+  .vt-badge.inp{ background:#e8edfb; color:#3b5bdb; }
+  .vt-badge.outp{ background:#e3f6f4; color:#0b8f78; }
   .kv{ display:grid; grid-template-columns:96px 1fr; column-gap:.8rem; font-size:0.875rem; }
   .kv dt{ color:var(--gray-500); padding:.5rem 0; }
   .kv dd{ color:var(--gray-800); padding:.5rem 0; }
@@ -1278,7 +1290,7 @@
   body.nav-synopsis .content{ max-width:none; margin:0; }   /* fill .page, whose 1.5rem padding matches the navbar */
   body.nav-synopsis .cat-heading{ display:none; }
   body.nav-synopsis .syn-head{ display:block; position:sticky; top:63px; z-index:30; background:var(--body-bg);
-    margin:0 -1.5rem 1.25rem; padding:.85rem 1.5rem; border-bottom:1px solid var(--gray-200); }
+    margin:0 -1.5rem 1.25rem; padding:.85rem 1.5rem; border-bottom:1px solid var(--gray-400); }
   /* centered patient chip in the top bar */
   body.nav-synopsis.flow-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.55); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); cursor:pointer; backdrop-filter:blur(2px); transition:background .14s, border-color .14s, box-shadow .14s; }
   body.nav-synopsis .nav-patient-chip:hover{ background:rgba(255,255,255,.8); border-color:rgba(255,255,255,.8); box-shadow:0 2px 8px rgba(18,38,63,.14); }
@@ -1290,8 +1302,10 @@
   .syn-titlerow{ display:flex; align-items:center; gap:.9rem; flex-wrap:wrap; margin:0; }
   .syn-title{ font-size:1.95rem; font-weight:500; color:var(--gray-900); margin:0; letter-spacing:-.01em; }
   .syn-actions{ display:inline-flex; gap:.5rem; }
-  .syn-act-btn{ padding:.4rem .95rem; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-700); cursor:pointer; box-shadow:0 1px 2px rgba(18,38,63,.06); transition:border-color .12s,color .12s,background .12s; }
+  .syn-act-btn{ display:inline-flex; align-items:center; gap:.4rem; padding:.4rem .85rem; border:1px solid var(--gray-300); background:#fff; border-radius:.45rem; font-family:inherit; font-size:.9rem; font-weight:600; color:var(--gray-700); cursor:pointer; box-shadow:0 1px 2px rgba(18,38,63,.06); transition:border-color .12s,color .12s,background .12s; }
+  .syn-act-btn .svg-ico{ width:15px; height:15px; color:var(--gray-500); }
   .syn-act-btn:hover{ color:var(--gray-900); border-color:var(--gray-400); }
+  .syn-act-btn:hover .svg-ico{ color:var(--primary); }
   .syn-act-btn:active{ background:var(--gray-100); }
   .syn-lookback{ margin-left:auto; display:inline-flex; align-items:center; gap:.55rem; }
   .syn-lb-label{ font-size:.82rem; font-weight:600; color:var(--gray-600); white-space:nowrap; }
@@ -2267,8 +2281,8 @@ body.flow-locked{ overflow:hidden; }
     <div class="syn-titlerow">
       <h1 class="syn-title">Patient Synopsis</h1>
       <div class="syn-actions">
-        <button type="button" class="syn-act-btn" data-view="history">History</button>
-        <button type="button" class="syn-act-btn" data-view="notes">Notes</button>
+        <button type="button" class="syn-act-btn" data-view="history"><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
+        <button type="button" class="syn-act-btn" data-view="notes"><svg class="svg-ico"><use href="#i-note"/></svg>Notes</button>
       </div>
       <div class="syn-lookback">
         <span class="syn-lb-label">Lookback from</span>
@@ -2381,14 +2395,15 @@ body.flow-locked{ overflow:hidden; }
       <div class="demo-hint"><svg class="svg-ico"><use href="#i-info"/></svg><span>Historical addresses, phone numbers and aliases are kept with entry dates — useful for reaching hard-to-contact clients. Open any <strong>History</strong> link above.</span></div>
     </div>
 
-    <!-- Coverage -->
+    <!-- Encounters insights + affiliations -->
     <div class="info-card">
-      <div class="ic-head"><span class="ic-title">Coverage and programs</span></div>
-      <dl class="kv">
-        <dt>Plan</dt><dd>Medi-Cal — Health Net</dd>
-        <dt>Program</dt><dd>Enhanced Care Management (ECM), Health Net</dd>
-      </dl>
-      <div class="sub" style="margin:.6rem 0 .3rem;">Affiliations, last 45 days <span style="color:var(--gray-500);font-weight:400;">· newest first</span></div>
+      <div class="ic-head"><span class="ic-title">Encounters insights, last 6 months</span></div>
+      <div class="stat-trio">
+        <div class="stat"><div class="num emerg">20</div><div class="lbl">Emergency</div></div>
+        <div class="stat"><div class="num inp">0</div><div class="lbl">Inpatient</div></div>
+        <div class="stat"><div class="num outp">23</div><div class="lbl">Outpatient</div></div>
+      </div>
+      <div class="sub" style="margin:.9rem 0 .35rem;">Affiliations, last 45 days <span style="color:var(--gray-500);font-weight:400;">· newest first</span></div>
       <ul class="affil-list">
         <li><span class="affil-date">02/10/2024</span><span class="affil-name">LA Care Members, for Portal</span></li>
         <li><span class="affil-date">02/04/2024</span><span class="affil-name">Health Net Active Members, for ENS</span></li>
@@ -2398,34 +2413,37 @@ body.flow-locked{ overflow:hidden; }
       </ul>
     </div>
 
-    <!-- Encounters last 6 months -->
+    <!-- Most recent encounters (table) -->
     <div class="info-card">
-      <div class="ic-head"><span class="ic-title">Encounters, last 6 months</span></div>
-      <div class="stat-trio">
-        <div class="stat"><div class="num emerg">20</div><div class="lbl">Emergency</div></div>
-        <div class="stat"><div class="num inp">0</div><div class="lbl">Inpatient</div></div>
-        <div class="stat"><div class="num outp">23</div><div class="lbl">Outpatient</div></div>
+      <div class="ic-head"><span class="ic-title">Most recent encounters</span></div>
+      <div class="ov-table-wrap">
+        <table class="ov-table">
+          <thead><tr><th>Start date</th><th>Visit type</th><th>Location</th><th>End date</th></tr></thead>
+          <tbody>
+            <tr><td>02/05/2024<span class="ov-time">09:57 AM</span></td><td><span class="vt-badge outp">Outpatient</span></td><td>Memorial Hospital of Gardena</td><td>02/05/2024</td></tr>
+            <tr><td>02/03/2024<span class="ov-time">08:01 PM</span></td><td><span class="vt-badge emerg">Emergency</span></td><td>LAC + USC Medical Center</td><td>02/04/2024</td></tr>
+            <tr><td>01/30/2024<span class="ov-time">11:05 PM</span></td><td><span class="vt-badge emerg">Emergency</span></td><td>Ronald Reagan UCLA Medical Center</td><td>01/31/2024</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="sub" style="margin-bottom:.1rem;">Most recent</div>
-      <div class="recent-list">
-        <div class="ri"><span class="ri-dot outp"></span><div><div>Outpatient, Memorial Hospital of Gardena</div><div class="sub">02/05/2024 09:57 AM, discharged 02/05/2024</div></div></div>
-        <div class="ri"><span class="ri-dot emerg"></span><div><div>Emergency, LAC + USC Medical Center</div><div class="sub">02/03/2024 08:01 PM, discharged 02/04/2024</div></div></div>
-        <div class="ri"><span class="ri-dot emerg"></span><div><div>Emergency, Ronald Reagan UCLA Medical Center</div><div class="sub">01/30/2024 11:05 PM, discharged 01/31/2024</div></div></div>
-      </div>
-      <div style="margin-top:.5rem;"><a href="#">All 197 encounters</a></div>
+      <div style="margin-top:.6rem;"><a href="#">All 197 encounters</a></div>
     </div>
 
-    <!-- Readmissions -->
+    <!-- Re-admissions (table) -->
     <div class="info-card">
-      <div class="ic-head"><span class="ic-title">Readmissions</span><span class="ic-badge">4</span></div>
-      <div class="sub" style="margin-bottom:.3rem;">A return to hospital within 30 days of a discharge.</div>
-      <div class="readmit">
-        <div class="rm"><div class="rm-name">Olive View-UCLA Medical Center</div><div class="rm-sub">Discharged 01/03/2024, readmitted 01/30/2024 · 27 days</div></div>
-        <div class="rm"><div class="rm-name">Olive View-UCLA Medical Center</div><div class="rm-sub">Discharged 01/02/2024, readmitted 01/30/2024 · 28 days</div></div>
-        <div class="rm"><div class="rm-name">Olive View-UCLA Medical Center</div><div class="rm-sub">Discharged 12/11/2023, readmitted 12/12/2023 · 1 day</div></div>
-        <div class="rm"><div class="rm-name">Community Hospital of Huntington Park</div><div class="rm-sub">Discharged 11/21/2023, readmitted 12/12/2023 · 21 days</div></div>
+      <div class="ic-head"><span class="ic-title">Re-admissions</span><span class="ic-badge">4</span></div>
+      <div class="sub" style="margin-bottom:.5rem;">A return to hospital within 30 days of a discharge.</div>
+      <div class="ov-table-wrap">
+        <table class="ov-table">
+          <thead><tr><th>Discharge date</th><th>Discharge location</th><th>Re-admit date</th><th>Re-admit location</th><th>Length of stay</th></tr></thead>
+          <tbody>
+            <tr><td>01/03/2024</td><td>Olive View-UCLA Medical Center</td><td>01/30/2024</td><td class="ov-muted">Not recorded</td><td>27 days</td></tr>
+            <tr><td>01/02/2024</td><td>Olive View-UCLA Medical Center</td><td>01/30/2024</td><td class="ov-muted">Not recorded</td><td>28 days</td></tr>
+            <tr><td>12/11/2023</td><td>Olive View-UCLA Medical Center</td><td>12/12/2023</td><td class="ov-muted">Not recorded</td><td>1 day</td></tr>
+            <tr><td>11/21/2023</td><td>Community Hospital of Huntington Park</td><td>12/12/2023</td><td class="ov-muted">Not recorded</td><td>21 days</td></tr>
+          </tbody>
+        </table>
       </div>
-      <div class="sub" style="margin-top:.4rem;">Readmission location is not recorded in the source.</div>
     </div>
   </div>
 
