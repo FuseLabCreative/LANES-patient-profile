@@ -1567,6 +1567,11 @@ body.flow-locked{ overflow:hidden; }
 .pf-pane{ grid-area:1 / 1; align-self:start; }
 .pf-pane:not(.active){ visibility:hidden; pointer-events:none; }
 .pf-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:1.1rem; margin-bottom:1.1rem; }
+/* patient search is either (name + DOB) OR MRN — "or" divider + dim the unused group */
+.pf-or{ display:flex; align-items:center; gap:.7rem; margin:.1rem 0 1.1rem; color:var(--gray-500); font-size:.72rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+.pf-or::before, .pf-or::after{ content:''; flex:1 1 auto; height:1px; background:var(--gray-200); }
+.pf-exgroup{ transition:opacity .15s; }
+.pf-exgroup.pf-dim{ opacity:.4; pointer-events:none; }
 .pf-grid2:last-child{ margin-bottom:0; }
 @media(max-width:620px){ .pf-grid2{ grid-template-columns:1fr; } }
 .pf-field{ display:flex; flex-direction:column; gap:.4rem; min-width:0; }
@@ -1845,11 +1850,11 @@ body.flow-locked{ overflow:hidden; }
         </div>
         <div class="pf-panes">
           <section class="pf-pane active" data-pane="patient">
-            <div class="pf-grid2">
-              <div class="pf-field"><label for="pf-first">First name</label><input type="text" id="pf-first" class="pf-input" placeholder="e.g. Maria"></div>
-              <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
-            </div>
-            <div class="pf-grid2">
+            <div class="pf-exgroup" id="pf-name-group">
+              <div class="pf-grid2">
+                <div class="pf-field"><label for="pf-first">First name</label><input type="text" id="pf-first" class="pf-input" placeholder="e.g. Maria"></div>
+                <div class="pf-field"><label for="pf-last">Last name</label><input type="text" id="pf-last" class="pf-input" placeholder="e.g. Sanchez"></div>
+              </div>
               <div class="pf-field">
                 <label for="pf-dob-input">Date of birth</label>
                 <span class="date-field pf-datefield" id="pf-dob">
@@ -1857,6 +1862,9 @@ body.flow-locked{ overflow:hidden; }
                   <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
                 </span>
               </div>
+            </div>
+            <div class="pf-or"><span>or</span></div>
+            <div class="pf-exgroup" id="pf-mrn-group">
               <div class="pf-field"><label for="pf-mrn">MRN</label><input type="text" id="pf-mrn" class="pf-input" placeholder="e.g. 00482915"></div>
             </div>
           </section>
@@ -4521,12 +4529,23 @@ body.flow-locked{ overflow:hidden; }
         const limit=modal? Math.min(window.innerHeight, modal.getBoundingClientRect().bottom) : window.innerHeight;
         if(r.bottom > limit-8) pop.classList.add('pf-cal-up'); }); }
     function closePop(){ pop.style.display='none'; }
+    // patient search is name+DOB OR MRN — dim whichever group isn't in use
+    function syncExclusive(){
+      const first=document.getElementById('pf-first'), last=document.getElementById('pf-last'), mrn=document.getElementById('pf-mrn');
+      const ng=document.getElementById('pf-name-group'), mg=document.getElementById('pf-mrn-group');
+      if(!first||!mrn||!ng||!mg) return;
+      const mrnFilled=mrn.value.trim()!=='';
+      const nameFilled=!!(first.value.trim()||last.value.trim()||(dobInput.value||'').trim());
+      ng.classList.toggle('pf-dim', mrnFilled);
+      mg.classList.toggle('pf-dim', nameFilled && !mrnFilled);
+    }
+    ['pf-first','pf-last','pf-mrn'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', syncExclusive); });
     dobWrap.addEventListener('click',e=>{ if(e.target.closest('.cp-msel,.cp-ysel')) return; e.stopPropagation(); if(pop.style.display==='none') openPop(); else closePop(); });
     pop.addEventListener('change',e=>{ if(e.target.classList.contains('cp-msel')){ viewM=+e.target.value; renderPop(); } else if(e.target.classList.contains('cp-ysel')){ viewY=+e.target.value; renderPop(); } });
     pop.addEventListener('click',e=>{ e.stopPropagation();
       const nav=e.target.closest('.cp-nav'); if(nav){ viewM+=+nav.dataset.nav; if(viewM<0){viewM=11;viewY--;} if(viewM>11){viewM=0;viewY++;} renderPop(); return; }
-      const day=e.target.closest('.cp-day:not(.cp-empty)'); if(day){ selDate=new Date(viewY,viewM,+day.dataset.d); dobInput.value=fmt(selDate); renderPop(); return; }
-      if(e.target.closest('.cp-clear')){ selDate=null; dobInput.value=''; renderPop(); return; }
+      const day=e.target.closest('.cp-day:not(.cp-empty)'); if(day){ selDate=new Date(viewY,viewM,+day.dataset.d); dobInput.value=fmt(selDate); syncExclusive(); renderPop(); return; }
+      if(e.target.closest('.cp-clear')){ selDate=null; dobInput.value=''; syncExclusive(); renderPop(); return; }
       if(e.target.closest('[data-done]')){ closePop(); return; } });
     document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob') && !e.target.closest('.pf-cal-pop')) closePop(); });
 
@@ -4556,6 +4575,7 @@ body.flow-locked{ overflow:hidden; }
       document.getElementById('pf-mrn').value='';
       selDate=null; dobInput.value=''; closePop();
       clinicSel.value=''; clinicSel.dispatchEvent(new Event('change'));
+      syncExclusive();
     });
 
     // pre-filled defaults so the form can be submitted straight through while designing
@@ -4565,6 +4585,7 @@ body.flow-locked{ overflow:hidden; }
     selDate=new Date(2001,0,1); dobInput.value=fmt(selDate);
     clinicSel.value='0'; clinicSel.dispatchEvent(new Event('change'));
     ['Primary Care','Behavioral Health'].forEach(v=>{ const cb=deptList().find(x=>x.value===v); if(cb) cb.checked=true; }); syncDept();
+    syncExclusive();
   })();
 
   /* ---- Smart Alerts header (static, no switcher) ---- */
