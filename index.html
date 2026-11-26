@@ -1289,6 +1289,8 @@
   .syn-lookback{ margin-left:auto; display:inline-flex; align-items:center; gap:.55rem; }
   .syn-lb-label{ font-size:.82rem; font-weight:600; color:var(--gray-600); white-space:nowrap; }
   .syn-insights .syn-lb-field{ width:150px; flex:0 0 150px; }
+  /* the shared calendar popup is sized for a full-width field; the compact Lookback field needs a fixed width, right-aligned so it stays on screen */
+  #syn-lookback .pf-cal-pop{ left:auto; right:0; width:300px; }
   .syn-lb-field input{ height:34px; font-size:.85rem; font-weight:600; padding:0 2rem 0 .65rem; }
   .syn-lb-field .cal{ right:.65rem; }
   @media(max-width:620px){ .syn-lookback{ margin-left:0; } }
