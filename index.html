@@ -720,11 +720,13 @@
   .kv a{ font-size:0.875rem; }
   .pending{ color:var(--gray-500); font-style:italic; }
 
-  .stat-trio{ display:flex; gap:.75rem; margin-bottom:.85rem; }
-  .stat{ flex:1; text-align:center; background:var(--gray-100); border-radius:.375rem; padding:.5rem; }
-  .stat .num{ font-size:1.35rem; font-weight:700; color:var(--gray-900); line-height:1.1; }
-  .stat .num.emerg{ color:var(--chart-emergency); } .stat .num.inp{ color:var(--chart-inpatient); } .stat .num.outp{ color:var(--chart-outpatient); }
-  .stat .lbl{ font-size:0.875rem; text-transform:none; letter-spacing:normal; color:var(--gray-500); }
+  .stat-trio{ display:flex; gap:1.4rem; margin-bottom:.85rem; }
+  .stat{ flex:1; text-align:left; background:none; padding:0; }
+  .stat-row{ display:flex; align-items:center; gap:.5rem; }
+  .stat-sq{ width:15px; height:15px; border-radius:.3rem; flex:none; }
+  .stat-sq.emerg{ background:var(--chart-emergency); } .stat-sq.inp{ background:var(--chart-inpatient); } .stat-sq.outp{ background:var(--chart-outpatient); }
+  .stat .num{ font-size:1.65rem; font-weight:700; color:var(--gray-900); line-height:1; }
+  .stat .lbl{ font-size:0.875rem; text-transform:none; letter-spacing:normal; color:var(--gray-500); margin-top:.35rem; }
   .recent-list{ font-size:0.875rem; }
   .recent-list .ri{ padding:.4rem 0; border-top:1px solid var(--gray-200); display:flex; gap:.4rem; }
   .ri-dot{ width:9px; height:9px; border-radius:2px; margin-top:.35rem; flex:0 0 auto; }
@@ -2408,9 +2410,9 @@ body.flow-locked{ overflow:hidden; }
       <div class="ic-head"><span class="ic-title">Encounters insights, last 6 months</span></div>
       <div class="ic-body">
       <div class="stat-trio">
-        <div class="stat"><div class="num emerg">20</div><div class="lbl">Emergency</div></div>
-        <div class="stat"><div class="num inp">0</div><div class="lbl">Inpatient</div></div>
-        <div class="stat"><div class="num outp">23</div><div class="lbl">Outpatient</div></div>
+        <div class="stat"><div class="stat-row"><span class="stat-sq emerg"></span><span class="num">20</span></div><div class="lbl">Emergency</div></div>
+        <div class="stat"><div class="stat-row"><span class="stat-sq inp"></span><span class="num">0</span></div><div class="lbl">Inpatient</div></div>
+        <div class="stat"><div class="stat-row"><span class="stat-sq outp"></span><span class="num">23</span></div><div class="lbl">Outpatient</div></div>
       </div>
       <div class="sub" style="margin:.9rem 0 .35rem;">Affiliations, last 45 days <span style="color:var(--gray-500);font-weight:400;">· newest first</span></div>
       <ul class="affil-list">
