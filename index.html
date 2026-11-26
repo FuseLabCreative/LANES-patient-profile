@@ -1268,7 +1268,8 @@
   body.nav-synopsis .cat-heading{ display:none; }
   body.nav-synopsis .syn-head{ display:block; margin:0 0 1.25rem; }
   /* centered patient chip in the top bar */
-  body.nav-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border:1px solid var(--gray-200); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); }
+  body.nav-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.55); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); cursor:pointer; backdrop-filter:blur(2px); transition:background .14s, border-color .14s, box-shadow .14s; }
+  body.nav-synopsis .nav-patient-chip:hover{ background:rgba(255,255,255,.8); border-color:rgba(255,255,255,.8); box-shadow:0 2px 8px rgba(18,38,63,.14); }
   .npc-avatar{ width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#a9d4f2,#47b0ff); color:#0b2a44; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:.7rem; flex:none; }
   .npc-text{ display:flex; flex-direction:column; line-height:1.15; }
   .npc-name{ font-weight:700; font-size:.86rem; color:var(--gray-900); }
@@ -1281,10 +1282,12 @@
   .syn-tg-btn{ width:36px; height:34px; border:1px solid var(--gray-200); background:#fff; border-radius:.45rem; color:var(--gray-600); cursor:pointer; display:inline-flex; align-items:center; justify-content:center; box-shadow:0 1px 2px rgba(18,38,63,.06); transition:border-color .12s,color .12s; }
   .syn-tg-btn:hover{ color:var(--gray-900); border-color:var(--gray-300); }
   .syn-tg-btn.active{ color:var(--primary); border-color:var(--primary); box-shadow:0 0 0 1px var(--primary); }
-  .syn-select{ font-family:inherit; font-size:.85rem; font-weight:600; color:var(--gray-800); background:#fff; border:1px solid var(--gray-300); border-radius:.4rem; padding:.42rem .6rem; cursor:pointer; }
-  .syn-section{ flex:1 1 220px; min-width:160px; max-width:420px; }
-  .syn-lookback{ margin-left:auto; }
-  @media(max-width:620px){ .syn-section{ flex-basis:100%; max-width:none; } .syn-lookback{ margin-left:0; } }
+  .syn-lookback{ margin-left:auto; display:inline-flex; align-items:center; gap:.55rem; }
+  .syn-lb-label{ font-size:.82rem; font-weight:600; color:var(--gray-600); white-space:nowrap; }
+  .syn-lb-field{ width:150px; flex:0 0 auto; }
+  .syn-lb-field input{ height:34px; font-size:.85rem; font-weight:600; padding:0 2rem 0 .65rem; }
+  .syn-lb-field .cal{ right:.65rem; }
+  @media(max-width:620px){ .syn-lookback{ margin-left:0; } }
   body:not(.nav-v3) .v3-mainnav{ display:none; }
   body.nav-v3 .v3-mainnav{ position:sticky; top:62px; z-index:800; background:var(--body-bg); max-width:1440px; margin:0 auto;
     display:flex; flex-direction:column; gap:.7rem; padding:1.5rem 0 1rem; }
@@ -2248,13 +2251,13 @@ body.flow-locked{ overflow:hidden; }
         <button type="button" class="syn-tg-btn active" data-view="summary" title="Summary insights"><svg class="svg-ico"><use href="#i-file"/></svg></button>
         <button type="button" class="syn-tg-btn" data-view="timeline" title="History timeline"><svg class="svg-ico"><use href="#i-history"/></svg></button>
       </div>
-      <select class="syn-select syn-section" id="syn-section" aria-label="Jump to section"></select>
-      <select class="syn-select syn-lookback" id="syn-lookback" aria-label="Lookback period">
-        <option>Lookback: 6 months</option>
-        <option>Lookback: 1 year</option>
-        <option>Lookback: 3 years</option>
-        <option>Lookback: All time</option>
-      </select>
+      <div class="syn-lookback">
+        <span class="syn-lb-label">Lookback from</span>
+        <span class="date-field pf-datefield syn-lb-field" id="syn-lookback">
+          <input type="text" id="syn-lookback-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
+          <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
+        </span>
+      </div>
     </div>
   </div>
 
@@ -3350,13 +3353,6 @@ body.flow-locked{ overflow:hidden; }
     let synReady=false;
     function __synInit(){
       if(!synReady){
-        const sel=document.getElementById('syn-section');
-        if(sel){
-          sel.innerHTML='<option value="">Jump to section…</option>'+
-            groups.filter(g=>g.items&&g.items.length).map(g=>'<optgroup label="'+g.label+'">'+
-              g.items.map(it=>'<option value="'+it[0]+'">'+it[1]+'</option>').join('')+'</optgroup>').join('');
-          sel.addEventListener('change',()=>{ const id=sel.value; if(!id) return; const el=document.getElementById(id); if(el) el.scrollIntoView({behavior:'smooth',block:'start'}); });
-        }
         const tgl=[...document.querySelectorAll('.syn-toggle .syn-tg-btn')];
         tgl.forEach(b=>b.addEventListener('click',()=>tgl.forEach(x=>x.classList.toggle('active',x===b))));
         synReady=true;
@@ -4617,6 +4613,44 @@ body.flow-locked{ overflow:hidden; }
       if(e.target.closest('[data-done]')){ closePop(); return; } });
     document.addEventListener('click',e=>{ if(!e.target.closest('#pf-dob') && !e.target.closest('.pf-cal-pop')) closePop(); });
 
+    /* Version 2 "Lookback from" — reuses the same .date-field + .cal-pop calendar as DOB */
+    (function(){
+      const lbWrap=document.getElementById('syn-lookback'), lbInput=document.getElementById('syn-lookback-input');
+      if(!lbWrap||!lbInput) return;
+      const lpop=document.createElement('div'); lpop.className='cal-pop pf-cal-pop'; lpop.style.display='none'; lbWrap.appendChild(lpop);
+      let lvY, lvM, lsel=new Date(); lsel.setMonth(lsel.getMonth()-6);     // default: 6 months back
+      lvY=lsel.getFullYear(); lvM=lsel.getMonth();
+      lbInput.value=fmt(lsel);
+      const nY=new Date().getFullYear();
+      function lrender(){
+        let h='<div class="cp-head"><button type="button" class="cp-nav" data-nav="-1">‹</button>'+
+          '<span class="cp-selects">'+
+            '<select class="cp-msel" aria-label="Month">'+MONTHS.map((m,i)=>'<option value="'+i+'"'+(i===lvM?' selected':'')+'>'+m+'</option>').join('')+'</select>'+
+            '<select class="cp-ysel" aria-label="Year">'+Array.from({length:nY-1915+1},(_,i)=>nY-i).map(y=>'<option'+(y===lvY?' selected':'')+'>'+y+'</option>').join('')+'</select>'+
+          '</span>'+
+          '<button type="button" class="cp-nav" data-nav="1">›</button></div><div class="cp-grid">';
+        ['Su','Mo','Tu','We','Th','Fr','Sa'].forEach(d=>h+='<span class="cp-dow-c">'+d+'</span>');
+        const first=new Date(lvY,lvM,1).getDay(), days=new Date(lvY,lvM+1,0).getDate();
+        for(let i=0;i<first;i++) h+='<span class="cp-day cp-empty"></span>';
+        for(let d=1;d<=days;d++){ const on=lsel&&lsel.getFullYear()===lvY&&lsel.getMonth()===lvM&&lsel.getDate()===d;
+          h+='<button type="button" class="cp-day cp-only'+(on?' cp-start':'')+'" data-d="'+d+'">'+d+'</button>'; }
+        h+='</div><div class="cp-foot"><button type="button" class="cp-clear">Clear</button><button type="button" class="cp-apply" data-done>Done</button></div>';
+        lpop.innerHTML=h;
+        if(window.enhanceSelects) window.enhanceSelects(lpop);
+      }
+      function lopen(){ if(lsel){ lvY=lsel.getFullYear(); lvM=lsel.getMonth(); } lrender(); lpop.classList.remove('pf-cal-up'); lpop.style.display='block';
+        requestAnimationFrame(()=>{ const r=lpop.getBoundingClientRect(); if(r.bottom > window.innerHeight-8) lpop.classList.add('pf-cal-up'); }); }
+      function lclose(){ lpop.style.display='none'; }
+      lbWrap.addEventListener('click',e=>{ if(e.target.closest('.cp-msel,.cp-ysel')) return; e.stopPropagation(); if(lpop.style.display==='none') lopen(); else lclose(); });
+      lpop.addEventListener('change',e=>{ if(e.target.classList.contains('cp-msel')){ lvM=+e.target.value; lrender(); } else if(e.target.classList.contains('cp-ysel')){ lvY=+e.target.value; lrender(); } });
+      lpop.addEventListener('click',e=>{ e.stopPropagation();
+        const nav=e.target.closest('.cp-nav'); if(nav){ lvM+=+nav.dataset.nav; if(lvM<0){lvM=11;lvY--;} if(lvM>11){lvM=0;lvY++;} lrender(); return; }
+        const day=e.target.closest('.cp-day:not(.cp-empty)'); if(day){ lsel=new Date(lvY,lvM,+day.dataset.d); lbInput.value=fmt(lsel); lrender(); return; }
+        if(e.target.closest('.cp-clear')){ lsel=null; lbInput.value=''; lrender(); return; }
+        if(e.target.closest('[data-done]')){ lclose(); return; } });
+      document.addEventListener('click',e=>{ if(!e.target.closest('#syn-lookback') && !lpop.contains(e.target)) lclose(); });
+    })();
+
     function doContinue(){
       const mode=(form.querySelector('.pf-seg-btn.active')||{}).dataset?.pane||'patient';
       if(mode==='wic'){ return; }   // WIC search is a placeholder — Apply performs no navigation
@@ -4720,6 +4754,11 @@ body.flow-locked{ overflow:hidden; }
       if(!(mode==='institution' && clinicEmpty)) close(); // navigated → tidy up; else let the form show validation
     }
     openBtns.forEach(b=>b.addEventListener('click',open));
+    // Version 2: the centered patient chip opens the same patient-search modal
+    const navChip=document.getElementById('nav-patient-chip');
+    if(navChip){ navChip.setAttribute('role','button'); navChip.setAttribute('tabindex','0');
+      navChip.addEventListener('click',open);
+      navChip.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); open(); } }); }
     document.getElementById('sd-close').addEventListener('click',close);
     document.getElementById('sd-cancel').addEventListener('click',close);
     document.getElementById('sd-apply').addEventListener('click',apply);
