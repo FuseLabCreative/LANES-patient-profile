@@ -698,12 +698,14 @@
   .ic-title{ font-weight:600; color:var(--gray-900); font-size:.98rem; }
   .ic-badge{ background:var(--gray-200); color:var(--gray-700); font-size:0.875rem; font-weight:600; padding:.1rem .45rem; border-radius:1rem; }
   /* overview data tables (Most recent encounters, Re-admissions) */
-  .ov-table-wrap{ overflow-x:auto; }
+  .ov-table-wrap{ width:100%; }
   .ov-table{ width:100%; border-collapse:collapse; font-size:.78rem; }
-  .ov-table th{ text-align:left; font-weight:500; color:var(--gray-500); font-size:.72rem; padding:.4rem .6rem; background:var(--gray-100); white-space:nowrap; vertical-align:bottom; }
-  .ov-table td{ padding:.45rem .6rem; border-bottom:1px solid var(--gray-200); color:var(--gray-700); vertical-align:top; line-height:1.3; }
+  .ov-table th{ text-align:left; font-weight:500; color:var(--gray-500); font-size:.7rem; padding:.35rem .4rem; background:var(--gray-100); vertical-align:bottom; }
+  .ov-table td{ padding:.4rem .4rem; border-bottom:1px solid var(--gray-200); color:var(--gray-700); vertical-align:top; line-height:1.3; }
   .ov-table tbody tr:hover{ background:var(--gray-100); }
   .ov-table tbody tr:last-child td{ border-bottom:none; }
+  .ov-table th:first-child, .ov-table td:first-child{ padding-left:0; }
+  .ov-table th:last-child, .ov-table td:last-child{ padding-right:0; }
   .ov-time{ display:block; color:var(--gray-500); font-size:.72rem; margin-top:.1rem; }
   .ov-muted{ color:var(--gray-500); font-style:italic; }
   .vt-badge{ display:inline-block; padding:.12rem .5rem; border-radius:1rem; font-size:.7rem; font-weight:600; white-space:nowrap; }
@@ -1291,7 +1293,7 @@
   body.nav-synopsis .content{ max-width:none; margin:0; }   /* fill .page, whose 1.5rem padding matches the navbar */
   body.nav-synopsis .cat-heading{ display:none; }
   body.nav-synopsis .syn-head{ display:block; position:sticky; top:63px; z-index:30; background:var(--body-bg);
-    margin:0 -1.5rem 1.25rem; padding:.3rem 1.5rem .8rem; border-bottom:1px solid var(--gray-300); }
+    margin:-1.25rem -1.5rem 1.25rem; padding:.8rem 1.5rem; border-bottom:1px solid var(--gray-300); }
   /* centered patient chip in the top bar */
   body.nav-synopsis.flow-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.55); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); cursor:pointer; backdrop-filter:blur(2px); transition:background .14s, border-color .14s, box-shadow .14s; }
   body.nav-synopsis .nav-patient-chip:hover{ background:rgba(255,255,255,.8); border-color:rgba(255,255,255,.8); box-shadow:0 2px 8px rgba(18,38,63,.14); }
@@ -1314,8 +1316,11 @@
   /* the shared calendar popup is sized for a full-width field; the compact Lookback field needs a fixed width, right-aligned so it stays on screen */
   #syn-lookback .pf-cal-pop{ left:auto; right:0; width:300px; }
   /* overview cards: uniform static height, body scrolls under a pinned header */
-  body.nav-synopsis #sec-overview .info-card{ height:380px; overflow-y:auto; padding-top:0; }
-  body.nav-synopsis #sec-overview .info-card .ic-head{ position:sticky; top:0; z-index:3; background:#fff; margin:0 -1.1rem .55rem; padding:.7rem 1.1rem .5rem; }
+  body.nav-synopsis #sec-overview .info-card{ height:380px; display:flex; flex-direction:column; overflow:hidden; }
+  body.nav-synopsis #sec-overview .info-card > .ic-head{ flex:none; margin-bottom:.55rem; }
+  body.nav-synopsis #sec-overview .info-card > .ic-body{ flex:1 1 auto; overflow-y:auto; min-height:0; }
+  /* table column header stays pinned while the body scrolls */
+  body.nav-synopsis #sec-overview .ov-table thead th{ position:sticky; top:0; z-index:1; }
   .syn-lb-field input{ height:34px; font-size:.85rem; font-weight:600; padding:0 2rem 0 .65rem; }
   .syn-lb-field .cal{ right:.65rem; }
   @media(max-width:620px){ .syn-lookback{ margin-left:0; } }
@@ -2282,8 +2287,8 @@ body.flow-locked{ overflow:hidden; }
     <div class="syn-titlerow">
       <h1 class="syn-title">Patient Synopsis</h1>
       <div class="syn-actions">
-        <button type="button" class="syn-act-btn" data-view="history"><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
-        <button type="button" class="syn-act-btn" data-view="notes"><svg class="svg-ico"><use href="#i-note"/></svg>Notes</button>
+        <button type="button" class="syn-act-btn" data-view="history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
+        <button type="button" class="syn-act-btn" id="syn-notes-btn" data-view="notes"><svg class="svg-ico"><use href="#i-note"/></svg>Notes</button>
       </div>
       <div class="syn-lookback">
         <span class="syn-lb-label">Lookback from</span>
@@ -2382,6 +2387,7 @@ body.flow-locked{ overflow:hidden; }
     <!-- Demographics -->
     <div class="info-card">
       <div class="ic-head"><span class="ic-title">Demographics and contact</span></div>
+      <div class="ic-body">
       <dl class="kv">
         <dt>Name</dt><dd>Maria Sanchez · <a href="#" data-hx="name">Aliases &amp; name history</a></dd>
         <dt>Phone</dt><dd>(213) 555-0147 · <a href="#" data-hx="phone">History</a></dd>
@@ -2394,11 +2400,13 @@ body.flow-locked{ overflow:hidden; }
         <dt>Marital status</dt><dd>Single</dd>
       </dl>
       <div class="demo-hint"><svg class="svg-ico"><use href="#i-info"/></svg><span>Historical addresses, phone numbers and aliases are kept with entry dates — useful for reaching hard-to-contact clients. Open any <strong>History</strong> link above.</span></div>
+      </div>
     </div>
 
     <!-- Encounters insights + affiliations -->
     <div class="info-card">
       <div class="ic-head"><span class="ic-title">Encounters insights, last 6 months</span></div>
+      <div class="ic-body">
       <div class="stat-trio">
         <div class="stat"><div class="num emerg">20</div><div class="lbl">Emergency</div></div>
         <div class="stat"><div class="num inp">0</div><div class="lbl">Inpatient</div></div>
@@ -2412,11 +2420,13 @@ body.flow-locked{ overflow:hidden; }
         <li><span class="affil-date">01/19/2024</span><span class="affil-name">Bella Vista IPA</span></li>
         <li><span class="affil-date">01/07/2024</span><span class="affil-name">LADMH_HI_USER_PILOT_GRP</span></li>
       </ul>
+      </div>
     </div>
 
     <!-- Most recent encounters (table) -->
     <div class="info-card">
       <div class="ic-head"><span class="ic-title">Most recent encounters</span></div>
+      <div class="ic-body">
       <div class="ov-table-wrap">
         <table class="ov-table">
           <thead><tr><th>Start date</th><th>Visit type</th><th>Location</th><th>End date</th></tr></thead>
@@ -2428,11 +2438,13 @@ body.flow-locked{ overflow:hidden; }
         </table>
       </div>
       <div style="margin-top:.6rem;"><a href="#">All 197 encounters</a></div>
+      </div>
     </div>
 
     <!-- Re-admissions (table) -->
     <div class="info-card">
       <div class="ic-head"><span class="ic-title">Re-admissions</span><span class="ic-badge">4</span></div>
+      <div class="ic-body">
       <div class="ov-table-wrap">
         <table class="ov-table">
           <thead><tr><th>Discharge date</th><th>Discharge location</th><th>Re-admit date</th><th>Re-admit location</th><th>Length of stay</th></tr></thead>
@@ -2443,6 +2455,7 @@ body.flow-locked{ overflow:hidden; }
             <tr><td>11/21/2023</td><td>Community Hospital of Huntington Park</td><td>12/12/2023</td><td class="ov-muted">Not recorded</td><td>21 days</td></tr>
           </tbody>
         </table>
+      </div>
       </div>
     </div>
   </div>
@@ -3390,6 +3403,9 @@ body.flow-locked{ overflow:hidden; }
     let synReady=false;
     function __synInit(){
       if(!synReady){
+        // Notes button opens the existing notes drawer; History uses data-hx-hub (delegated)
+        const nb=document.getElementById('syn-notes-btn');
+        if(nb) nb.addEventListener('click',()=>{ const a=document.getElementById('ph-addnote-btn'); if(a) a.click(); });
         synReady=true;
       }
       const nm=document.querySelector('.ph-name'), cn=document.querySelector('#nav-patient-chip .npc-name');
