@@ -999,9 +999,6 @@
   body.v2 .panel{ box-shadow:var(--card-shadow); border:1px solid var(--gray-300); border-radius:.6rem; }
   body.v2 .info-card{ box-shadow:var(--card-shadow); border:1px solid var(--gray-300); }
   body.v2 .info-cards{ gap:.85rem; }
-  /* V2 synopsis: 2-up grid so the data tables have room for all columns */
-  body.nav-synopsis #sec-overview{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-  @media(max-width:720px){ body.nav-synopsis #sec-overview{ grid-template-columns:1fr; } }
   body.v2 .main-grid{ gap:1.5rem; flex:1 1 auto; min-width:0; max-width:1440px; margin:0 auto; }
   body.v2 .cat-heading{ font-weight:500; }
   body.v2 .panel-header{ padding:1rem 1.25rem; background:#fff; border-bottom:1px solid var(--gray-200); }
@@ -1290,15 +1287,15 @@
   /* ===== Version 2: Patient Synopsis layout (nav-synopsis) ===== */
   .syn-head{ display:none; }
   .nav-patient-chip{ display:none; }
-  body.nav-synopsis .toc{ display:none; }
   body.nav-synopsis .patient-header{ display:none; }
   body.nav-synopsis .patient-search{ display:none; }   /* the centered patient chip replaces the search box */
   body.nav-synopsis .cat-subnav, body.nav-synopsis .ov-rail{ display:none !important; }
-  body.nav-synopsis .layout{ display:block; }
-  body.nav-synopsis .content{ max-width:none; margin:0; }   /* fill .page, whose 1.5rem padding matches the navbar */
+  body.nav-synopsis .layout{ display:flex; gap:3rem; align-items:flex-start; }   /* left nav + content, like Version 1 */
+  body.nav-synopsis .content{ flex:1 1 auto; min-width:0; }
   body.nav-synopsis .cat-heading{ display:none; }
+  /* synopsis header sits at the top of the content column, spanning its width */
   body.nav-synopsis .syn-head{ display:block; position:sticky; top:63px; z-index:30; background:var(--body-bg);
-    margin:-1.25rem -1.5rem 1.25rem; padding:.8rem 1.5rem; border-bottom:1px solid var(--gray-300); }
+    margin:0 0 1.25rem; padding:.2rem 0 .8rem; border-bottom:1px solid var(--gray-300); }
   /* centered patient chip in the top bar */
   body.nav-synopsis.flow-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.55); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); cursor:pointer; backdrop-filter:blur(2px); transition:background .14s, border-color .14s, box-shadow .14s; }
   body.nav-synopsis .nav-patient-chip:hover{ background:rgba(255,255,255,.8); border-color:rgba(255,255,255,.8); box-shadow:0 2px 8px rgba(18,38,63,.14); }
