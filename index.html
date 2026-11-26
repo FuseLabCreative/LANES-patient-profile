@@ -1321,11 +1321,17 @@
   /* the shared calendar popup is sized for a full-width field; the compact Lookback field needs a fixed width, right-aligned so it stays on screen */
   #syn-lookback .pf-cal-pop{ left:auto; right:0; width:300px; }
   /* overview cards: uniform static height, body scrolls under a pinned header */
-  body.nav-synopsis #sec-overview .info-card{ height:380px; display:flex; flex-direction:column; overflow:hidden; }
+  body.nav-synopsis #sec-overview .info-card{ height:320px; display:flex; flex-direction:column; overflow:hidden; }
   body.nav-synopsis #sec-overview .info-card > .ic-head{ flex:none; margin-bottom:.55rem; }
   body.nav-synopsis #sec-overview .info-card > .ic-body{ flex:1 1 auto; overflow-y:auto; min-height:0; }
   /* table column header stays pinned while the body scrolls */
   body.nav-synopsis #sec-overview .ov-table thead th{ position:sticky; top:0; z-index:1; }
+  /* table cards: table stretches to the full card width; title/link/cell text stay indented */
+  body.nav-synopsis #sec-overview .ic-tablecard{ padding-left:0; padding-right:0; }
+  body.nav-synopsis #sec-overview .ic-tablecard > .ic-head{ padding-left:1.1rem; padding-right:1.1rem; }
+  body.nav-synopsis #sec-overview .ic-tablecard .ic-body > *:not(.ov-table-wrap){ padding-left:1.1rem; padding-right:1.1rem; }
+  body.nav-synopsis #sec-overview .ic-tablecard .ov-table th:first-child, body.nav-synopsis #sec-overview .ic-tablecard .ov-table td:first-child{ padding-left:1.1rem; }
+  body.nav-synopsis #sec-overview .ic-tablecard .ov-table th:last-child, body.nav-synopsis #sec-overview .ic-tablecard .ov-table td:last-child{ padding-right:1.1rem; }
   .syn-lb-field input{ height:34px; font-size:.85rem; font-weight:600; padding:0 2rem 0 .65rem; }
   .syn-lb-field .cal{ right:.65rem; }
   @media(max-width:620px){ .syn-lookback{ margin-left:0; } }
@@ -2429,7 +2435,7 @@ body.flow-locked{ overflow:hidden; }
     </div>
 
     <!-- Most recent encounters (table) -->
-    <div class="info-card">
+    <div class="info-card ic-tablecard">
       <div class="ic-head"><span class="ic-title">Most recent encounters</span></div>
       <div class="ic-body">
       <div class="ov-table-wrap">
@@ -2447,7 +2453,7 @@ body.flow-locked{ overflow:hidden; }
     </div>
 
     <!-- Re-admissions (table) -->
-    <div class="info-card">
+    <div class="info-card ic-tablecard">
       <div class="ic-head"><span class="ic-title">Re-admissions</span><span class="ic-badge">4</span></div>
       <div class="ic-body">
       <div class="ov-table-wrap">
