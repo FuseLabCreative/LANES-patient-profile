@@ -826,12 +826,11 @@
   body.v2 .scope-dd-chev{ color:#0b3b66; }
   body.v2 .scope-dd-btn:focus{ box-shadow:0 0 0 .14rem rgba(255,255,255,.25); }
 
-  /* 4 — Navbar right: compact user card + chevron dropdown */
-  body.v2 .user-info, body.v2 .gear{ display:none; }
+  /* 4 — Navbar right: name + datetime stack with a settings gear */
   .user-card{ display:none; }
-  body.v2 .user-card{ display:flex; align-items:center; gap:.45rem; cursor:pointer; background:rgba(255,255,255,.28);
-    border:1px solid rgba(255,255,255,.5); border-radius:.45rem; padding:.28rem .5rem .28rem .35rem; }
-  body.v2 .user-card:hover{ background:rgba(255,255,255,.42); }
+  body.v2 .user-card{ display:none; }
+  body.v2 .user-info{ display:flex; }
+  body.v2 .gear{ display:flex; }
   .uc-avatar{ width:26px; height:26px; border-radius:50%; background:#13456f; color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.875rem; font-weight:600; flex:0 0 auto; }
   .uc-name{ font-size:0.875rem; font-weight:600; color:#13456f; white-space:nowrap; }
   .uc-chev{ color:#13456f; display:flex; font-size:0.875rem; transition:transform .15s; }
@@ -2159,7 +2158,7 @@ body.flow-locked{ overflow:hidden; }
       </div>
       <div class="user-info">
         <span class="user-name">Jane Doe</span>
-        <span class="user-datetime" id="user-datetime" style="display:none"></span>
+        <span class="user-datetime" id="user-datetime"></span>
       </div>
       <span class="gear" title="Settings"><svg class="svg-ico"><use href="#i-gear"/></svg></span>
       <div class="user-card" id="user-card">
@@ -2923,8 +2922,8 @@ body.flow-locked{ overflow:hidden; }
     const el = document.getElementById('user-datetime');
     function tick(){
       const d = new Date();
-      el.textContent = d.toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'}) + ' · ' +
-                       d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true});
+      el.textContent = d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + ', ' +
+                       d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true});
     }
     tick(); setInterval(tick,1000);
   })();
