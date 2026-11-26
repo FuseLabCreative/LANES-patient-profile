@@ -261,6 +261,8 @@
   .notes-count{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:rgba(255,255,255,.28); color:#fff; font-size:.72rem; font-weight:700; }
   /* Patient Summary card */
   .pt-summary{ background:#fff; border:1px solid var(--gray-200); border-radius:var(--radius); box-shadow:var(--card-shadow); padding:1.2rem 1.5rem 1.4rem; margin:0 auto 1.5rem; max-width:1440px; }
+  /* Patient Summary card removed from all layout versions */
+  #pt-summary{ display:none; }
   /* full-bleed divider: reach the card's left/right edges */
   .pts-head{ display:flex; align-items:center; gap:.6rem; margin:0 -1.5rem 1.05rem; padding:0 1.5rem .8rem; border-bottom:1px solid var(--gray-200); }
   .pts-head-ico{ flex:none; width:30px; height:30px; border-radius:.5rem; display:inline-flex; align-items:center; justify-content:center; background:rgba(44,123,229,.1); color:var(--primary); }
@@ -365,8 +367,10 @@
   .ti-main{ display:flex; align-items:center; gap:.35rem; }
   .ti-label{ flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .ti-alert{ width:6px; height:6px; border-radius:50%; background:var(--danger); flex:0 0 auto; }
-  .ti-count{ font-size:0.875rem; font-weight:600; color:var(--gray-500); background:var(--gray-200); padding:.03rem .32rem; border-radius:.25rem; flex:0 0 auto; }
+  .ti-count{ display:none; }
   .ti-sub{ font-size:0.875rem; font-weight:400; color:var(--gray-500); margin-top:.05rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  /* prominent "new" badge so new data stands out in the section list */
+  .ti-new{ display:inline-flex; align-items:center; font-size:0.68rem; font-weight:700; color:#fff; background:var(--primary); border-radius:1rem; padding:.07rem .4rem; flex:0 0 auto; }
   .toc-item.active .ti-count{ background:#dbeafe; color:var(--primary); }
   .toc-cat{ padding:.3rem .65rem .3rem 0; font-size:0.875rem; text-transform:none; letter-spacing:normal; color:var(--gray-600); font-weight:600; margin-top:.9rem; }
   .toc-cat:first-child{ margin-top:0; }
@@ -3003,11 +3007,12 @@ body.flow-locked{ overflow:hidden; }
     // --- build 2-level nav ---
     const toc = document.getElementById('toc');
     const mkItem=(id,label,meta)=>{ meta=meta||{}; const d=document.createElement('div'); d.className='toc-item'; d.dataset.target=id;
+      const isNew = meta.sub && /^\d+\s+new$/i.test(meta.sub);
       let h='<div class="ti-main"><span class="ti-label">'+label+'</span>';
       if(meta.alert) h+='<span class="ti-alert" data-tip="'+label+(meta.sub?' — '+meta.sub:' needs attention')+'"></span>';
-      if(meta.c!=null) h+='<span class="ti-count">'+meta.c+'</span>';
+      if(isNew) h+='<span class="ti-new">'+meta.sub+'</span>';
       h+='</div>';
-      if(meta.sub) h+='<div class="ti-sub">'+meta.sub+'</div>';
+      if(meta.sub && !isNew) h+='<div class="ti-sub">'+meta.sub+'</div>';
       d.innerHTML=h; return d; };
     groups.forEach(g=>{
       const cat=document.createElement('div'); cat.className='toc-cat'; cat.textContent=g.label; cat.dataset.target=g.id; cat.style.cursor='pointer';
@@ -3237,8 +3242,8 @@ body.flow-locked{ overflow:hidden; }
     gearMenu.innerHTML =
       '<div class="gm-userhead"><div class="n">Jane Doe</div><div class="r">Care coordinator</div><div class="dt" id="gm-datetime"></div></div>'+
       '<div class="gm-title">Layouts</div>'+
-      '<button class="gm-item active" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Grouped tabs with section chips</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
-      '<button class="gm-item" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Grouped tabs with section chips</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
       '<button class="gm-item" data-mode="v3"><span class="gm-txt"><span class="gm-name">Version 3</span><span class="gm-desc">Left panel with nav, profile and section links</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
     navUser.appendChild(gearMenu);
 
@@ -3305,7 +3310,7 @@ body.flow-locked{ overflow:hidden; }
     setInterval(()=>{ const el=document.getElementById('user-datetime'); if(gmDt && el) gmDt.textContent = el.textContent; }, 1000);
 
     setVersion('v2');
-    setMode('tabs'); // default layout: Version 1 (grouped tabs)
+    setMode('sidebar'); // default layout: Version 1 (left sidebar)
   })();
 
   /* ===== Version 2 interactive bits: header filters, combined date-range, overview rail ===== */
