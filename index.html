@@ -103,7 +103,7 @@
   .app-toast.show{ opacity:1; transform:translate(-50%,0); }
   .app-toast .svg-ico{ color:#4ec77f; width:16px; height:16px; }
   /* ===== history / related-contacts trigger icons + modal ===== */
-  .hx-ico{ display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; margin-left:.35rem; padding:0;
+  .hx-ico{ display:none; align-items:center; justify-content:center; width:30px; height:30px; margin-left:.35rem; padding:0;
     border:1px solid var(--primary); background:var(--primary); border-radius:.45rem; cursor:pointer;
     color:#fff; vertical-align:middle; flex:0 0 auto; box-shadow:0 1px 2px rgba(44,123,229,.35); transition:background .15s, border-color .15s, box-shadow .15s, transform .05s; }
   .hx-ico svg{ width:16px; height:16px; }
@@ -374,8 +374,8 @@
   /* sticky nav: stays put while the right-side content scrolls */
   .toc{ position:sticky; top:var(--stick,76px); width:176px; flex:0 0 176px; align-self:flex-start;
     max-height:calc(100vh - var(--stick,76px) - 16px); overflow:auto; }
-  .toc-item{ display:block; padding:.4rem .65rem; font-size:0.875rem; color:var(--gray-700); cursor:pointer; border-radius:.3rem; }
-  .toc-item:hover{ color:var(--gray-900); background:var(--gray-100); }
+  .toc-item{ display:block; padding:.4rem .65rem; font-size:0.875rem; color:var(--primary); cursor:pointer; border-radius:.3rem; }
+  .toc-item:hover{ color:var(--primary-hover); background:var(--gray-100); }
   .toc-item.active{ color:var(--primary); font-weight:600; }
   .ti-main{ display:flex; align-items:center; gap:.35rem; }
   .ti-label{ flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -651,7 +651,7 @@
     letter-spacing:normal; background:var(--gray-100); border-bottom:none; padding:.6rem 1rem; }
   body.v2 .result-table td{ padding:.6rem 1rem; }
   .sort-caret{ color:var(--gray-500); font-size:0.875rem; margin-left:.2rem; }
-  .lanes-table tbody td{ padding:.6rem 1rem; border-bottom:1px solid var(--gray-200); color:var(--gray-700); vertical-align:top; }
+  .lanes-table tbody td{ padding:.6rem 1rem; border-bottom:1px solid var(--gray-200); color:var(--primary); vertical-align:top; }
   .lanes-table tbody tr:hover{ background:var(--gray-100); }
   .lanes-table tbody tr:last-child td{ border-bottom:none; }
   .table-scroll{ overflow:auto; min-height:120px; }
