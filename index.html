@@ -1325,6 +1325,9 @@
   /* the shared calendar popup is sized for a full-width field; the compact Lookback field needs a fixed width, right-aligned so it stays on screen */
   #syn-lookback .pf-cal-pop{ left:auto; right:0; width:300px; }
   .syn-titlerow .daterange{ margin-left:auto; }
+  /* KPIs in the synopsis card hug their content instead of stretching across the card */
+  body.nav-synopsis #sec-overview .ov-stat{ gap:1.9rem; }
+  body.nav-synopsis #sec-overview .ov-kpi{ flex:0 0 auto; min-width:0; }
   /* full-screen (expand) button on overview cards + the modal it opens */
   .ic-expand{ margin-left:auto; width:30px; height:30px; border:none; background:none; color:var(--gray-500); border-radius:.375rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; flex:none; }
   .ic-expand .svg-ico{ width:15px; height:15px; }
