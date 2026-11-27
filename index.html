@@ -199,6 +199,11 @@
     border-radius:.5rem; box-shadow:var(--card-shadow); padding:.35rem; min-width:244px; z-index:1050; display:none; }
   .gear-menu.open{ display:block; }
   .gm-title{ font-size:0.875rem; text-transform:none; letter-spacing:normal; color:var(--gray-500); font-weight:600; padding:.35rem .6rem; }
+  .gm-arch-toggle{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; width:100%; margin-top:.4rem; padding:.35rem .6rem; background:none; border:none; cursor:pointer; font-family:inherit; font-size:0.875rem; font-weight:600; color:var(--gray-500); border-radius:.375rem; text-align:left; }
+  .gm-arch-toggle:hover{ background:var(--gray-100); color:var(--gray-700); }
+  .gm-arch-chev{ width:14px; height:14px; color:var(--gray-400); transition:transform .15s; }
+  .gm-arch-toggle[aria-expanded="true"] .gm-arch-chev{ transform:rotate(180deg); }
+  .gm-arch[hidden]{ display:none; }
   .gm-item{ display:flex; align-items:center; justify-content:space-between; gap:.5rem; padding:.5rem .6rem; border-radius:.375rem;
     font-size:0.875rem; color:var(--gray-700); cursor:pointer; background:none; border:none; width:100%; text-align:left; }
   .gm-item:hover{ background:var(--gray-100); color:var(--gray-900); }
@@ -1349,10 +1354,16 @@
   .ov-modal-body .ov-table td{ padding:.6rem .85rem; }
   .ov-modal-body .ov-table th:first-child, .ov-modal-body .ov-table td:first-child{ padding-left:0; }
   .ov-modal-body .ov-table th:last-child, .ov-modal-body .ov-table td:last-child{ padding-right:0; }
+  /* KPIs in the modal hug their content too (don't stretch to the window width) */
+  .ov-modal-body .ov-stat{ gap:2.4rem; }
+  .ov-modal-body .ov-kpi{ flex:0 0 auto; }
+  .ov-modal-foot{ flex:none; padding:.9rem 1.4rem; border-top:1px solid var(--gray-200); }
   /* overview cards: uniform static height, body scrolls under a pinned header */
   body.nav-synopsis #sec-overview .info-card{ height:320px; display:flex; flex-direction:column; overflow:hidden; }
   body.nav-synopsis #sec-overview .info-card > .ic-head{ flex:none; margin-bottom:.55rem; }
   body.nav-synopsis #sec-overview .info-card > .ic-body{ flex:1 1 auto; overflow-y:auto; min-height:0; }
+  body.nav-synopsis #sec-overview .info-card > .ic-foot{ flex:none; margin-top:.5rem; padding-top:.6rem; border-top:1px solid var(--gray-200); }
+  body.nav-synopsis #sec-overview .ic-tablecard > .ic-foot{ padding-left:1.1rem; padding-right:1.1rem; }
   /* table column header stays pinned while the body scrolls */
   body.nav-synopsis #sec-overview .ov-table thead th{ position:sticky; top:0; z-index:1; }
   /* table cards: table stretches to the full card width; title/link/cell text stay indented */
@@ -2479,8 +2490,8 @@ body.flow-locked{ overflow:hidden; }
           </tbody>
         </table>
       </div>
-      <div style="margin-top:.6rem;"><a href="#">All 197 encounters</a></div>
       </div>
+      <div class="ic-foot"><a href="#">All 197 encounters</a></div>
     </div>
 
     <!-- Re-admissions (table) -->
@@ -3412,9 +3423,11 @@ body.flow-locked{ overflow:hidden; }
       '<div class="gm-title">Layouts</div>'+
       '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
       '<button class="gm-item" data-mode="synopsis"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Patient Synopsis with insights &amp; lookback</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
-      '<div class="gm-title" style="margin-top:.5rem;">Archive</div>'+
+      '<button type="button" class="gm-arch-toggle" id="gm-arch-toggle" aria-expanded="false"><span>Archive</span><svg class="svg-ico gm-arch-chev"><use href="#i-chevron"/></svg></button>'+
+      '<div class="gm-arch" id="gm-arch" hidden>'+
       '<button class="gm-item" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Grouped tabs</span><span class="gm-desc">Category tabs across the top</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
-      '<button class="gm-item" data-mode="v3"><span class="gm-txt"><span class="gm-name">Compact v3</span><span class="gm-desc">Condensed layout with quick links</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
+      '<button class="gm-item" data-mode="v3"><span class="gm-txt"><span class="gm-name">Compact v3</span><span class="gm-desc">Condensed layout with quick links</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '</div>';
       /* legacy grouped-tabs and left-panel layouts hidden for now */
     navUser.appendChild(gearMenu);
 
@@ -3474,6 +3487,7 @@ body.flow-locked{ overflow:hidden; }
       const host = trigger.closest('.nav-user'); if(host) toggleMenu(e, host);
     });
     gearMenu.addEventListener('click', e=>{
+      const at=e.target.closest('.gm-arch-toggle'); if(at){ const arch=gearMenu.querySelector('#gm-arch'); const open=at.getAttribute('aria-expanded')==='true'; at.setAttribute('aria-expanded', String(!open)); if(arch) arch.hidden=open; return; }
       const m=e.target.closest('.gm-item[data-mode]'); if(m){ setMode(m.dataset.mode); closeMenu(); return; }
       const v=e.target.closest('.gm-item[data-ver]'); if(v){ setVersion(v.dataset.ver); closeMenu(); return; }
     });
@@ -3925,17 +3939,19 @@ body.flow-locked{ overflow:hidden; }
   // Overview card "Full screen" modal
   (function(){
     const modal=document.createElement('div'); modal.className='ov-modal'; modal.id='ov-modal'; modal.style.display='none';
-    modal.innerHTML='<div class="ov-modal-backdrop"></div><div class="ov-modal-panel"><div class="ov-modal-head"><span class="ov-modal-title" id="ov-modal-title"></span><button type="button" class="ov-modal-close" id="ov-modal-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div><div class="ov-modal-body" id="ov-modal-body"></div></div>';
+    modal.innerHTML='<div class="ov-modal-backdrop"></div><div class="ov-modal-panel"><div class="ov-modal-head"><span class="ov-modal-title" id="ov-modal-title"></span><button type="button" class="ov-modal-close" id="ov-modal-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div><div class="ov-modal-body" id="ov-modal-body"></div><div class="ov-modal-foot" id="ov-modal-foot" style="display:none"></div></div>';
     document.body.appendChild(modal);
-    const titleEl=modal.querySelector('#ov-modal-title'), bodyEl=modal.querySelector('#ov-modal-body');
+    const titleEl=modal.querySelector('#ov-modal-title'), bodyEl=modal.querySelector('#ov-modal-body'), footEl=modal.querySelector('#ov-modal-foot');
     function open(card){
       const head=card.querySelector('.ic-head');
       if(head){ const t=head.cloneNode(true); const x=t.querySelector('.ic-expand'); if(x) x.remove(); titleEl.innerHTML=t.innerHTML; }
       const body=card.querySelector('.ic-body');
       bodyEl.innerHTML = body ? body.innerHTML : '';
+      const foot=card.querySelector('.ic-foot');
+      if(foot){ footEl.innerHTML=foot.innerHTML; footEl.style.display=''; } else { footEl.innerHTML=''; footEl.style.display='none'; }
       modal.style.display='flex'; document.body.classList.add('ov-modal-open');
     }
-    function close(){ modal.style.display='none'; bodyEl.innerHTML=''; document.body.classList.remove('ov-modal-open'); }
+    function close(){ modal.style.display='none'; bodyEl.innerHTML=''; footEl.innerHTML=''; footEl.style.display='none'; document.body.classList.remove('ov-modal-open'); }
     modal.querySelector('#ov-modal-close').addEventListener('click', close);
     modal.querySelector('.ov-modal-backdrop').addEventListener('click', close);
     document.addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.style.display!=='none') close(); });
