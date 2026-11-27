@@ -5129,8 +5129,12 @@ body.flow-locked{ overflow:hidden; }
     window.LC.init(document.getElementById('sa-chart-sdl'),{
       tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},
       legend:{top:0,data:['Outpatient','Emergency','Inpatient'],icon:'roundRect',itemWidth:11,itemHeight:11,textStyle:{color:'#5e6e82',fontSize:11}},
-      grid:{left:168,right:20,top:30,bottom:10},
-      xAxis:{type:'value',axisLabel:axL,splitLine:split},
+      grid:{left:168,right:34,top:30,bottom:34},
+      dataZoom:[
+        {type:'inside',yAxisIndex:0,zoomLock:true,moveOnMouseWheel:true,startValue:4,endValue:9},
+        {type:'slider',yAxisIndex:0,zoomLock:true,startValue:4,endValue:9,width:7,right:8,top:30,bottom:34,showDetail:false,brushSelect:false,handleSize:0,fillerColor:'rgba(44,123,229,.3)',borderColor:'transparent',backgroundColor:'rgba(116,129,148,.12)'}
+      ],
+      xAxis:{type:'value',axisLabel:axL,splitLine:split,position:'bottom'},
       yAxis:{type:'category',data:sdl.map(x=>x[0]),axisLabel:{color:'#5e6e82',fontSize:11,fontFamily:'Poppins, sans-serif'},axisLine:axLine,axisTick:{show:false}},
       series:[
         {name:'Outpatient',type:'bar',stack:'t',barMaxWidth:16,itemStyle:{color:C.out,borderRadius:[0,0,0,0]},data:sdl.map(x=>Math.round(x[1]*0.8))},
