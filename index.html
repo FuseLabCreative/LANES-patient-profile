@@ -999,6 +999,9 @@
   body.v2 .panel{ box-shadow:var(--card-shadow); border:1px solid var(--gray-300); border-radius:.6rem; }
   body.v2 .info-card{ box-shadow:var(--card-shadow); border:1px solid var(--gray-300); }
   body.v2 .info-cards{ gap:.85rem; }
+  /* V2 synopsis: 2-up grid (two cards per row) */
+  body.nav-synopsis #sec-overview{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  @media(max-width:860px){ body.nav-synopsis #sec-overview{ grid-template-columns:1fr; } }
   body.v2 .main-grid{ gap:1.5rem; flex:1 1 auto; min-width:0; max-width:1440px; margin:0 auto; }
   body.v2 .cat-heading{ font-weight:500; }
   body.v2 .panel-header{ padding:1rem 1.25rem; background:#fff; border-bottom:1px solid var(--gray-200); }
@@ -1317,6 +1320,25 @@
   .syn-head .syn-lb-field{ width:150px; flex:0 0 150px; }
   /* the shared calendar popup is sized for a full-width field; the compact Lookback field needs a fixed width, right-aligned so it stays on screen */
   #syn-lookback .pf-cal-pop{ left:auto; right:0; width:300px; }
+  .syn-titlerow .daterange{ margin-left:auto; }
+  /* full-screen (expand) button on overview cards + the modal it opens */
+  .ic-expand{ margin-left:auto; width:30px; height:30px; border:none; background:none; color:var(--gray-500); border-radius:.375rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .ic-expand .svg-ico{ width:15px; height:15px; }
+  .ic-expand:hover{ background:var(--gray-100); color:var(--gray-800); }
+  body.ov-modal-open{ overflow:hidden; }
+  .ov-modal{ position:fixed; inset:0; z-index:3000; display:flex; align-items:center; justify-content:center; padding:2rem; }
+  .ov-modal-backdrop{ position:absolute; inset:0; background:rgba(18,38,63,.45); }
+  .ov-modal-panel{ position:relative; background:#fff; border-radius:.75rem; box-shadow:0 20px 60px rgba(18,38,63,.3); width:min(1080px,94vw); max-height:88vh; display:flex; flex-direction:column; overflow:hidden; }
+  .ov-modal-head{ display:flex; align-items:center; gap:.5rem; padding:1rem 1.4rem; border-bottom:1px solid var(--gray-200); flex:none; }
+  .ov-modal-title{ font-size:1.15rem; font-weight:700; color:var(--gray-900); display:flex; align-items:center; gap:.5rem; }
+  .ov-modal-close{ margin-left:auto; width:32px; height:32px; border:none; background:none; color:var(--gray-500); border-radius:.375rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+  .ov-modal-close:hover{ background:var(--gray-100); color:var(--gray-900); }
+  .ov-modal-close .svg-ico{ width:16px; height:16px; }
+  .ov-modal-body{ padding:1.25rem 1.4rem; overflow-y:auto; flex:1 1 auto; }
+  .ov-modal-body .ov-table{ font-size:.9rem; }
+  .ov-modal-body .ov-table th{ font-size:.78rem; padding:.5rem .85rem; }
+  .ov-modal-body .ov-table td{ padding:.6rem .85rem; }
+  .ov-modal-body .ov-table th:first-child, .ov-modal-body .ov-table td:first-child{ padding-left:0; }
   /* overview cards: uniform static height, body scrolls under a pinned header */
   body.nav-synopsis #sec-overview .info-card{ height:320px; display:flex; flex-direction:column; overflow:hidden; }
   body.nav-synopsis #sec-overview .info-card > .ic-head{ flex:none; margin-bottom:.55rem; }
@@ -2290,13 +2312,12 @@ body.flow-locked{ overflow:hidden; }
         <button type="button" class="syn-act-btn" data-view="history" data-hx-hub><svg class="svg-ico"><use href="#i-history"/></svg>History</button>
         <button type="button" class="syn-act-btn" id="syn-notes-btn" data-view="notes"><svg class="svg-ico"><use href="#i-note"/></svg>Notes</button>
       </div>
-      <div class="syn-lookback">
-        <span class="syn-lb-label">Lookback from</span>
-        <span class="date-field pf-datefield syn-lb-field" id="syn-lookback">
-          <input type="text" id="syn-lookback-input" placeholder="mm/dd/yyyy" readonly autocomplete="off">
-          <span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
-        </span>
-      </div>
+      <span class="daterange syn-daterange" id="syn-daterange">
+        <span class="date-field dr-start"><input type="text" value="05/27/2026" readonly placeholder="Start date"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+        <span class="dr-sep">–</span>
+        <span class="date-field dr-end"><input type="text" value="11/27/2026" readonly placeholder="End date"><span class="cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span></span>
+        <span class="dr-cal"><svg class="svg-ico"><use href="#i-calendar"/></svg></span>
+      </span>
     </div>
   </div>
 
@@ -2395,7 +2416,7 @@ body.flow-locked{ overflow:hidden; }
   <div class="info-cards" id="sec-overview">
     <!-- Demographics -->
     <div class="info-card">
-      <div class="ic-head"><span class="ic-title">Demographics and contact</span></div>
+      <div class="ic-head"><span class="ic-title">Demographics and contact</span><button type="button" class="ic-expand" title="Full screen"><svg class="svg-ico"><use href="#i-fullscreen"/></svg></button></div>
       <div class="ic-body">
       <dl class="kv">
         <dt>Name</dt><dd>Maria Sanchez · <a href="#" data-hx="name">Aliases &amp; name history</a></dd>
@@ -2414,7 +2435,7 @@ body.flow-locked{ overflow:hidden; }
 
     <!-- Encounters insights + affiliations -->
     <div class="info-card">
-      <div class="ic-head"><span class="ic-title">Encounters insights</span><span class="ov-h-badge">last 6 months</span></div>
+      <div class="ic-head"><span class="ic-title">Encounters insights</span><span class="ov-h-badge">last 6 months</span><button type="button" class="ic-expand" title="Full screen"><svg class="svg-ico"><use href="#i-fullscreen"/></svg></button></div>
       <div class="ic-body">
       <div class="ov-stat">
         <div class="ov-kpi"><div class="ov-kpi-top"><span class="ov-kpi-bar e"></span><span class="ov-kpi-num">20</span></div><div class="ov-kpi-lbl">Emergency</div></div>
@@ -2434,7 +2455,7 @@ body.flow-locked{ overflow:hidden; }
 
     <!-- Most recent encounters (table) -->
     <div class="info-card ic-tablecard">
-      <div class="ic-head"><span class="ic-title">Most recent encounters</span></div>
+      <div class="ic-head"><span class="ic-title">Most recent encounters</span><button type="button" class="ic-expand" title="Full screen"><svg class="svg-ico"><use href="#i-fullscreen"/></svg></button></div>
       <div class="ic-body">
       <div class="ov-table-wrap">
         <table class="ov-table">
@@ -2452,7 +2473,7 @@ body.flow-locked{ overflow:hidden; }
 
     <!-- Re-admissions (table) -->
     <div class="info-card ic-tablecard">
-      <div class="ic-head"><span class="ic-title">Re-admissions</span><span class="ic-badge">4</span></div>
+      <div class="ic-head"><span class="ic-title">Re-admissions</span><span class="ic-badge">4</span><button type="button" class="ic-expand" title="Full screen"><svg class="svg-ico"><use href="#i-fullscreen"/></svg></button></div>
       <div class="ic-body">
       <div class="ov-table-wrap">
         <table class="ov-table">
@@ -3378,7 +3399,10 @@ body.flow-locked{ overflow:hidden; }
       '<div class="gm-userhead"><div class="n">Jane Doe</div><div class="r">Care coordinator</div><div class="dt" id="gm-datetime"></div></div>'+
       '<div class="gm-title">Layouts</div>'+
       '<button class="gm-item active" data-mode="sidebar"><span class="gm-txt"><span class="gm-name">Version 1</span><span class="gm-desc">Left sidebar with the section list</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
-      '<button class="gm-item" data-mode="synopsis"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Patient Synopsis with insights &amp; lookback</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
+      '<button class="gm-item" data-mode="synopsis"><span class="gm-txt"><span class="gm-name">Version 2</span><span class="gm-desc">Patient Synopsis with insights &amp; lookback</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<div class="gm-title" style="margin-top:.5rem;">Archive</div>'+
+      '<button class="gm-item" data-mode="tabs"><span class="gm-txt"><span class="gm-name">Grouped tabs</span><span class="gm-desc">Category tabs across the top</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>'+
+      '<button class="gm-item" data-mode="v3"><span class="gm-txt"><span class="gm-name">Compact v3</span><span class="gm-desc">Condensed layout with quick links</span></span><svg class="svg-ico chk"><use href="#i-check"/></svg></button>';
       /* legacy grouped-tabs and left-panel layouts hidden for now */
     navUser.appendChild(gearMenu);
 
@@ -3884,6 +3908,26 @@ body.flow-locked{ overflow:hidden; }
     });
     // the popup closes only via Apply, Close, or clicking the date input (pill) again
     document.querySelectorAll('.daterange').forEach(dr=>{ dr.addEventListener('click', e=>{ e.stopPropagation(); if(active===dr) close(); else open(dr); }); });
+  })();
+
+  // Overview card "Full screen" modal
+  (function(){
+    const modal=document.createElement('div'); modal.className='ov-modal'; modal.id='ov-modal'; modal.style.display='none';
+    modal.innerHTML='<div class="ov-modal-backdrop"></div><div class="ov-modal-panel"><div class="ov-modal-head"><span class="ov-modal-title" id="ov-modal-title"></span><button type="button" class="ov-modal-close" id="ov-modal-close" title="Close"><svg class="svg-ico"><use href="#i-x"/></svg></button></div><div class="ov-modal-body" id="ov-modal-body"></div></div>';
+    document.body.appendChild(modal);
+    const titleEl=modal.querySelector('#ov-modal-title'), bodyEl=modal.querySelector('#ov-modal-body');
+    function open(card){
+      const head=card.querySelector('.ic-head');
+      if(head){ const t=head.cloneNode(true); const x=t.querySelector('.ic-expand'); if(x) x.remove(); titleEl.innerHTML=t.innerHTML; }
+      const body=card.querySelector('.ic-body');
+      bodyEl.innerHTML = body ? body.innerHTML : '';
+      modal.style.display='flex'; document.body.classList.add('ov-modal-open');
+    }
+    function close(){ modal.style.display='none'; bodyEl.innerHTML=''; document.body.classList.remove('ov-modal-open'); }
+    modal.querySelector('#ov-modal-close').addEventListener('click', close);
+    modal.querySelector('.ov-modal-backdrop').addEventListener('click', close);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.style.display!=='none') close(); });
+    document.addEventListener('click', e=>{ const b=e.target.closest('.ic-expand'); if(b){ e.stopPropagation(); const card=b.closest('.info-card'); if(card) open(card); } });
   })();
 
   // Feedback / Help popover
