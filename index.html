@@ -1341,11 +1341,14 @@
   .ov-modal-close{ margin-left:auto; width:32px; height:32px; border:none; background:none; color:var(--gray-500); border-radius:.375rem; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
   .ov-modal-close:hover{ background:var(--gray-100); color:var(--gray-900); }
   .ov-modal-close .svg-ico{ width:16px; height:16px; }
-  .ov-modal-body{ padding:1.25rem 1.4rem; overflow-y:auto; flex:1 1 auto; }
+  .ov-modal-body{ padding:0 0 1.4rem; overflow-y:auto; flex:1 1 auto; }
+  .ov-modal-body > *:not(.ov-table-wrap){ padding-left:1.4rem; padding-right:1.4rem; }   /* keep non-table content inset */
+  .ov-modal-body > *:not(.ov-table-wrap):first-child{ padding-top:1.25rem; }
   .ov-modal-body .ov-table{ font-size:.9rem; }
   .ov-modal-body .ov-table th{ font-size:.78rem; padding:.5rem .85rem; }
   .ov-modal-body .ov-table td{ padding:.6rem .85rem; }
   .ov-modal-body .ov-table th:first-child, .ov-modal-body .ov-table td:first-child{ padding-left:0; }
+  .ov-modal-body .ov-table th:last-child, .ov-modal-body .ov-table td:last-child{ padding-right:0; }
   /* overview cards: uniform static height, body scrolls under a pinned header */
   body.nav-synopsis #sec-overview .info-card{ height:320px; display:flex; flex-direction:column; overflow:hidden; }
   body.nav-synopsis #sec-overview .info-card > .ic-head{ flex:none; margin-bottom:.55rem; }
