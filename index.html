@@ -1300,8 +1300,12 @@
   body.nav-synopsis .syn-head{ display:block; position:sticky; top:var(--nav-h,63px); z-index:30; background:var(--body-bg);
     margin:-1.25rem -1.5rem 1.25rem; padding:.45rem 1.5rem .85rem; border-bottom:1px solid var(--gray-300); }
   /* centered patient chip in the top bar */
-  body.nav-synopsis.flow-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.5rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:rgba(255,255,255,.55); border:1px solid rgba(255,255,255,.55); border-radius:.5rem; padding:.3rem .75rem; box-shadow:0 1px 3px rgba(18,38,63,.08); cursor:pointer; backdrop-filter:blur(2px); transition:background .14s, border-color .14s, box-shadow .14s; }
-  body.nav-synopsis .nav-patient-chip:hover{ background:rgba(255,255,255,.8); border-color:rgba(255,255,255,.8); box-shadow:0 2px 8px rgba(18,38,63,.14); }
+  body.nav-synopsis.flow-synopsis .nav-patient-chip{ display:inline-flex; align-items:center; gap:.55rem; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); background:#fff; border:1px solid rgba(255,255,255,.9); border-radius:.55rem; padding:.32rem .55rem .32rem .4rem; box-shadow:0 2px 10px rgba(18,38,63,.18); cursor:pointer; transition:box-shadow .14s, transform .08s; }
+  body.nav-synopsis .nav-patient-chip:hover{ box-shadow:0 4px 16px rgba(18,38,63,.26); }
+  body.nav-synopsis .nav-patient-chip:active{ transform:translate(-50%,-50%) scale(.985); }
+  .npc-edit{ display:inline-flex; align-items:center; justify-content:center; color:var(--primary); margin-left:.1rem; }
+  .npc-edit .svg-ico{ width:14px; height:14px; }
+  .nav-patient-chip:hover .npc-edit{ color:#1657b8; }
   .npc-avatar{ width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg,#a9d4f2,#47b0ff); color:#0b2a44; display:inline-flex; align-items:center; justify-content:center; font-weight:500; font-size:.7rem; flex:none; }
   .npc-text{ display:flex; flex-direction:column; line-height:1.15; }
   .npc-name{ font-weight:700; font-size:.86rem; color:var(--gray-900); }
@@ -1421,6 +1425,7 @@
   <symbol id="i-note" viewBox="0 0 16 16"><path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/></symbol>
   <symbol id="i-chart" viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5h-2v12h2V2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></symbol>
   <symbol id="i-chevron" viewBox="0 0 16 16"><path d="M3.204 5h9.592L8 10.481 3.204 5z"/></symbol>
+  <symbol id="i-edit" viewBox="0 0 16 16"><path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" fill="currentColor"/></symbol>
   <symbol id="i-cd" viewBox="0 0 16 16"><path d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></symbol>
   <symbol id="i-person" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z"/></symbol>
   <symbol id="i-cl" viewBox="0 0 16 16"><path d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></symbol>
@@ -2190,6 +2195,7 @@ body.flow-locked{ overflow:hidden; }
     <div class="nav-patient-chip" id="nav-patient-chip">
       <span class="npc-avatar">MS</span>
       <span class="npc-text"><span class="npc-name">Maria Sanchez</span><span class="npc-meta">DOB 01/01/2001 · 23 yrs</span></span>
+      <span class="npc-edit" title="Change patient"><svg class="svg-ico"><use href="#i-edit"/></svg></span>
     </div>
     <div class="nav-user">
       <div class="nav-help-wrap nav-help-home">
